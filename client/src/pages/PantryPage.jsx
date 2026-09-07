@@ -162,11 +162,13 @@ export default function PantryPage({ user, onRequireAuth }) {
   const almost = matches.filter((match) => match.match_ratio < 1);
 
   return (
-    <div className="mx-auto grid w-full max-w-6xl gap-8 px-4 py-10 lg:grid-cols-[380px_1fr]">
+    <div className="mx-auto w-full max-w-6xl px-4 py-10">
+      {/* ── Scan ───────────────────────────────────────────────── */}
+      <FridgeScan onConfirm={confirmScan} alreadyInFridge={ingredientNames} />
+
+      <div className="mt-8 grid gap-8 lg:grid-cols-[340px_1fr]">
       {/* ── Fridge ─────────────────────────────────────────────── */}
       <aside className="grid h-fit gap-6">
-        <FridgeScan onConfirm={confirmScan} alreadyInFridge={ingredientNames} />
-
         <section className="rounded-[var(--r-lg)] border border-[var(--border)] bg-[var(--surface-strong)] p-6 shadow-[var(--shadow-sm)]">
           <h1 className="m-0 font-[var(--font-display)] text-2xl font-black text-[var(--text)]">
             What&apos;s in your fridge?
@@ -320,6 +322,7 @@ export default function PantryPage({ user, onRequireAuth }) {
           </>
         )}
       </section>
+      </div>
     </div>
   );
 }

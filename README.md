@@ -157,14 +157,17 @@ reports anything that quietly wanted the network.
 ## Tests
 
 ```bash
-php artisan test           # 59 tests
+php artisan test           # 72 tests
 cd client && npm run lint
 ```
 
 `FridgeScanTest` covers detector-label mapping, chip collapsing, unknown
 labels, and that a scan never writes to the fridge on its own.
 `UseItUpRankingTest` covers urgency, the expiring shelf, diminishing returns,
-and that the published score matches the running order.
+and that the published score matches the running order. `ApiErrorShapeTest`
+pins every `/api` route to JSON status codes, with and without an `Accept`
+header — a redirect where a 401 belongs is the kind of thing only a network tab
+reveals.
 
 ---
 

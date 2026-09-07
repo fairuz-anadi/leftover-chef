@@ -131,6 +131,22 @@ detector class means adding an alias.
 > Fixed; `FridgeScanTest::test_detector_labels_resolve_through_the_alias_table`
 > and the `offline-check` alias step both guard it now.
 
+### Every /api response is JSON
+
+`Handler::render()` used to delegate to the framework handler whenever the
+caller had not sent `Accept: application/json`. That handler redirects
+unauthenticated callers to `route('login')` — a route this app does not have,
+because the front end is React. The result was a **500 where a 401 belonged**,
+on the client's own boot-time `GET /api/me`, on every single page load. The UI
+never showed it (the boot code catches everything), which is exactly why it
+survived: it was only visible in a network tab, which is where a judge looks.
+
+It now keys off the path — `/api/*` is an API and has no HTML to serve — so
+auth failures are 401 and validation failures are 422 regardless of what the
+caller asked for. `ApiErrorShapeTest` covers both header cases across six
+endpoints. `api.js` also sends the header now; either fix alone is sufficient,
+and having both means a curl or a phone gets the same answers as the client.
+
 ---
 
 ## 5. The confirm step
@@ -149,6 +165,13 @@ overrule them.
 
 **Do not remove this step.** Everything else in the plan's cut list can go
 first.
+
+The scan panel spans the full page width rather than sitting in the sidebar,
+and splits into photo-left / chips-right once a result is in. It started in the
+380px column and the boxes were unreadable at that size, which defeats the
+point of drawing them. Box labels also flip to the inside of the box when it is
+against the top edge of the photo — fridge shelves put things there constantly,
+and a label clipped by the container is a detection nobody can read.
 
 ---
 
@@ -278,13 +301,21 @@ Re-seed on the morning of and the shelf is correct.
 - Scan UI: upload / webcam / saved photos, boxes over the photo, confidence
   chips, click a box to drop its chip, confirm before anything is written.
 - Use It Up: dates on chips, the expiring shelf, rescue reasons on cards.
-- 59 PHPUnit tests pass, 15 of them new. `npm run build` clean, eslint clean.
+- `/api/*` answers 401/422 in JSON instead of 500/302 — see §4.
+- Run for real in a browser, signed out and signed in: sample photo scans in
+  ~475 ms, chips carry "have" badges against the saved fridge, the shelf reads
+  "4 items to use up tomorrow", and the ranked list puts a 78% match that
+  rescues tomorrow's spinach above an 82% one that rescues nothing.
+- 72 PHPUnit tests pass, 28 of them new. `npm run build` clean, eslint clean.
 
 **Not done**
 
-- **Demo photos.** One starter photo ships in
-  `client/src/assets/demo-photos/`. Take 3–4 real ones — see the README in that
-  folder for what makes a good one. This is the highest-value hour left.
+- **Demo photos.** The one that ships in `client/src/assets/demo-photos/` is a
+  food-styling shot, not a fridge: it detects six things happily but they do
+  not combine into any recipe, so the results panel reads "0 recipes you can
+  make". Fine for proving the detector, useless as the demo. Take 3–4 real
+  fridge photos — see the README in that folder. **This is the highest-value
+  hour left**, and nothing else on this list comes close.
 - **The offline rehearsal has not been run on the venue laptop.** Everything is
   local by construction and `offline-check.ps1` exists, but "should work
   offline" and "we watched it work offline" are different claims and only one

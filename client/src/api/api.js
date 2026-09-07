@@ -19,6 +19,11 @@ export function setToken(token) {
 async function request(path, options = {}, config = {}) {
   const body = options.body;
   const headers = {
+    // Say it explicitly on every call. Without it Laravel treats the request as
+    // a browser navigation and tries to redirect unauthenticated callers to a
+    // login route this API does not have, which surfaces as a 500 rather than
+    // the 401 the caller is expecting.
+    Accept: "application/json",
     ...(isFormData(body) ? {} : { "Content-Type": "application/json" }),
     ...(options.headers || {}),
   };

@@ -302,9 +302,10 @@ export default function FridgeScan({ onConfirm, alreadyInFridge = [] }) {
         </div>
       )}
 
+      <div className={photoUrl ? "mt-5 grid gap-6 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]" : ""}>
       {/* ── Photo + boxes ──────────────────────────────────────────── */}
       {photoUrl && (
-        <div className="mt-5">
+        <div>
           <BoxedPhoto
             src={photoUrl}
             image={result?.image}
@@ -326,7 +327,7 @@ export default function FridgeScan({ onConfirm, alreadyInFridge = [] }) {
 
       {/* ── Chips + confirm ────────────────────────────────────────── */}
       {result && (
-        <div className="mt-5">
+        <div className="lg:pt-1">
           <p className="mb-2 text-xs uppercase tracking-wider text-[var(--muted-light)]">
             {kept.length > 0
               ? `Found ${kept.length} ingredient${kept.length === 1 ? "" : "s"} — drop anything wrong`
@@ -373,6 +374,7 @@ export default function FridgeScan({ onConfirm, alreadyInFridge = [] }) {
           </div>
         </div>
       )}
+      </div>
     </section>
   );
 }
@@ -407,6 +409,13 @@ function BoxedPhoto({ src, image, items, scanning, hovered, onToggle }) {
           const colour = BOX_COLOURS[index % BOX_COLOURS.length];
           const dim = hovered && hovered !== item.slug;
 
+          // A label normally sits above its box. Near the top of the photo
+          // there is no "above" — the container clips it — so it flips inside.
+          // Fridge shelves put things against the top edge constantly, and a
+          // detection you cannot read is a detection you did not make.
+          const topPercent = (y1 / height) * 100;
+          const flipInside = topPercent < 7;
+
           return (
             <button
               key={`${item.slug}-${boxIndex}`}
@@ -415,7 +424,7 @@ function BoxedPhoto({ src, image, items, scanning, hovered, onToggle }) {
               title={`${item.name} — click to drop`}
               style={{
                 left: `${(x1 / width) * 100}%`,
-                top: `${(y1 / height) * 100}%`,
+                top: `${topPercent}%`,
                 width: `${((x2 - x1) / width) * 100}%`,
                 height: `${((y2 - y1) / height) * 100}%`,
                 borderColor: colour,
@@ -425,7 +434,11 @@ function BoxedPhoto({ src, image, items, scanning, hovered, onToggle }) {
             >
               <span
                 style={{ backgroundColor: colour }}
-                className="absolute -top-[1px] left-[-2px] max-w-[200%] -translate-y-full whitespace-nowrap rounded-t-[3px] px-1.5 py-0.5 text-[10px] font-bold leading-tight text-white"
+                className={`absolute left-[-2px] max-w-[240%] whitespace-nowrap px-1.5 py-0.5 text-[10px] font-bold leading-tight text-white ${
+                  flipInside
+                    ? "top-[-1px] rounded-b-[3px]"
+                    : "-top-[1px] -translate-y-full rounded-t-[3px]"
+                }`}
               >
                 {item.name} {Math.round(item.confidence * 100)}%
               </span>

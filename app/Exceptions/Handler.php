@@ -32,9 +32,21 @@ class Handler extends ExceptionHandler
         });
     }
 
+    /**
+     * Everything under /api answers in JSON, whatever the caller asked for.
+     *
+     * Keying this off Accept alone was a trap. A request without an explicit
+     * `Accept: application/json` fell through to the framework handler, which
+     * redirects unauthenticated callers to `route('login')` - a route this app
+     * does not have, because the front end is a React client. The result was a
+     * 500 where a 401 belonged, on the client's own boot-time GET /api/me, and
+     * a 302 where a 422 belonged on any multipart POST.
+     *
+     * The path is the honest signal: /api is an API and has no HTML to serve.
+     */
     public function render($request, Throwable $exception)
     {
-        if (!$request->expectsJson()) {
+        if (!$request->expectsJson() && !$request->is('api/*')) {
             return parent::render($request, $exception);
         }
 
