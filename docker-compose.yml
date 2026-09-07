@@ -1,0 +1,75 @@
+# Leftover Chef — web tier.
+#
+# The vision sidecar is deliberately NOT in here. It has to run on the laptop
+# that goes to the exhibition, where there is no internet and no Docker, and
+# containerising a 2 GB torch image to talk to localhost buys nothing. Start it
+# with scripts/start-demo.ps1 and point VISION_URL at it.
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/app/Dockerfile
+    container_name: leftoverchef_app
+    env_file:
+      - .env
+    environment:
+      # The .env default is sqlite for zero-setup local dev; inside compose we
+      # run against PostgreSQL, the deployment target.
+      DB_CONNECTION: pgsql
+      DB_HOST: leftoverchef_postgres
+      DB_PORT: 5432
+      DB_DATABASE: ${DB_DATABASE:-leftoverchef}
+      DB_USERNAME: ${DB_USERNAME:-leftoverchef}
+      DB_PASSWORD: ${DB_PASSWORD:-StrongPassword123!}
+      MAIL_MAILER: smtp
+      MAIL_HOST: leftoverchef_mailpit
+      MAIL_PORT: 1025
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mailpit:
+        condition: service_started
+    ports:
+      - "${APP_PORT:-8000}:80"
+
+  client:
+    build:
+      context: .
+      dockerfile: docker/client/Dockerfile
+      args:
+        VITE_API_URL: ${VITE_API_URL:-/api}
+        VITE_GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+    container_name: leftoverchef_client
+    depends_on:
+      - app
+    ports:
+      - "${CLIENT_PORT:-5173}:80"
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: leftoverchef_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_DATABASE:-leftoverchef}
+      POSTGRES_USER: ${DB_USERNAME:-leftoverchef}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-StrongPassword123!}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-leftoverchef}"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: leftoverchef_mailpit
+    ports:
+      - "${MAIL_PORT:-1025}:1025"
+      - "${MAIL_UI_PORT:-8025}:8025"
+
+volumes:
+  postgres_data:

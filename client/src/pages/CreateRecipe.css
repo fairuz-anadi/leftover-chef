@@ -1,0 +1,27 @@
+.cr-page {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.cr-form {
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cr-form input,
+.cr-form textarea {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.cr-form button {
+  padding: 10px;
+  background: black;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}

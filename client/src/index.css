@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+/* Tailwind utilities are wired to the same tokens App.css already defines, so
+   the new feature screens sit next to the original hand-written CSS without a
+   second palette. */
+@theme {
+  --color-brand: #0f5132;
+  --color-brand-deep: #0a3a24;
+  --color-accent: #b5762a;
+  --color-gold: #c79a3e;
+  --color-cream: #f6f6f4;
+  --color-ink: #14181b;
+  --color-muted: #59616a;
+  --font-display: 'Fraunces Variable', 'Fraunces', Georgia, serif;
+  --font-sans: 'Inter Variable', 'Inter', 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter Variable', 'Inter', 'Segoe UI', system-ui, sans-serif;
+  color: #14181b;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}

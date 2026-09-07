@@ -1,0 +1,46 @@
+/.phpunit.cache
+/node_modules
+/public/build
+/public/hot
+/public/storage
+/storage/*.key
+/vendor
+.env
+.env.backup
+.env.production
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+auth.json
+npm-debug.log
+yarn-error.log
+/.fleet
+/.idea
+/.vscode
+
+# Composer's own cache came along in the source archive; it is not source.
+/.composer
+
+# SQLite is the zero-setup local default. `php artisan migrate --seed` rebuilds
+# it in seconds, and committing a binary every teammate rewrites is a
+# guaranteed merge conflict.
+/database/database.sqlite
+/database/*.sqlite-journal
+
+# Vision sidecar.
+/vision/.venv
+**/__pycache__
+
+# Model weights: ~390 MB of YOLO-World, the COCO fallback and the CLIP text
+# encoder. Fetched once by scripts/warm-cache.ps1 and then never again — the
+# venue has no internet, but that is what the local cache is for, not git.
+/vision/weights
+
+# Fridge photos for the demo. Drop your own into client/src/assets/demo-photos
+# and they appear in the scan panel automatically; they are not committed
+# because they are large, personal, and specific to whoever is demoing.
+# One starter photo is committed so a fresh clone can demo immediately; the
+# rest are yours.
+/client/src/assets/demo-photos/*
+!/client/src/assets/demo-photos/README.md
+!/client/src/assets/demo-photos/1-kitchen-counter.jpg

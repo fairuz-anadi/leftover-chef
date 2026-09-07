@@ -1,0 +1,17 @@
+# Leftover Chef vision sidecar.
+#
+# Install into vision/.venv (scripts/setup.ps1 does this). torch comes in as an
+# ultralytics dependency; on a machine that already has a CPU or CUDA build of
+# torch, create the venv with --system-site-packages and pip will leave it
+# alone rather than pulling another 2 GB.
+#
+# YOLO-World also needs OpenAI CLIP for its text encoder. ultralytics installs
+# it on first use, but pinning it here means `pip install -r requirements.txt`
+# leaves nothing to download at the venue.
+
+ultralytics>=8.3,<9
+fastapi>=0.115
+uvicorn[standard]>=0.30
+python-multipart>=0.0.9
+pillow>=10.0
+clip @ git+https://github.com/ultralytics/CLIP.git
