@@ -1,6 +1,10 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import '@fontsource-variable/inter'
+import '@fontsource/dm-sans/400.css'
+import '@fontsource/dm-sans/500.css'
+import '@fontsource/dm-sans/700.css'
+import '@fontsource/manrope/700.css'
+import '@fontsource/manrope/800.css'
 import '@fontsource/ibm-plex-mono'
 // Inter carries no Bengali glyphs, so without this every ingredient name
 // falls back to whatever the OS happens to have — which on a strange laptop
@@ -8,6 +12,8 @@ import '@fontsource/ibm-plex-mono'
 import '@fontsource/noto-sans-bengali/400.css'
 import '@fontsource/noto-sans-bengali/600.css'
 import './index.css'
+import './landing.css'
+import './app-shell.css'
 import Root from './Root.jsx'
 import { isNativeApp } from './api'
 

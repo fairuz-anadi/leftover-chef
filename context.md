@@ -419,6 +419,57 @@ Two tests cover it.
 
 ---
 
+## 10b. The redesign
+
+A frontend mock arrived as a Manus scaffold — TypeScript, shadcn/ui, wouter,
+254 KB of lockfile — with the note that it was "just the inspo". So the design
+was taken and the stack was not: nothing in this repo changed language,
+framework or router, and no shadcn component was copied. What moved across was
+the look.
+
+**The palette is the whole trick.** Every component already read its colours
+from tokens rather than literals, so re-pointing about thirty custom properties
+in `index.css` re-skinned the entire app in one edit — navy ink on cream,
+teal as the brand, lime as the second voice — without touching a single
+component's colours. That is the payoff for a rule written months earlier and
+kept.
+
+Three things were changed rather than copied:
+
+- **The fonts are bundled.** The mock pulls DM Sans and Manrope off Google
+  Fonts, which is a network request the venue cannot make and which
+  `offline-check.ps1` fails on by design. They are `@fontsource` packages now.
+- **The lime is two colours.** `--lime` is the fill; `--lime-ink` is the same
+  green dark enough to read as text. #76d43b on cream is about 1.9:1 — fine
+  behind a fridge, unreadable as a word, and the wordmark is a word.
+- **The tiers stayed dark.** The mock's coral and yellow are lovely and fail at
+  a metre. Green, amber and red are the only colours in this app that carry
+  meaning, and they are tuned for a judge standing at a stall, not for a design
+  file.
+
+**The mark** is now a fridge with a lime leaf in its corner, drawn as two-tone
+SVG in `components/Logo.jsx`. `scratchpad/icons.py` renders the same geometry
+into both the web icons and the five Android launcher densities, including the
+adaptive foreground scaled into its 72-of-108dp safe zone, so the two sets
+cannot drift.
+
+### Two screens became five, and nothing was hidden
+
+The mock has a sidebar workspace: Overview, My Fridge, Recipe ideas, Impact.
+Adopting that risks the thing the rebuild was for — the proposal's one screen,
+and a ninety-second demo that cannot afford a click which only moves you
+somewhere else.
+
+The resolution is that **the sidebar is a set of lenses, not a set of places**.
+`Kitchen` holds the entire loop exactly as before: scan, shelf, recipes,
+health, waste, the voice question and the missing-ingredient list. The other
+three views are that same data given room, for somebody who wants to look
+properly rather than be shown. Each block is built once in `App.jsx` and placed
+into whichever views need it, so "nothing is only reachable from one place" is
+enforced by there being one of each rather than by anyone remembering.
+
+---
+
 ## 11. State of things
 
 **Done and verified**

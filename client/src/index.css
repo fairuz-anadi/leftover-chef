@@ -1,74 +1,107 @@
 @import "tailwindcss";
 
 /*
-  FridgeMama — one screen, light.
+  FridgeMama.
 
-  Two rules hold the whole palette together:
+  Three rules hold the whole palette together:
 
-  1. The three freshness tiers are the only colours that carry meaning. Green,
-     amber and red do the work; everything else is a cool near-neutral so those
+  1. Every colour is a token, used nowhere as a literal. Retheming is this
+     block, not two hundred class attributes — which is how the entire app
+     changed skin in one commit without touching a component's colours.
+
+  2. The three freshness tiers are the only colours that carry meaning. Green,
+     amber and red do the work; everything else is ink, teal or paper, so those
      three are the only things competing for attention. That is the hierarchy
-     the app is trying to teach, so the paint has to agree with it.
+     the app exists to teach, and the paint has to agree with it.
 
-  2. Every colour is a token, used nowhere as a literal. Retheming is this
-     block, not two hundred class attributes.
-
-  The tier colours are darker than their dark-mode equivalents — a #3ddc84 that
-  sang against near-black fails contrast on white, and these numbers are the
-  ones a judge has to read from a metre away.
+  3. Contrast beats fidelity to a mock. The tier colours here are darker than
+     the lime and coral they came from, because a #76d43b that sings in a
+     design file fails at a metre on a projector, and a metre is the distance
+     a judge is standing at.
 */
 @theme {
-  --color-bg: #f4f7f8;
+  --color-bg: #fbfaf6;
   --color-surface: #ffffff;
-  --color-text: #0f1b1e;
-  --color-accent: #0d9488;
+  --color-text: #17295f;
+  --color-accent: #00a6a6;
 
-  /* Noto Sans Bengali sits after Inter: Latin keeps Inter's metrics, and
-     Bengali falls through to a face that actually has the glyphs. */
-  --font-sans: "Inter Variable", "Inter", "Noto Sans Bengali", "Segoe UI", system-ui, sans-serif;
+  /* Manrope sets the headings, DM Sans the body, and Noto Sans Bengali sits
+     behind both: Latin keeps the intended metrics, Bengali falls through to a
+     face that actually has the glyphs. All three are bundled — the design this
+     came from pulled them off Google Fonts, which is a network request the
+     venue cannot make. */
+  --font-sans: "DM Sans", "Noto Sans Bengali", "Segoe UI", system-ui, sans-serif;
+  --font-display: "Manrope", "DM Sans", "Noto Sans Bengali", system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
 }
 
 :root {
   /* Surfaces */
-  --bg: #f4f7f8;
+  --bg: #fbfaf6;
   --surface: #ffffff;
-  --raised: #f1f5f6;
-  --line: #dde5e7;
-  --hover: #e8eef0;
-  --track: #e6ecee;
-  --input-bg: #fbfcfd;
+  --raised: #eff7f3;
+  --line: #e6eceb;
+  --hover: #e2efe8;
+  --track: #e9efee;
+  --input-bg: #fdfdfb;
 
-  /* Type */
-  --text: #0f1b1e;
-  --dim: #55686c;
-  --faint: #7d9095;
-  --placeholder: #9fb0b4;
+  /* Type. Ink is navy rather than near-black: it reads warmer against cream
+     and it is what makes teal look deliberate instead of accidental. */
+  --text: #17295f;
+  --ink-2: #2f4587;
+  --dim: #4b5c8a;
+  --faint: #718096;
+  --placeholder: #97a3b8;
 
-  /* The one brand colour: cold, because it is a fridge. */
-  --accent: #0d9488;
-  --accent-soft: rgba(13, 148, 136, 0.1);
+  /* The brand: cold, because it is a fridge. */
+  --accent: #00a6a6;
+  --accent-dark: #007c86;
+  --accent-soft: rgba(0, 166, 166, 0.1);
   --on-accent: #ffffff;
 
+  /* Supporting colour, for surfaces and illustration only — never for
+     freshness, which owns green/amber/red exclusively. */
+  --lime: #76d43b;
+  /* The same green, dark enough to be read as text. #76d43b on cream is about
+     1.9:1 — fine as a fill on teal, unreadable as a word. The wordmark and any
+     other lime *text* uses this one. */
+  --lime-ink: #4f9c17;
+  --coral: #ff6b4a;
+  --yellow: #ffd23f;
+
   /* The three tiers. Nothing else in the app may use these. */
-  --fresh: #15a05a;
-  --fresh-soft: rgba(21, 160, 90, 0.12);
+  --fresh: #3f9612;
+  --fresh-soft: rgba(118, 212, 59, 0.16);
   --on-fresh: #ffffff;
 
-  --soon: #c07806;
-  --soon-soft: rgba(192, 120, 6, 0.12);
-  --soon-line: #f0d3a0;
+  --soon: #b07800;
+  --soon-soft: rgba(255, 210, 63, 0.22);
+  --soon-line: #f2dc9a;
   --on-soon: #ffffff;
 
-  --today: #d33d3d;
-  --today-soft: rgba(211, 61, 61, 0.1);
-  --today-line: #f2c2c2;
+  --today: #e14a2b;
+  --today-soft: rgba(255, 107, 74, 0.13);
+  --today-line: #f7c3b6;
 
   --need: #c2557c;
 
-  --shadow-sm: 0 1px 2px rgba(15, 27, 30, 0.05), 0 1px 3px rgba(15, 27, 30, 0.04);
-  --shadow-md: 0 4px 12px rgba(15, 27, 30, 0.07);
-  --shadow-lg: 0 18px 45px rgba(15, 27, 30, 0.12);
+  --radius: 24px;
+  --ease: cubic-bezier(0.23, 1, 0.32, 1);
+
+  --shadow-sm: 0 1px 2px rgba(23, 41, 95, 0.05), 0 1px 3px rgba(23, 41, 95, 0.04);
+  --shadow-md: 0 8px 24px rgba(23, 41, 95, 0.08);
+  --shadow-lg: 0 25px 75px rgba(23, 41, 95, 0.12);
+}
+
+/* Headings carry the display face; body text does not. Manrope's tighter
+   tracking is what makes a two-word heading look like a brand rather than a
+   paragraph that happens to be bold. */
+h1,
+h2,
+h3,
+.lc-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.03em;
 }
 
 *,

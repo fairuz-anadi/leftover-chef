@@ -1,10 +1,20 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { api, recipeImage } from "./api";
+import {
+  ChefHat,
+  CircleHelp,
+  LayoutDashboard,
+  Menu,
+  Refrigerator,
+  RotateCcw,
+  ScanLine,
+  Sprout,
+  X,
+} from "lucide-react";
+import { api, isNativeApp, recipeImage } from "./api";
 import { FreshnessBadge } from "./components/Freshness";
 import HealthDial from "./components/HealthDial";
 import InstallButton from "./components/InstallButton";
 import Logo from "./components/Logo";
-import { isNativeApp } from "./api";
 import RecipeReveal from "./components/RecipeReveal";
 import ScanPanel from "./components/ScanPanel";
 import Shelf from "./components/Shelf";
@@ -12,13 +22,26 @@ import VoiceAsk from "./components/VoiceAsk";
 import WastePanel from "./components/WastePanel";
 
 /**
- * FridgeMama — the whole app, one screen.
+ * FridgeMama — the workspace.
  *
- * The loop the proposal describes, in the order it happens:
- * detect → track → warn → cook → measure. There is nothing else to navigate
- * to, no account to make and no menu, because every extra click is a second
- * of a ninety-second demo spent on something that is not the point.
+ * The loop the proposal describes, in the order it happens: detect → track →
+ * warn → cook → measure.
+ *
+ * The sidebar is a set of lenses, not a set of places. **Kitchen** holds the
+ * entire loop on one screen — scan, shelf, recipes, health, waste, the voice
+ * question and the missing-ingredient list — because a ninety-second demo
+ * cannot afford a click that only moves you somewhere else. The other three
+ * views are that same data given room to breathe, for somebody who wants to
+ * look properly rather than be shown. Nothing lives in one of them alone.
  */
+
+const VIEWS = [
+  { id: "kitchen", label: "Kitchen", icon: LayoutDashboard },
+  { id: "fridge", label: "My Fridge", icon: Refrigerator },
+  { id: "recipes", label: "Recipe ideas", icon: ChefHat },
+  { id: "impact", label: "Impact", icon: Sprout },
+];
+
 export default function App({ onHome = null, onChangeKitchen = null }) {
   const [state, setState] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -28,6 +51,8 @@ export default function App({ onHome = null, onChangeKitchen = null }) {
   const [openRecipe, setOpenRecipe] = useState(null);
   const [fridgePhoto, setFridgePhoto] = useState(null);
   const [adding, setAdding] = useState("");
+  const [view, setView] = useState("kitchen");
+  const [navOpen, setNavOpen] = useState(false);
   // Bumped by "Reset demo" so the scan panel remounts and forgets the last
   // judge's photo along with everything else.
   const [scanKey, setScanKey] = useState(0);
@@ -106,14 +131,16 @@ export default function App({ onHome = null, onChangeKitchen = null }) {
     setOpenRecipe(null);
     setFridgePhoto(null);
     setAdding("");
+    setView("kitchen");
     setScanKey((n) => n + 1);
     await act(() => api.reset());
   }
 
   if (loading) {
     return (
-      <div className="grid min-h-screen place-items-center text-sm text-[var(--faint)]">
-        Opening the fridge…
+      <div className="grid min-h-screen place-items-center gap-4 text-sm text-[var(--faint)]">
+        <Logo size={38} />
+        <span>Opening the fridge…</span>
       </div>
     );
   }
@@ -121,16 +148,13 @@ export default function App({ onHome = null, onChangeKitchen = null }) {
   if (!state) {
     return (
       <div className="grid min-h-screen place-items-center gap-3 px-6 text-center text-sm text-[var(--dim)]">
+        <Logo size={38} />
         <p className="m-0 max-w-xs">
           {isNativeApp
             ? "Couldn't reach the kitchen. Check the laptop is running and both devices are on the same WiFi."
             : "Couldn't reach the app."}
         </p>
-        <button
-          type="button"
-          onClick={load}
-          className="rounded-full border border-[var(--line)] px-4 py-2 font-semibold"
-        >
+        <button type="button" onClick={load} className="pill-outline">
           Try again
         </button>
         {onChangeKitchen && (
@@ -146,201 +170,323 @@ export default function App({ onHome = null, onChangeKitchen = null }) {
     );
   }
 
-  const { items, health, waste, leaderboard, suggestions, missing_links: missing, at_risk: atRisk } = state;
+  const {
+    items,
+    health,
+    waste,
+    leaderboard,
+    suggestions,
+    missing_links: missing,
+    at_risk: atRisk,
+  } = state;
+
+  // Built once and placed in whichever views need them, so "every option stays
+  // visible" is enforced by there being one of each rather than by discipline.
+  const scanPanel = (
+    <ScanPanel key={scanKey} onConfirmed={load} onPhoto={setFridgePhoto} showToast={showToast} />
+  );
+
+  const shelfBlock = (
+    <Card title="In the fridge" meta={`${items.length} items · ${health.at_risk} need using`}>
+      <AddItem
+        value={adding}
+        onChange={setAdding}
+        onAdd={async (name) => {
+          await act(() => api.addItem(name));
+          setAdding("");
+          await load();
+        }}
+        busy={busy}
+      />
+
+      <div className="mt-4">
+        <Shelf
+          items={items}
+          alertIds={alertIds}
+          onSetDate={async (item, date) => {
+            await act(() => api.setExpiry(item.id, date), { quiet: true });
+            await load();
+          }}
+          onRemove={async (item) => {
+            await act(() => api.removeItem(item.id), { quiet: true });
+            await load();
+          }}
+          onBin={async (item) => {
+            await act(() => api.removeItem(item.id, true));
+            await load();
+          }}
+        />
+      </div>
+    </Card>
+  );
+
+  const suggestionsBlock = (columns) => (
+    <Card title="Cook this" meta="Ranked by what you have and what's about to go">
+      {suggestions.length === 0 ? (
+        <p className="mt-4 rounded-xl border border-dashed border-[var(--line)] p-8 text-center text-sm text-[var(--faint)]">
+          Add a few ingredients and suggestions appear here.
+        </p>
+      ) : (
+        <div className={`lc-stagger mt-4 grid gap-3 sm:grid-cols-2 ${columns}`}>
+          {suggestions.map((suggestion) => (
+            <SuggestionCard
+              key={suggestion.recipe.id}
+              suggestion={suggestion}
+              onOpen={() => setOpenRecipe(suggestion.recipe.id)}
+            />
+          ))}
+        </div>
+      )}
+    </Card>
+  );
+
+  const healthBlock = (
+    <Card label="Fridge health">
+      <HealthDial health={health} />
+    </Card>
+  );
+
+  const wasteBlock = (
+    <Card label="Food waste saved">
+      <WastePanel waste={waste} leaderboard={leaderboard} />
+    </Card>
+  );
+
+  const missingBlock = missing.length > 0 && (
+    <Card label="What am I missing?">
+      <p className="m-0 mb-3 text-xs text-[var(--faint)]">
+        One thing on the way home unlocks these.
+      </p>
+      <ul className="lc-stagger m-0 grid list-none gap-2 p-0">
+        {missing.map((row) => (
+          <li key={row.ingredient_id} className="text-sm">
+            <div className="flex items-baseline gap-2">
+              <span className="font-semibold text-[var(--text)]">{row.name}</span>
+              {row.name_bn && <span className="text-xs text-[var(--faint)]">{row.name_bn}</span>}
+              <span className="font-mono text-[10px] text-[var(--accent)]">
+                +{row.unlocks} recipe{row.unlocks === 1 ? "" : "s"}
+              </span>
+            </div>
+            <p className="m-0 truncate text-xs text-[var(--faint)]">{row.recipes.join(", ")}</p>
+          </li>
+        ))}
+      </ul>
+    </Card>
+  );
+
+  const voiceBlock = <VoiceAsk suggestions={suggestions} atRisk={atRisk} showToast={showToast} />;
 
   return (
-    <div className="mx-auto w-full max-w-[1400px] px-5 pb-20 pt-6">
-      {/* ── Header ──────────────────────────────────────────── */}
-      <header className="flex flex-wrap items-center gap-x-5 gap-y-3">
-        {onHome ? (
-          <button
-            type="button"
-            onClick={onHome}
-            title="Back to the front page"
-            className="flex items-center gap-3 rounded-xl border-0 bg-transparent p-0 text-left"
-          >
-            <Logo
-              size={38}
-              tagline="Point your phone — it tells you what to eat before it's too late."
-            />
-          </button>
-        ) : (
-          <Logo
-            size={38}
-            tagline="Point your phone — it tells you what to eat before it's too late."
-          />
-        )}
-
-        <div className="ml-auto flex flex-wrap items-center gap-2">
-          <InstallButton />
-          <span className="rounded-full border border-[var(--line)] px-3 py-1.5 font-mono text-xs text-[var(--dim)]">
-            Day {state.session.day_offset + 1}
-          </span>
-          <button
-            type="button"
-            onClick={fastForward}
-            disabled={busy}
-            className="rounded-full bg-[var(--raised)] px-4 py-1.5 text-sm font-semibold text-[var(--accent)] transition hover:bg-[var(--hover)] disabled:opacity-40"
-          >
-            Fast-forward a day →
-          </button>
-          <button
-            type="button"
-            onClick={resetDemo}
-            disabled={busy}
-            className="rounded-full border border-[var(--line)] px-3 py-1.5 text-xs text-[var(--faint)] transition hover:text-[var(--text)] disabled:opacity-40"
-          >
-            Reset demo
-          </button>
-        </div>
-      </header>
-
-      {/* ── Notification simulation ─────────────────────────── */}
-      {alert && (
-        <div
-          className="lc-rise mt-5 flex flex-wrap items-center gap-3 rounded-2xl border border-[var(--today)]/50 bg-[rgba(255,93,93,0.1)] px-5 py-4"
-          role="status"
-        >
-          <span className="text-2xl">🔔</span>
-          <div className="min-w-0 flex-1">
-            <p className="m-0 text-sm font-semibold text-[var(--today)]">
-              {alert.items.length === 1
-                ? `Your ${alert.items[0].name} expires today`
-                : `${alert.items.length} things expire today`}
-            </p>
-            <p className="m-0 text-xs text-[var(--dim)]">
-              {alert.items.map((row) => row.name).join(", ")} — cook something with{" "}
-              {alert.items.length === 1 ? "it" : "them"} tonight.
-            </p>
-          </div>
-          {suggestions[0] && (
+    <div className="app-shell">
+      {/* ── Sidebar ─────────────────────────────────────────── */}
+      <aside className={`sidebar ${navOpen ? "sidebar-open" : ""}`}>
+        <div className="sidebar-head">
+          {onHome ? (
             <button
               type="button"
-              onClick={() => setOpenRecipe(suggestions[0].recipe.id)}
-              className="rounded-full bg-[var(--today)] px-4 py-2 text-sm font-semibold text-white"
+              onClick={onHome}
+              title="Back to the front page"
+              className="border-0 bg-transparent p-0"
             >
-              Try {suggestions[0].recipe.title}
+              <Logo size={32} compact />
+            </button>
+          ) : (
+            <Logo size={32} compact />
+          )}
+          <button
+            type="button"
+            className="icon-button sidebar-close"
+            onClick={() => setNavOpen(false)}
+            aria-label="Close navigation"
+          >
+            <X size={18} />
+          </button>
+        </div>
+
+        <div className="workspace-chip">
+          <span className="workspace-avatar">
+            <Refrigerator size={16} />
+          </span>
+          <span>
+            <b>This kitchen</b>
+            <small>Day {state.session.day_offset + 1} · offline</small>
+          </span>
+        </div>
+
+        <nav className="side-nav">
+          <p className="nav-label">Workspace</p>
+          {VIEWS.map((entry) => {
+            const Icon = entry.icon;
+            return (
+              <button
+                key={entry.id}
+                type="button"
+                className={`nav-item ${view === entry.id ? "active" : ""}`}
+                onClick={() => {
+                  setView(entry.id);
+                  setNavOpen(false);
+                }}
+              >
+                <Icon size={17} />
+                <span>{entry.label}</span>
+                {entry.id === "fridge" && <em>{items.length}</em>}
+                {entry.id === "recipes" && <em>{suggestions.length}</em>}
+              </button>
+            );
+          })}
+        </nav>
+
+        <div className="sidebar-bottom">
+          <div className="offline-card">
+            <span className="live-dot" />
+            <div>
+              <b>Running locally</b>
+              <small>No internet required</small>
+            </div>
+            <CircleHelp size={15} />
+          </div>
+          {onChangeKitchen && (
+            <button type="button" onClick={onChangeKitchen} className="nav-item">
+              <ScanLine size={17} />
+              <span>Kitchen address</span>
             </button>
           )}
         </div>
+      </aside>
+
+      {navOpen && (
+        <button
+          type="button"
+          className="sidebar-backdrop"
+          aria-label="Close navigation"
+          onClick={() => setNavOpen(false)}
+        />
       )}
 
-      <main className="mt-6 grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_360px]">
-        {/* ── Left: scan, shelf, suggestions ─────────────────── */}
-        <div className="grid gap-5">
-          <ScanPanel key={scanKey} onConfirmed={load} onPhoto={setFridgePhoto} showToast={showToast} />
+      {/* ── Main ────────────────────────────────────────────── */}
+      <div className="app-main">
+        <header className="app-topbar">
+          <button
+            type="button"
+            className="icon-button mobile-menu"
+            onClick={() => setNavOpen(true)}
+            aria-label="Open navigation"
+          >
+            <Menu size={20} />
+          </button>
 
-          <section className="rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-5">
-            <div className="flex flex-wrap items-baseline justify-between gap-2">
-              <h2 className="m-0 text-lg font-bold tracking-tight text-[var(--text)]">In the fridge</h2>
-              <span className="font-mono text-xs text-[var(--faint)]">
-                {items.length} items · {health.at_risk} need using
-              </span>
-            </div>
+          <div className="topbar-context">
+            <span className="live-dot" />
+            <span>Live kitchen view</span>
+            <span className="context-separator">/</span>
+            <b>{VIEWS.find((entry) => entry.id === view)?.label}</b>
+          </div>
 
-            <AddItem
-              value={adding}
-              onChange={setAdding}
-              onAdd={async (name) => {
-                await act(() => api.addItem(name));
-                setAdding("");
-                await load();
-              }}
-              busy={busy}
-            />
+          <div className="topbar-actions">
+            <InstallButton />
+            <span className="day-chip">Day {state.session.day_offset + 1}</span>
+            <button type="button" onClick={fastForward} disabled={busy} className="pill-solid">
+              Fast-forward a day →
+            </button>
+            <button
+              type="button"
+              onClick={resetDemo}
+              disabled={busy}
+              className="icon-button"
+              title="Reset the demo for the next judge"
+              aria-label="Reset demo"
+            >
+              <RotateCcw size={17} />
+            </button>
+          </div>
+        </header>
 
-            <div className="mt-4">
-              <Shelf
-                items={items}
-                alertIds={alertIds}
-                onSetDate={async (item, date) => {
-                  await act(() => api.setExpiry(item.id, date), { quiet: true });
-                  await load();
-                }}
-                onRemove={async (item) => {
-                  await act(() => api.removeItem(item.id), { quiet: true });
-                  await load();
-                }}
-                onBin={async (item) => {
-                  await act(() => api.removeItem(item.id, true));
-                  await load();
-                }}
-              />
-            </div>
-          </section>
-
-          <section className="rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-5">
-            <div className="flex flex-wrap items-baseline justify-between gap-2">
-              <h2 className="m-0 text-lg font-bold tracking-tight text-[var(--text)]">Cook this</h2>
-              <span className="text-xs text-[var(--faint)]">
-                Ranked by what you have and what&apos;s about to go
-              </span>
-            </div>
-
-            {suggestions.length === 0 ? (
-              <p className="mt-4 rounded-xl border border-dashed border-[var(--line)] p-8 text-center text-sm text-[var(--faint)]">
-                Add a few ingredients and suggestions appear here.
-              </p>
-            ) : (
-              <div className="lc-stagger mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-                {suggestions.map((suggestion) => (
-                  <SuggestionCard
-                    key={suggestion.recipe.id}
-                    suggestion={suggestion}
-                    onOpen={() => setOpenRecipe(suggestion.recipe.id)}
-                  />
-                ))}
+        <div className="app-content">
+          {/* ── Notification simulation ───────────────────── */}
+          {alert && (
+            <div className="lc-rise alert-banner" role="status">
+              <span className="alert-bell">🔔</span>
+              <div className="min-w-0 flex-1">
+                <p className="m-0 text-sm font-bold text-[var(--today)]">
+                  {alert.items.length === 1
+                    ? `Your ${alert.items[0].name} expires today`
+                    : `${alert.items.length} things expire today`}
+                </p>
+                <p className="m-0 text-xs text-[var(--dim)]">
+                  {alert.items.map((row) => row.name).join(", ")} — cook something with{" "}
+                  {alert.items.length === 1 ? "it" : "them"} tonight.
+                </p>
               </div>
-            )}
-          </section>
-        </div>
-
-        {/* ── Right: the measurements ────────────────────────── */}
-        <aside className="grid gap-5 lg:sticky lg:top-6">
-          <section className="rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-5">
-            <h2 className="m-0 mb-4 text-sm font-semibold uppercase tracking-widest text-[var(--faint)]">
-              Fridge health
-            </h2>
-            <HealthDial health={health} />
-          </section>
-
-          <section className="rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-5">
-            <h2 className="m-0 mb-4 text-sm font-semibold uppercase tracking-widest text-[var(--faint)]">
-              Food waste saved
-            </h2>
-            <WastePanel waste={waste} leaderboard={leaderboard} />
-          </section>
-
-          <VoiceAsk suggestions={suggestions} atRisk={atRisk} showToast={showToast} />
-
-          {missing.length > 0 && (
-            <section className="rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-5">
-              <h2 className="m-0 mb-1 text-sm font-semibold uppercase tracking-widest text-[var(--faint)]">
-                What am I missing?
-              </h2>
-              <p className="m-0 mb-3 text-xs text-[var(--faint)]">
-                One thing on the way home unlocks these.
-              </p>
-              <ul className="lc-stagger m-0 grid list-none gap-2 p-0">
-                {missing.map((row) => (
-                  <li key={row.ingredient_id} className="text-sm">
-                    <div className="flex items-baseline gap-2">
-                      <span className="font-semibold text-[var(--text)]">{row.name}</span>
-                      {row.name_bn && (
-                        <span className="text-xs text-[var(--faint)]">{row.name_bn}</span>
-                      )}
-                      <span className="font-mono text-[10px] text-[var(--accent)]">
-                        +{row.unlocks} recipe{row.unlocks === 1 ? "" : "s"}
-                      </span>
-                    </div>
-                    <p className="m-0 truncate text-xs text-[var(--faint)]">{row.recipes.join(", ")}</p>
-                  </li>
-                ))}
-              </ul>
-            </section>
+              {suggestions[0] && (
+                <button
+                  type="button"
+                  onClick={() => setOpenRecipe(suggestions[0].recipe.id)}
+                  className="alert-action"
+                >
+                  Try {suggestions[0].recipe.title}
+                </button>
+              )}
+            </div>
           )}
-        </aside>
-      </main>
+
+          {/* ── Kitchen: the whole loop, nothing hidden ───── */}
+          {view === "kitchen" && (
+            <div className="view kitchen-grid">
+              <div className="grid gap-5">
+                {scanPanel}
+                {shelfBlock}
+                {suggestionsBlock("xl:grid-cols-3")}
+              </div>
+              <aside className="grid gap-5 lg:sticky lg:top-4 lg:self-start">
+                {healthBlock}
+                {wasteBlock}
+                {voiceBlock}
+                {missingBlock}
+              </aside>
+            </div>
+          )}
+
+          {/* ── The same data, given room ─────────────────── */}
+          {view === "fridge" && (
+            <div className="view grid gap-5">
+              <PageHeading
+                eyebrow="Everything on the shelf"
+                title="My Fridge"
+                lede="Every item, its Bangla name, and how long it has left. Tap a date to correct it — the model saves the typing, it does not get the last word."
+              />
+              {scanPanel}
+              {shelfBlock}
+              {missingBlock}
+            </div>
+          )}
+
+          {view === "recipes" && (
+            <div className="view grid gap-5">
+              <PageHeading
+                eyebrow="Ranked around what is dying"
+                title="Recipe ideas"
+                lede="Priority is 0.6 × how much of the recipe you already have, plus 0.4 × how urgent those ingredients are, plus a nudge for Bangladeshi cooking. Arithmetic you can check by hand."
+              />
+              {voiceBlock}
+              {suggestionsBlock("xl:grid-cols-4")}
+            </div>
+          )}
+
+          {view === "impact" && (
+            <div className="view grid gap-5">
+              <PageHeading
+                eyebrow="Small actions, visible impact"
+                title="Impact"
+                lede="Food waste is easier to prevent when the next best action is visible at the right time. SDG 12 — responsible consumption and production."
+              />
+              <div className="impact-grid">
+                {healthBlock}
+                {wasteBlock}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
 
       {openRecipe && (
         <RecipeReveal
@@ -354,18 +500,50 @@ export default function App({ onHome = null, onChangeKitchen = null }) {
 
       {toast && (
         <div
-          className={`lc-rise fixed bottom-5 left-1/2 z-[60] -translate-x-1/2 rounded-full px-5 py-3 text-sm font-semibold shadow-lg ${
+          className={`lc-rise toast ${
             toast.kind === "error"
-              ? "bg-[var(--today)] text-white"
+              ? "toast-error"
               : toast.kind === "warn"
-                ? "bg-[var(--soon)] text-[var(--on-soon)]"
-                : "bg-[var(--fresh)] text-[var(--on-fresh)]"
+                ? "toast-warn"
+                : "toast-ok"
           }`}
           role="status"
         >
           {toast.message}
         </div>
       )}
+    </div>
+  );
+}
+
+/** A panel. Either a titled section, or a quieter labelled one for the rail. */
+function Card({ title, label, meta, children }) {
+  return (
+    <section className="panel">
+      {title && (
+        <div className="flex flex-wrap items-baseline justify-between gap-2">
+          <h2 className="m-0 text-lg font-bold text-[var(--text)]">{title}</h2>
+          {meta && <span className="text-xs text-[var(--faint)]">{meta}</span>}
+        </div>
+      )}
+      {label && (
+        <h2 className="m-0 mb-4 text-[11px] font-bold uppercase tracking-[0.14em] text-[var(--faint)]">
+          {label}
+        </h2>
+      )}
+      {children}
+    </section>
+  );
+}
+
+function PageHeading({ eyebrow, title, lede }) {
+  return (
+    <div className="page-heading">
+      <p className="eyebrow">
+        <span /> {eyebrow}
+      </p>
+      <h1>{title}</h1>
+      <p>{lede}</p>
     </div>
   );
 }
@@ -413,19 +591,19 @@ function AddItem({ value, onChange, onAdd, busy }) {
           value={value}
           onChange={(event) => onChange(event.target.value)}
           placeholder="Add something by hand…"
-          className="min-w-0 flex-1 rounded-full border border-[var(--line)] bg-[var(--bg)] px-4 py-2 text-sm placeholder:text-[var(--placeholder)] focus:border-[var(--accent)] focus:outline-none"
+          className="min-w-0 flex-1 rounded-full border border-[var(--line)] bg-[var(--bg)] px-4 py-2.5 text-sm placeholder:text-[var(--placeholder)] focus:border-[var(--accent)] focus:outline-none"
         />
         <button
           type="submit"
           disabled={busy || !value.trim()}
-          className="shrink-0 rounded-full bg-[var(--raised)] px-4 py-2 text-sm font-semibold text-[var(--accent)] disabled:opacity-40"
+          className="shrink-0 rounded-full bg-[var(--raised)] px-5 py-2.5 text-sm font-semibold text-[var(--accent)] disabled:opacity-40"
         >
           Add
         </button>
       </form>
 
       {options.length > 0 && (
-        <ul className="absolute z-20 mt-1 grid w-full list-none gap-0.5 rounded-xl border border-[var(--line)] bg-[var(--raised)] p-1.5 shadow-xl">
+        <ul className="absolute z-20 mt-1 grid w-full list-none gap-0.5 rounded-xl border border-[var(--line)] bg-[var(--surface)] p-1.5 shadow-xl">
           {options.slice(0, 6).map((option) => (
             <li key={option.id}>
               <button
@@ -448,18 +626,14 @@ function SuggestionCard({ suggestion, onOpen }) {
   const { recipe, rescues } = suggestion;
 
   return (
-    <button
-      type="button"
-      onClick={onOpen}
-      className="lc-card lc-lift group overflow-hidden rounded-xl border border-[var(--line)] bg-[var(--surface)] text-left transition hover:border-[var(--accent)]"
-    >
+    <button type="button" onClick={onOpen} className="lc-card lc-lift recipe-card group">
       <div className="relative">
         <img
           src={recipeImage(recipe.image_path)}
           alt=""
           className="h-28 w-full object-cover transition group-hover:scale-[1.03]"
         />
-        <span className="absolute right-2 top-2 rounded-full bg-black/70 px-2 py-0.5 font-mono text-[10px] font-bold text-[var(--text)]">
+        <span className="absolute right-2 top-2 rounded-full bg-black/70 px-2 py-0.5 font-mono text-[10px] font-bold text-white">
           {suggestion.match_percent}%
         </span>
         {suggestion.local_bonus > 0 && (

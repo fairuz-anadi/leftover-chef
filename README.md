@@ -214,17 +214,37 @@ Three things this needed that the web app did not:
 
 ---
 
-## The front page
+## The front page, and the workspace
 
-`/` is a landing page — the logo, what the app does, the four steps, the three
-decisions worth defending, and the install instructions. It is what sits on the
-laptop between judges and the first thing anyone sees on their own phone.
+`/` is the landing page: the hero, the four steps, the three decisions worth
+defending, and the install instructions. It is what sits on the laptop between
+judges and the first thing anyone sees on their own phone.
 
-`/app` is the app. Clicking the logo in its header goes back. Routing is
-`pushState` and a `popstate` listener in `src/Root.jsx`, not a router library:
-there are two screens and no third one coming.
+`/app` is the workspace. The sidebar is a set of **lenses, not places** —
+**Kitchen** holds the entire loop on one screen (scan, shelf, recipes, health,
+waste, voice, missing links), because a ninety-second demo cannot afford a
+click that only moves you somewhere else. **My Fridge**, **Recipe ideas** and
+**Impact** are that same data given room. Every block is built once in
+`App.jsx` and placed into whichever views need it, so nothing is reachable from
+only one place.
+
+Routing between the two is `pushState` and a `popstate` listener in
+`src/Root.jsx`, not a router library: two screens, and no third one coming.
+
+### Design
+
+Navy ink on cream, teal for the brand, lime as the second voice. Every colour
+is a token in `src/index.css` — re-pointing those tokens re-skins the whole app
+without touching a component, which is exactly how the redesign happened.
+
+Two rules the palette will not bend on: the three freshness tiers are the only
+colours that carry meaning, and they are tuned for contrast at a metre rather
+than for a design file. Fonts (DM Sans, Manrope, Noto Sans Bengali, IBM Plex
+Mono) are all bundled — a webfont fetched from Google is a network request the
+venue cannot make, and `offline-check.ps1` fails the build if one appears.
 
 ---
+
 
 ## Offline
 
