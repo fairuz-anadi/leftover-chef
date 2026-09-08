@@ -48,6 +48,9 @@ replaces the search. **SDG 12 — Responsible Consumption and Production.**
   the missing ingredients named.
 - **Use It Up** — a shelf that says *"4 items to use up tomorrow"*, and recipes
   scored on how much of that they rescue, with the reason on the card.
+- **Use-by dates estimated for you** — confirming a scan dates the perishables
+  from typical shelf life, so the ranking works without anyone typing a date.
+  Guesses are marked with a `~`; cupboard staples get no date at all.
 - Plus the platform underneath: a 32-recipe library, cuisine map, guided cook
   mode with timers, meal planner, auto shopping list, nutrition estimates,
   profiles with diets and allergies, reviews and an admin dashboard.
@@ -157,7 +160,7 @@ reports anything that quietly wanted the network.
 ## Tests
 
 ```bash
-php artisan test           # 72 tests
+php artisan test           # 86 tests
 cd client && npm run lint
 ```
 
@@ -167,7 +170,8 @@ labels, and that a scan never writes to the fridge on its own.
 and that the published score matches the running order. `ApiErrorShapeTest`
 pins every `/api` route to JSON status codes, with and without an `Accept`
 header — a redirect where a 401 belongs is the kind of thing only a network tab
-reveals.
+reveals. `ExpiryEstimationTest` covers the shelf-life catalog and every rule
+about when a date may and may not be guessed.
 
 ---
 

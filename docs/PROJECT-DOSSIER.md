@@ -73,7 +73,7 @@ to say.
 | **Idea** | A daily problem every judge has personally had, tied to a real SDG, with a mechanism nobody expects (open-vocabulary detection) | *"Every one of you has stood in front of a fridge at 7pm. We photographed that moment."* |
 | **Features** | 55 API endpoints, 14 screens, and the scan is one feature on top of a complete cooking platform — planner, shopping list, cook mode, nutrition, cuisine map | Don't list features. Show the scan, then say *"and that sits on a full platform — here's the shopping list it generates from your week."* |
 | **Design** | Coherent token-driven design system, the detection boxes drawn over the user's own photo, confidence on every chip, explanations next to every score | The boxes **are** the design argument. Let them land before you talk. |
-| **Implementation** | Three-process local architecture, 72 automated tests, a real bug fixed in the inherited code, honest degradation when the detector is down | *"The alias table was silently dropping ingredients. We found it, fixed it, and wrote the test that stops it coming back."* |
+| **Implementation** | Three-process local architecture, 86 automated tests, a real bug fixed in the inherited code, honest degradation when the detector is down | *"The alias table was silently dropping ingredients. We found it, fixed it, and wrote the test that stops it coming back."* |
 | **Social impact** | SDG 12.3 explicitly — halve per-capita food waste. The expiry ranking is the intervention, not a slogan bolted on | *"The ranking exists to stop food being thrown away. Take it out and the project has no reason to exist."* |
 | **Deployment** | Docker Compose for the web tier, one-command local start, SQLite→PostgreSQL path, offline rehearsal script | *"One command brings up three processes and waits for each to answer — because a demo you have to fix on stage is a demo you have lost."* |
 | **Clean code** | Every non-obvious decision carries a comment saying *why*, services are small and single-purpose, no mapping tables where a data row will do | Open `UseItUpService.php` on the laptop. The scoring maths is nine lines and reads like prose. |
@@ -132,6 +132,19 @@ aspirational.
 - **Only food you actually hold, and that still has urgency to lose, counts.** A
   recipe does not save your spinach by listing spinach you would have to buy,
   and an onion three weeks out is not being rescued from anything.
+- **Use-by dates are estimated for you.** Confirming a scan dates every
+  perishable from its typical shelf life — spinach 3 days, chicken 2, garlic 60
+  — so the ranking works without anyone typing a date. This is the step that
+  makes the whole expiry half usable rather than theoretical.
+- **The estimate only ever fills a blank.** An explicit date wins, and anything
+  already on the shelf keeps the date the cook gave it even if a later scan sees
+  it again.
+- **Nothing gets a date that does not need one.** 50 of 92 ingredients have a
+  shelf life; salt, rice, oil and every spice have none. A countdown on the salt
+  is noise, and noise dilutes the shelf that means "cook this tonight".
+- **A guess is labelled a guess** — `~in 5 days` with a dashed border, against
+  `in 5 days` for a date the cook set, and the toast says how many were
+  estimated. Edit one and it stops being an estimate.
 - **Every score shows its reason** — *"Uses up Spinach (tomorrow) · use-it-up
   86"* — so a judge can check the arithmetic on the spot.
 - **It vanishes cleanly.** With no dates set anywhere, the second term is zero
@@ -176,13 +189,15 @@ Inherited from the FridgeToFork codebase and fully working:
 
 ### 3.5 Engineering quality
 
-- **72 automated tests, 179 assertions**, all passing.
+- **86 automated tests, 225 assertions**, all passing.
   - `FridgeScanTest` — alias resolution, chip collapsing, unknown labels, the
     no-write-on-scan rule, sidecar-down handling, non-image rejection.
   - `UseItUpRankingTest` — urgency curve, the expiring shelf order, diminishing
     returns, and that the published score matches the on-screen running order.
   - `ApiErrorShapeTest` — every `/api` route answers in JSON status codes with
     and without an `Accept` header.
+  - `ExpiryEstimationTest` — the shelf-life catalog, and every rule about when
+    a date may and may not be guessed.
   - `RecipePlatformTest` — end-to-end coverage of the eight original functional
     requirements.
 - **Two real bugs found and fixed in the inherited code**, both with regression
@@ -246,11 +261,10 @@ is a question judges ask.
   pantry item that gets consumed by a cooked recipe versus deleted while
   expired. Turns SDG 12 from a claim into a number on screen — and it is a
   genuinely small feature: one table, one counter, one card.
-- **Expiry estimation on scan.** When the camera adds spinach, pre-fill a
-  sensible use-by date from a per-ingredient shelf-life table (leafy greens 3
-  days, root veg 3 weeks, tinned goods none). Removes the one piece of manual
-  data entry the Use It Up feature currently depends on. This is the highest-
-  leverage feature on the whole list.
+- ~~**Expiry estimation on scan.**~~ **Shipped** — see §3.2. Confirming a scan
+  now dates the perishables from `ShelfLifeCatalog`, marks the guesses, and
+  leaves cupboard staples alone. This was the highest-leverage item on the list
+  and the manual step it removed is gone.
 - **"Cook this and it's gone" button.** Finish a recipe in cook mode → the
   ingredients it consumed are decremented or removed from the fridge. Closes the
   loop between the two halves of the app.
@@ -443,7 +457,7 @@ disqualification ground. Treat the deadline as the deadline.
 > remaining, so users learn which foods they habitually lose, not merely what to
 > cook.
 >
-> **Status.** Fully implemented and operational, covered by seventy-two automated
+> **Status.** Fully implemented and operational, covered by eighty-six automated
 > tests, comprising a complete cooking platform: recipe library, meal planner,
 > aisle-grouped shopping list, guided cooking mode with timers, and nutrition
 > analysis.
@@ -506,7 +520,7 @@ time. Open on the demo cook, signed in.
 | 0:20 | **Click a saved photo.** Boxes land with labels and confidences | *"One photo. That's the whole input."* — then **stop talking** and let them look |
 | 0:45 | **Point at the footer**: `open-vocabulary · yolov8s-worldv2.pt · 8 detections in 475 ms · on this laptop` | *"No cloud. That ran here, in under half a second, on CPU."* |
 | 1:05 | **Drop a wrong chip. Add a missing one.** | *"The model proposes. The cook decides. A 70%-accurate model behind a confirm step is a 100%-reliable product."* |
-| 1:25 | **Confirm.** Results reorder live | *"Two of these I can cook right now."* |
+| 1:25 | **Confirm.** Results reorder live | *"Two of these I can cook right now — and it dated the perishables itself, so I never typed a use-by date."* |
 | 1:45 | **Point at the top card** | *"This one is first at 78% — below a 100% match — because it uses the spinach that dies tomorrow. Seventy percent cookability, thirty percent waste avoided. You can check the arithmetic; it's on the card."* |
 | 2:15 | **Start cooking.** Timer running | *"Steps with timers parsed out of the instructions."* |
 | 2:35 | **The close** | *"A third of the world's food is never eaten. Most of it dies in a fridge like this one. That's SDG 12, and it's the ranking function, not the tagline."* |
@@ -553,6 +567,13 @@ beat; do not debug on stage.
 > consulted the alias table, so anything the detector called `capsicum` or
 > `jeera` silently vanished — no error, just recipes quietly not matching. That
 > one taught us that the dangerous bugs are the ones that don't throw.
+
+**"Where do the expiry dates come from — does the model see them?"**
+> No, and it would be a stretch to claim it could. They come from a shelf-life
+> table: spinach three days, chicken two, garlic sixty. It is a starting guess,
+> it is marked on screen with a tilde so nobody mistakes it for a fact, and one
+> tap corrects it. The alternative was asking somebody to type twelve dates
+> after every scan, which means the feature never gets used.
 
 **"How would you deploy this for real?"**
 > Docker Compose is in the repo — the web tier runs against PostgreSQL. The
@@ -649,12 +670,12 @@ Memorise five of these. They make answers sound like measurements.
 | | |
 | --- | --- |
 | Recipes seeded | **32**, across **23 countries** and **9 world regions** |
-| Ingredient vocabulary | **92 ingredients**, **290 recipe-ingredient links**, 26 staples |
+| Ingredient vocabulary | **92 ingredients**, **290 recipe-ingredient links**, 26 staples, **50 with a shelf life** |
 | Detector classes | **49**, zero-shot, extensible by one line of JSON |
 | Detection time | **~190–475 ms** per photo, **CPU only**, no GPU |
 | API surface | **55 endpoints** |
 | Front end | **14 screens**, React 19 + Tailwind 4 |
-| Automated tests | **72 tests, 179 assertions**, all passing |
+| Automated tests | **86 tests, 225 assertions**, all passing |
 | Application code | **~17,000 lines** across PHP, JSX, Python and PowerShell |
 | Model cache | **~390 MB**, fully local |
 | Processes to start | **3**, via **1** command |

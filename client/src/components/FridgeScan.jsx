@@ -98,6 +98,13 @@ export default function FridgeScan({ onConfirm, alreadyInFridge = [] }) {
     [result, dropped]
   );
 
+  // Salt and rice have no meaningful use-by date, so only some of a scan gets
+  // one. Saying which, up front, keeps the guess from arriving as a surprise.
+  const datedCount = useMemo(
+    () => kept.filter((item) => item.suggested_expires_on).length,
+    [kept]
+  );
+
   async function runScan(file) {
     if (objectUrl.current) URL.revokeObjectURL(objectUrl.current);
     objectUrl.current = URL.createObjectURL(file);
@@ -348,6 +355,13 @@ export default function FridgeScan({ onConfirm, alreadyInFridge = [] }) {
             ))}
           </div>
 
+          {datedCount > 0 && (
+            <p className="mt-3 text-xs text-[var(--muted)]">
+              Use-by dates will be estimated for {datedCount} of these from typical
+              shelf life — correct any of them on the chip afterwards.
+            </p>
+          )}
+
           {result.unmatched?.length > 0 && (
             <p className="mt-3 text-xs text-[var(--muted)]">
               Seen but not in the ingredient list:{" "}
@@ -463,6 +477,11 @@ function DetectionChip({ item, colour, dropped, duplicate, onHover, onToggle }) 
       onClick={onToggle}
       onMouseEnter={() => onHover(item.slug)}
       onMouseLeave={() => onHover(null)}
+      title={
+        item.shelf_life_days
+          ? `${item.name} — keeps about ${item.shelf_life_days} days · click to drop`
+          : `${item.name} — no use-by date · click to drop`
+      }
       style={{ borderColor: dropped ? undefined : colour }}
       className={`inline-flex items-center gap-2 rounded-[var(--r-pill)] border-2 py-1.5 pl-3 pr-2.5 text-sm transition ${
         dropped

@@ -120,6 +120,7 @@ class UseItUpService
             'name' => (string) $item->ingredient->name,
             'aisle' => (string) $item->ingredient->aisle,
             'expires_on' => $item->expires_on->toDateString(),
+            'estimated' => (bool) $item->expiry_estimated,
             'days_left' => $daysLeft,
             'urgency' => $this->urgency($daysLeft),
             'state' => $this->state($daysLeft),

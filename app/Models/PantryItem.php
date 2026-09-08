@@ -15,6 +15,7 @@ class PantryItem extends Model
         'quantity',
         'unit',
         'expires_on',
+        'expiry_estimated',
         'source',
         'detected_as',
         'confidence',
@@ -23,6 +24,7 @@ class PantryItem extends Model
     protected $casts = [
         'quantity' => 'float',
         'expires_on' => 'date',
+        'expiry_estimated' => 'boolean',
         'confidence' => 'float',
     ];
 

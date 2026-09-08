@@ -220,6 +220,37 @@ Shakshuka                    match  89%   use-it-up 38   priority 74   Tomato (4
 
 ---
 
+### Estimating the date nobody wants to type
+
+A scan adds a dozen ingredients in one tap. Asking the cook to then set twelve
+use-by dates by hand is how a feature gets ignored, and an ignored expiry field
+means the entire waste-ranking half of the app does nothing. So food arriving
+without a date gets one proposed from `ShelfLifeCatalog` — spinach 3 days,
+chicken 2, garlic 60 — applied on scan confirm, on manual add, and on the sync
+endpoint, so the shelf behaves the same however it was stocked.
+
+Three rules keep it honest:
+
+- **It only ever fills a blank.** An explicit date in the request wins, and
+  anything already on the shelf keeps the date the cook gave it even if a later
+  scan sees it again.
+- **It never invents a date for things that do not expire.** 50 of the 92
+  ingredients have a shelf life; salt, rice, oil and every spice have `null`. A
+  countdown on the salt is noise, and noise dilutes the shelf that is supposed
+  to mean "cook this tonight".
+- **A guess is labelled as a guess.** `pantry_items.expiry_estimated` drives a
+  tilde and a dashed border on the chip — `~in 5 days` versus `in 5 days` — and
+  the confirmation toast says how many dates were estimated. The moment anyone
+  edits one, including clearing it, it stops being an estimate.
+
+The numbers live in `app/Support/ShelfLifeCatalog.php` rather than as a tenth
+column on every `IngredientSeeder` row: they are the kind of value that gets
+argued over and revised, and they should read as a list. Ingredients invented on
+the fly by `Ingredient::resolve()` have no seeded value and fall back to an
+aisle default.
+
+---
+
 ## 7. Where things live
 
 ```
@@ -237,6 +268,9 @@ vision/                     the sidecar (no database, no state)
   detector.py               backend selection, inference, dedupe, CLIP pinning
   vocabulary.json           49 prompts → canonical ingredient names
   weights/                  gitignored, ~390 MB, fetched by warm-cache.ps1
+
+app/Support/
+  ShelfLifeCatalog.php      how long each ingredient keeps, by slug then aisle
 
 app/Http/Services/
   VisionClient.php          HTTP to the sidecar, degrades to a clear 503
@@ -262,18 +296,22 @@ client/src/
 | `POST` | `/api/pantry/scan` | — | Photo → candidate ingredients + boxes |
 | `POST` | `/api/pantry/scan/confirm` | yes | Commit confirmed chips (additive) |
 | `GET` | `/api/pantry/expiring` | yes | The "cook this tonight" shelf |
-| `PATCH` | `/api/pantry/{item}` | yes | Set or clear a use-by date |
+| `PATCH` | `/api/pantry/{item}` | yes | Set or clear a use-by date (and clear the estimated flag) |
 
 `POST /api/pantry/search` gained `use_it_up_score`, `rescues` and
 `priority_score` per match, and `expiring_soon` / `rescues_waste` in `meta`.
 
-### Schema change
+### Schema changes
 
-One migration: `2026_09_07_000015_add_scan_provenance_to_pantry_items_table`
+`2026_09_07_000015_add_scan_provenance_to_pantry_items_table`
 adds `source` (`manual` / `scan` / `seed`), `detected_as` and `confidence`.
 Worth storing rather than inferring — the chip shows a 📷 for camera-added
 items, and `detected_as` keeps the raw label for when a mapping looks wrong and
 someone has to work out why.
+
+`2026_09_08_000016_add_shelf_life_estimation` adds `ingredients.shelf_life_days`
+and `pantry_items.expiry_estimated`. Both nullable/defaulted, because salt does
+not expire and a column that forced a number would invent one.
 
 ---
 
@@ -310,7 +348,9 @@ Re-seed on the morning of and the shelf is correct.
   ~475 ms, chips carry "have" badges against the saved fridge, the shelf reads
   "4 items to use up tomorrow", and the ranked list puts a 78% match that
   rescues tomorrow's spinach above an 82% one that rescues nothing.
-- 72 PHPUnit tests pass, 28 of them new. `npm run build` clean, eslint clean.
+- Expiry estimation on scan: confirming a photo dates the perishables from
+  `ShelfLifeCatalog`, marks the guesses, and leaves cupboard staples undated.
+- 86 PHPUnit tests pass, 42 of them new. `npm run build` clean, eslint clean.
 
 **Not done**
 

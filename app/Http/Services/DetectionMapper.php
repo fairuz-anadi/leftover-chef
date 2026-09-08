@@ -59,6 +59,11 @@ class DetectionMapper
                 'label' => $label,
                 'confidence' => $confidence,
                 'box' => $box,
+                // What confirming this chip would date it as, so the panel can
+                // say "spinach, 3 days" before the cook commits rather than
+                // after.
+                'shelf_life_days' => $ingredient->shelfLifeDays(),
+                'suggested_expires_on' => $ingredient->suggestedExpiry()?->toDateString(),
             ]);
         }
 

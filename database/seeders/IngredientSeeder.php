@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Ingredient;
+use App\Support\ShelfLifeCatalog;
 use Illuminate\Database\Seeder;
 
 /**
@@ -138,6 +139,11 @@ class IngredientSeeder extends Seeder
                     'fat_per_100g' => $fat,
                     'is_staple' => $staple,
                     'aliases' => $aliases,
+                    // Shelf life lives in its own catalog rather than a tenth
+                    // column on every row here: it is the kind of number that
+                    // gets argued over and revised, and it should be readable
+                    // as a list rather than buried mid-tuple.
+                    'shelf_life_days' => ShelfLifeCatalog::daysFor(Ingredient::slugify($name), $aisle),
                 ]
             );
         }

@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Support\ShelfLifeCatalog;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 
 class Ingredient extends Model
@@ -20,6 +22,7 @@ class Ingredient extends Model
         'fat_per_100g',
         'aliases',
         'is_staple',
+        'shelf_life_days',
     ];
 
     protected $casts = [
@@ -29,6 +32,7 @@ class Ingredient extends Model
         'protein_per_100g' => 'float',
         'carbs_per_100g' => 'float',
         'fat_per_100g' => 'float',
+        'shelf_life_days' => 'integer',
     ];
 
     public function recipes()
@@ -99,5 +103,31 @@ class Ingredient extends Model
             'name' => Str::title($clean),
             'aisle' => 'other',
         ]);
+    }
+
+    /**
+     * Typical shelf life once this is in someone's fridge, or null if it does
+     * not meaningfully expire.
+     *
+     * Prefers the seeded column and falls back to the catalog, so a row
+     * created on the fly by resolve() - which has no shelf life of its own -
+     * still gets whatever its aisle suggests.
+     */
+    public function shelfLifeDays(): ?int
+    {
+        return $this->shelf_life_days ?? ShelfLifeCatalog::daysFor($this->slug, $this->aisle);
+    }
+
+    /**
+     * The use-by date to propose when this lands in a fridge today.
+     *
+     * A guess, and treated as one everywhere it is used: the pantry row marks
+     * it estimated and the UI shows it differently from a date a cook typed.
+     */
+    public function suggestedExpiry(): ?Carbon
+    {
+        $days = $this->shelfLifeDays();
+
+        return $days === null ? null : Carbon::today()->addDays($days);
     }
 }

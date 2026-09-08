@@ -420,12 +420,21 @@ function PantryChip({ item, editing, onEdit, onCancelEdit, onSaveExpiry, onRemov
       <button
         type="button"
         onClick={onEdit}
-        title={expiry ? `Use by ${expiry.expires_on}` : "Set a use-by date"}
+        title={
+          expiry
+            ? expiry.estimated
+              ? `Estimated use by ${expiry.expires_on} from typical shelf life — tap to correct`
+              : `Use by ${expiry.expires_on}`
+            : "Set a use-by date"
+        }
         className={`rounded-[var(--r-pill)] px-1.5 py-0.5 font-[var(--font-mono)] text-[10px] ${
           expiry ? expiryTone(expiry.state) : "bg-white/60 text-[var(--muted)]"
-        }`}
+        } ${expiry?.estimated ? "border border-dashed border-current opacity-80" : ""}`}
       >
-        {expiry ? describeDays(expiry.days_left) : "+ date"}
+        {/* A tilde and a dashed border: this date is our guess, not the
+            cook's. Dressing an estimate up as a fact is how people stop
+            trusting the whole shelf. */}
+        {expiry ? `${expiry.estimated ? "~" : ""}${describeDays(expiry.days_left)}` : "+ date"}
       </button>
 
       <button
