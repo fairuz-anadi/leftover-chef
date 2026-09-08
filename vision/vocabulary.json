@@ -1,5 +1,5 @@
 {
-  "_comment": "Detector vocabulary for Leftover Chef. `prompt` is what the open-vocabulary detector is asked to look for; `ingredient` is the canonical name in the Laravel `ingredients` table. Keep `ingredient` values spelled exactly as they appear in IngredientSeeder (or as one of that row's aliases) — DetectionMapper resolves them through Ingredient::lookup().",
+  "_comment": "Detector vocabulary for FridgeMama. `prompt` is what the open-vocabulary detector is asked to look for; `ingredient` is the canonical name in the Laravel `ingredients` table. Keep `ingredient` values spelled exactly as they appear in IngredientSeeder (or as one of that row's aliases) — DetectionMapper resolves them through Ingredient::lookup().",
   "classes": [
     { "prompt": "tomato",                 "ingredient": "Tomato" },
     { "prompt": "onion",                  "ingredient": "Onion" },

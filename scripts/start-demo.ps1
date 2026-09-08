@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-  Bring the whole Leftover Chef demo up with one command.
+  Bring the whole FridgeMama demo up with one command.
 
 .DESCRIPTION
   Starts the three processes the demo needs — the vision sidecar, the Laravel
@@ -18,6 +18,11 @@
   you want to fall back to typing ingredients — the rest of the app is fine
   without it.
 
+.PARAMETER Dev
+  Run the Vite dev server with hot reload instead of serving the built app.
+  Use this while working on the client. The installable app is a production-
+  only feature, so nothing installs in this mode.
+
 .PARAMETER NoBrowser
   Do not open a browser window.
 
@@ -28,6 +33,7 @@
 [CmdletBinding()]
 param(
     [switch]$SkipVision,
+    [switch]$Dev,
     [switch]$NoBrowser
 )
 
@@ -77,7 +83,7 @@ function Wait-ForUrl {
 }
 
 Write-Host ''
-Write-Host 'Leftover Chef - starting demo' -ForegroundColor White
+Write-Host 'FridgeMama - starting demo' -ForegroundColor White
 Write-Host '-----------------------------' -ForegroundColor DarkGray
 
 # -- 1. Vision sidecar ------------------------------------------------------
@@ -86,7 +92,7 @@ if (-not $SkipVision) {
         Write-Warn 'vision/.venv is missing - run scripts/setup.ps1 first. Continuing without the detector.'
     } else {
         Write-Step 'Starting the vision sidecar on :8001 (loading model weights)...'
-        Start-InWindow -Title 'Leftover Chef - vision' -WorkingDirectory $visionDir -Command "& '$venvPython' app.py"
+        Start-InWindow -Title 'FridgeMama - vision' -WorkingDirectory $visionDir -Command "& '$venvPython' app.py"
 
         if (Wait-ForUrl -Url "$visionUrl/health" -TimeoutSeconds 120 -Label 'vision sidecar') {
             $health = Invoke-RestMethod -Uri "$visionUrl/health" -TimeoutSec 5
@@ -102,27 +108,74 @@ if (-not $SkipVision) {
 }
 
 # -- 2. Laravel API ---------------------------------------------------------
+# Bound to every interface, like the client, because the Android app talks to
+# Laravel directly rather than through Vite's proxy. Same exposure the client
+# already has: fine on a hotspot, and a reason not to run this on a cafe's WiFi.
 Write-Step 'Starting the API on :8000...'
-Start-InWindow -Title 'Leftover Chef - api' -WorkingDirectory $root -Command 'php artisan serve --host=127.0.0.1 --port=8000'
+Start-InWindow -Title 'FridgeMama - api' -WorkingDirectory $root -Command 'php artisan serve --host=0.0.0.0 --port=8000'
 
-if (Wait-ForUrl -Url "$apiUrl/api/categories" -TimeoutSeconds 45 -Label 'API') {
+if (Wait-ForUrl -Url "$apiUrl/api/fridge" -TimeoutSeconds 45 -Label 'API') {
     Write-Ok 'API ready'
 }
 
 # -- 3. Vite client ---------------------------------------------------------
-Write-Step 'Starting the client on :5173...'
-Start-InWindow -Title 'Leftover Chef - client' -WorkingDirectory $clientDir -Command 'npm run dev'
+# The built app, not the dev server. A service worker is only registered in a
+# production build, and without one this is a web page rather than something a
+# judge can install on their phone. The build takes about a second.
+if ($Dev) {
+    Write-Step 'Starting the client on :5173 (dev server, no install)...'
+    Start-InWindow -Title 'FridgeMama - client' -WorkingDirectory $clientDir -Command 'npm run dev'
+} else {
+    Write-Step 'Building the client...'
+    Push-Location $clientDir
+    try {
+        & npm.cmd run build | Out-Null
+        if ($LASTEXITCODE -ne 0) { throw 'the client build failed - run npm run build in client/ to see why' }
+    } finally {
+        Pop-Location
+    }
+    Write-Ok 'Client built'
+
+    Write-Step 'Serving the installable app on :5173...'
+    Start-InWindow -Title 'FridgeMama - client' -WorkingDirectory $clientDir -Command 'npm run preview'
+}
 
 if (Wait-ForUrl -Url $clientUrl -TimeoutSeconds 60 -Label 'client') {
     Write-Ok 'Client ready'
 }
 
+# The address the phone needs. Loopback is no use to it, and link-local
+# (169.254.x) means Windows gave up on DHCP - showing that would just waste
+# somebody's time at the stall.
+$lanIp = $null
+try {
+    $lanIp = (Get-NetIPAddress -AddressFamily IPv4 -ErrorAction Stop |
+        Where-Object {
+            $_.IPAddress -notmatch '^(127\.|169\.254\.)' -and $_.AddressState -eq 'Preferred'
+        } |
+        Sort-Object -Property InterfaceMetric |
+        Select-Object -First 1).IPAddress
+} catch {
+    $lanIp = $null
+}
+
 Write-Host ''
-Write-Host '  Fridge screen : ' -NoNewline; Write-Host "$clientUrl/fridge" -ForegroundColor White
-Write-Host '  Demo login    : demo@leftoverchef.test / DemoPass123!' -ForegroundColor DarkGray
+Write-Host '  Open          : ' -NoNewline; Write-Host $clientUrl -ForegroundColor White
+
+if ($lanIp -and -not $Dev) {
+    Write-Host '  On your phone : ' -NoNewline; Write-Host "http://${lanIp}:5173" -ForegroundColor White
+    Write-Host '                  same WiFi or the laptop hotspot, then tap Install.' -ForegroundColor DarkGray
+}
+
+if ($lanIp) {
+    Write-Host '  In the APK    : ' -NoNewline; Write-Host $lanIp -ForegroundColor White
+    Write-Host '                  type this on the app''s "Find the kitchen" screen.' -ForegroundColor DarkGray
+}
+
+Write-Host '  No login - the fridge belongs to the browser session.' -ForegroundColor DarkGray
 Write-Host '  Stop it all   : .\scripts\stop-demo.ps1' -ForegroundColor DarkGray
 Write-Host ''
 
 if (-not $NoBrowser) {
-    Start-Process "$clientUrl/fridge"
+    Start-Process $clientUrl
 }

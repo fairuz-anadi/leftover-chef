@@ -1,19 +1,74 @@
 @import "tailwindcss";
 
-/* Tailwind utilities are wired to the same tokens App.css already defines, so
-   the new feature screens sit next to the original hand-written CSS without a
-   second palette. */
+/*
+  FridgeMama — one screen, light.
+
+  Two rules hold the whole palette together:
+
+  1. The three freshness tiers are the only colours that carry meaning. Green,
+     amber and red do the work; everything else is a cool near-neutral so those
+     three are the only things competing for attention. That is the hierarchy
+     the app is trying to teach, so the paint has to agree with it.
+
+  2. Every colour is a token, used nowhere as a literal. Retheming is this
+     block, not two hundred class attributes.
+
+  The tier colours are darker than their dark-mode equivalents — a #3ddc84 that
+  sang against near-black fails contrast on white, and these numbers are the
+  ones a judge has to read from a metre away.
+*/
 @theme {
-  --color-brand: #0f5132;
-  --color-brand-deep: #0a3a24;
-  --color-accent: #b5762a;
-  --color-gold: #c79a3e;
-  --color-cream: #f6f6f4;
-  --color-ink: #14181b;
-  --color-muted: #59616a;
-  --font-display: 'Fraunces Variable', 'Fraunces', Georgia, serif;
-  --font-sans: 'Inter Variable', 'Inter', 'Segoe UI', system-ui, sans-serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+  --color-bg: #f4f7f8;
+  --color-surface: #ffffff;
+  --color-text: #0f1b1e;
+  --color-accent: #0d9488;
+
+  /* Noto Sans Bengali sits after Inter: Latin keeps Inter's metrics, and
+     Bengali falls through to a face that actually has the glyphs. */
+  --font-sans: "Inter Variable", "Inter", "Noto Sans Bengali", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+:root {
+  /* Surfaces */
+  --bg: #f4f7f8;
+  --surface: #ffffff;
+  --raised: #f1f5f6;
+  --line: #dde5e7;
+  --hover: #e8eef0;
+  --track: #e6ecee;
+  --input-bg: #fbfcfd;
+
+  /* Type */
+  --text: #0f1b1e;
+  --dim: #55686c;
+  --faint: #7d9095;
+  --placeholder: #9fb0b4;
+
+  /* The one brand colour: cold, because it is a fridge. */
+  --accent: #0d9488;
+  --accent-soft: rgba(13, 148, 136, 0.1);
+  --on-accent: #ffffff;
+
+  /* The three tiers. Nothing else in the app may use these. */
+  --fresh: #15a05a;
+  --fresh-soft: rgba(21, 160, 90, 0.12);
+  --on-fresh: #ffffff;
+
+  --soon: #c07806;
+  --soon-soft: rgba(192, 120, 6, 0.12);
+  --soon-line: #f0d3a0;
+  --on-soon: #ffffff;
+
+  --today: #d33d3d;
+  --today-soft: rgba(211, 61, 61, 0.1);
+  --today-line: #f2c2c2;
+
+  --need: #c2557c;
+
+  --shadow-sm: 0 1px 2px rgba(15, 27, 30, 0.05), 0 1px 3px rgba(15, 27, 30, 0.04);
+  --shadow-md: 0 4px 12px rgba(15, 27, 30, 0.07);
+  --shadow-lg: 0 18px 45px rgba(15, 27, 30, 0.12);
 }
 
 *,
@@ -28,25 +83,326 @@ body,
   min-height: 100%;
 }
 
+/*
+  The background: whitish, with two slow-drifting colour fields behind it. The
+  drift is 40 seconds a cycle — fast enough that the page feels alive when you
+  glance up from the shelf, slow enough that nobody watching a demo notices it
+  moving.
+*/
 body {
   margin: 0;
-  font-family: 'Inter Variable', 'Inter', 'Segoe UI', system-ui, sans-serif;
-  color: #14181b;
+  font-family: var(--font-sans);
+  color: var(--text);
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(60rem 40rem at 8% -10%, rgba(13, 148, 136, 0.13), transparent 60%),
+    radial-gradient(50rem 35rem at 98% 4%, rgba(21, 160, 90, 0.12), transparent 58%),
+    radial-gradient(45rem 30rem at 50% 108%, rgba(192, 120, 6, 0.09), transparent 62%);
+  background-attachment: fixed;
+  animation: lc-drift 40s ease-in-out infinite alternate;
+  -webkit-font-smoothing: antialiased;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+@keyframes lc-drift {
+  from { background-position: 0% 0%, 100% 0%, 50% 100%; }
+  to   { background-position: 6% 4%, 94% 6%, 46% 96%; }
+}
+
+/*
+  ── Installed on a phone ──────────────────────────────────────────────────
+
+  Everything below only matters once this is on a home screen. In a browser
+  tab the chrome handles all of it; in standalone there is no chrome, and the
+  page is on its own against the notch, the home indicator and a stray
+  double-tap that zooms the shelf out from under you mid-demo.
+*/
+
+/* The header sits at the very top, so it is what ends up under the notch. */
+#root {
+  padding-top: env(safe-area-inset-top);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Landscape on a phone puts a rotated status bar down one side. */
+@media (display-mode: standalone) {
+  body {
+    /* An installed app should not rubber-band like a web page; that bounce is
+       the single clearest tell that something is "just a website". */
+    overscroll-behavior-y: none;
+  }
+}
+
+/*
+  iOS zooms the page in when a form field's text is under 16px, and never
+  zooms back out. The only field here is "add something by hand", and a judge
+  typing into it should not end up with the shelf half off-screen.
+*/
+@supports (-webkit-touch-callout: none) {
+  input,
+  select,
+  textarea {
+    font-size: max(16px, 1em);
+  }
+}
+
+/* Fingers, not mice: no accidental text selection while tapping chips. */
+@media (hover: none) and (pointer: coarse) {
+  button {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    user-select: none;
+    /* Apple's own floor for something you have to hit while standing up. */
+    min-height: 44px;
+  }
 }
 
 button,
 input,
-textarea,
 select {
   font: inherit;
+  color: inherit;
 }
 
 img {
-  max-width: 100%;
   display: block;
+  max-width: 100%;
+}
+
+/* ── Panels ──────────────────────────────────────────────────────────── */
+
+/* Every card gets the same soft lift, so depth means "this is a surface"
+   rather than being decoration applied unevenly. */
+.lc-card {
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 240ms ease, transform 240ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.lc-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* ── The countdown bar ───────────────────────────────────────────────── */
+
+/* Width comes from life_remaining and colour from the tier, so the bar and the
+   badge can never disagree. The long easing is what makes fast-forward read as
+   one movement rather than twenty independent jumps. */
+.lc-bar {
+  transition:
+    width 700ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 500ms ease;
+}
+
+/* ── Motion ──────────────────────────────────────────────────────────── */
+
+/* Something that just turned red pulses, so the fast-forward moment is watched
+   rather than explained. */
+@keyframes lc-alarm {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(211, 61, 61, 0); }
+  35% { box-shadow: 0 0 0 5px rgba(211, 61, 61, 0.22); }
+}
+
+.lc-alarm {
+  animation: lc-alarm 1.6s ease-out 3;
+}
+
+@keyframes lc-rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+
+.lc-rise {
+  animation: lc-rise 460ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Lists stagger in rather than appearing as a block. Capped at twelve steps —
+   past that the last row would arrive noticeably late, which reads as lag
+   rather than polish. */
+.lc-stagger > * {
+  animation: lc-rise 460ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.lc-stagger > *:nth-child(1) { animation-delay: 0ms; }
+.lc-stagger > *:nth-child(2) { animation-delay: 35ms; }
+.lc-stagger > *:nth-child(3) { animation-delay: 70ms; }
+.lc-stagger > *:nth-child(4) { animation-delay: 105ms; }
+.lc-stagger > *:nth-child(5) { animation-delay: 140ms; }
+.lc-stagger > *:nth-child(6) { animation-delay: 175ms; }
+.lc-stagger > *:nth-child(7) { animation-delay: 210ms; }
+.lc-stagger > *:nth-child(8) { animation-delay: 245ms; }
+.lc-stagger > *:nth-child(9) { animation-delay: 280ms; }
+.lc-stagger > *:nth-child(10) { animation-delay: 315ms; }
+.lc-stagger > *:nth-child(11) { animation-delay: 350ms; }
+.lc-stagger > *:nth-child(n + 12) { animation-delay: 385ms; }
+
+@keyframes lc-reveal {
+  from { opacity: 0; transform: scale(0.95) translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+.lc-reveal {
+  animation: lc-reveal 480ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* The waste counter, when it moves. A number that changes silently is a number
+   nobody notices changing. */
+@keyframes lc-pop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.16); }
+  100% { transform: scale(1); }
+}
+
+.lc-pop {
+  animation: lc-pop 520ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes lc-listen {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.12); opacity: 0.75; }
+}
+
+.lc-listen {
+  animation: lc-listen 1.1s ease-in-out infinite;
+}
+
+/* A sweep across the photo while the detector is thinking, so the wait has a
+   heartbeat instead of a frozen spinner. */
+@keyframes lc-sweep {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(100%); }
+}
+
+.lc-sweep::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 35%, rgba(255, 255, 255, 0.45) 50%, transparent 65%);
+  animation: lc-sweep 1.5s ease-in-out infinite;
+}
+
+/*
+  ── The landing page ──────────────────────────────────────────────────────
+
+  Everything in the app above animates on arrival, because the element is new.
+  A landing page is different: all of it exists at once and most of it is below
+  the fold, so it animates on approach instead. `.lc-inview` is the resting
+  state, `.is-in` is what the observer adds when the section comes into view.
+*/
+.lc-inview {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 620ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 620ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.lc-inview.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Children of a revealed group come in one after another, left to right. */
+.lc-inview.is-in > .lc-step:nth-child(1) { transition-delay: 0ms; }
+.lc-inview.is-in > .lc-step:nth-child(2) { transition-delay: 90ms; }
+.lc-inview.is-in > .lc-step:nth-child(3) { transition-delay: 180ms; }
+.lc-inview.is-in > .lc-step:nth-child(4) { transition-delay: 270ms; }
+
+.lc-step {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 560ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 560ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.lc-inview.is-in > .lc-step {
+  opacity: 1;
+  transform: none;
+}
+
+/* The heart in the logo, on the hero only. Slow — a resting pulse, not an
+   alarm; the app has a separate animation for things that are actually
+   urgent and the two must not read the same. */
+@keyframes lc-beat {
+  0%, 72%, 100% { transform: scale(1); }
+  78%           { transform: scale(1.055); }
+  84%           { transform: scale(1); }
+  90%           { transform: scale(1.03); }
+}
+
+.lc-beat {
+  animation: lc-beat 3.4s ease-in-out infinite;
+  transform-origin: center;
+}
+
+/* A shelf-life bar draining, used once in the hero to show the idea in
+   motion before anyone has read a word about it. */
+@keyframes lc-drain {
+  0%   { width: 100%; background: var(--fresh); }
+  45%  { width: 46%;  background: var(--soon); }
+  80%  { width: 12%;  background: var(--today); }
+  100% { width: 12%;  background: var(--today); }
+}
+
+.lc-drain {
+  animation: lc-drain 5.5s cubic-bezier(0.4, 0, 0.5, 1) infinite alternate;
+}
+
+/* The soft halo behind the hero mark. */
+@keyframes lc-halo {
+  from { transform: scale(1); opacity: 0.55; }
+  to   { transform: scale(1.14); opacity: 0.25; }
+}
+
+.lc-halo {
+  animation: lc-halo 4.2s ease-in-out infinite alternate;
+}
+
+/* Respect anyone who has asked the OS to stop moving things. Every animation
+   in the file is decorative — nothing here is the only way information is
+   conveyed — so they can all simply stop. */
+@media (prefers-reduced-motion: reduce) {
+  body,
+  .lc-bar,
+  .lc-alarm,
+  .lc-rise,
+  .lc-stagger > *,
+  .lc-reveal,
+  .lc-pop,
+  .lc-listen,
+  .lc-sweep::after,
+  .lc-card,
+  .lc-lift:hover,
+  .lc-beat,
+  .lc-drain,
+  .lc-halo {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+
+  /* These two hide their content until an observer reveals them, so they
+     cannot simply have their transition removed — they have to arrive
+     already visible. */
+  .lc-inview,
+  .lc-step {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd8db;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #b3c4c8;
 }

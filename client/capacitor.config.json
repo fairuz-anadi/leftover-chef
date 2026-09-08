@@ -1,0 +1,12 @@
+{
+  "appId": "bd.edu.aust.fridgemama",
+  "appName": "FridgeMama",
+  "webDir": "dist",
+  "android": {
+    "allowMixedContent": true
+  },
+  "server": {
+    "androidScheme": "http",
+    "cleartext": true
+  }
+}

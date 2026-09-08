@@ -3,11 +3,11 @@
   Prove the demo works with no internet.
 
 .DESCRIPTION
-  The rulebook says the venue provides no connection. This script is the
-  rehearsal for that: turn WiFi off, run it, and it walks the whole path a
-  judge will see — detector loaded from local weights, API answering, a real
-  photo scanned, ingredients resolved, recipes ranked — and reports anything
-  that quietly depended on the network.
+  The rulebook says the venue provides no connection. This is the rehearsal for
+  that: turn WiFi off, run it, and it walks the whole loop a judge will see —
+  detector loaded from local weights, the fridge tracking freshness, the clock
+  moving, a recipe suggested, cooked, and the waste counter moving — reporting
+  anything that quietly depended on the network.
 
   Start the stack first (scripts/start-demo.ps1), then disconnect, then run
   this. Anything it flags, fix or cut before exhibition day.
@@ -27,25 +27,53 @@ $ErrorActionPreference = 'Stop'
 $root      = Split-Path -Parent $PSScriptRoot
 $apiUrl    = 'http://127.0.0.1:8000/api'
 $visionUrl = 'http://127.0.0.1:8001'
+$clientUrl = 'http://127.0.0.1:5173'
+$session   = "offline-check-$([guid]::NewGuid().ToString('N').Substring(0,12))"
+$headers   = @{ 'X-Fridge-Session' = $session; 'Accept' = 'application/json' }
 
 $passed = 0
 $failed = 0
+
+# Windows PowerShell 5.1 has no -Form, so the multipart body is assembled by
+# hand. The file bytes are carried as latin-1 text because that is the only
+# encoding that survives the round trip through Invoke-RestMethod's string body
+# without mangling bytes above 0x7F.
+function New-MultipartPhoto {
+    param([string]$Path)
+
+    $boundary = [guid]::NewGuid().ToString()
+    $latin1 = [System.Text.Encoding]::GetEncoding('iso-8859-1')
+    $bytes = [System.IO.File]::ReadAllBytes($Path)
+
+    $lines = @(
+        "--$boundary",
+        'Content-Disposition: form-data; name="photo"; filename="fridge.jpg"',
+        'Content-Type: image/jpeg',
+        '',
+        $latin1.GetString($bytes),
+        "--$boundary--",
+        ''
+    )
+
+    return @{ Boundary = $boundary; Body = ($lines -join "`r`n") }
+}
+
 
 function Test-Step {
     param([string]$Name, [scriptblock]$Body)
 
     try {
         $detail = & $Body
-        Write-Host ("  PASS  {0,-34} {1}" -f $Name, $detail) -ForegroundColor Green
+        Write-Host ("  PASS  {0,-36} {1}" -f $Name, $detail) -ForegroundColor Green
         $script:passed++
     } catch {
-        Write-Host ("  FAIL  {0,-34} {1}" -f $Name, $_.Exception.Message) -ForegroundColor Red
+        Write-Host ("  FAIL  {0,-36} {1}" -f $Name, $_.Exception.Message) -ForegroundColor Red
         $script:failed++
     }
 }
 
 Write-Host ''
-Write-Host 'Leftover Chef - offline rehearsal' -ForegroundColor White
+Write-Host 'FridgeMama - offline rehearsal' -ForegroundColor White
 Write-Host '---------------------------------' -ForegroundColor DarkGray
 
 $online = Test-Connection -ComputerName '1.1.1.1' -Count 1 -Quiet -ErrorAction SilentlyContinue
@@ -56,10 +84,60 @@ if ($online) {
 }
 Write-Host ''
 
-Test-Step 'vision sidecar is up' {
+Test-Step 'detector is loaded' {
     $health = Invoke-RestMethod "$visionUrl/health" -TimeoutSec 5
     if (-not $health.detector.ready) { throw $health.detector.error }
     "$($health.detector.backend) / $($health.detector.weights), $($health.detector.class_count) classes"
+}
+
+# Tahmid's check, kept: the sidecar can be perfectly offline while the client
+# still reaches for a Google font or an Unsplash photo, and you only find out
+# when the page renders bare in front of a judge.
+Test-Step 'the client pulls nothing off the internet' {
+    $sources = Get-ChildItem (Join-Path $root 'client\src') -Recurse -File |
+        Where-Object { $_.Extension -match '^\.(js|jsx|css|html)$' }
+    $hits = $sources | Select-String -Pattern 'fonts\.googleapis\.com|fonts\.gstatic\.com|unsplash\.com|cdn\.jsdelivr|cdnjs\.cloudflare|unpkg\.com'
+    if ($hits) { throw "external asset referenced in $($hits[0].Path):$($hits[0].LineNumber)" }
+
+    $index = Join-Path $root 'client\index.html'
+    if (Test-Path $index) {
+        $remote = Select-String -Path $index -Pattern 'https?://'
+        if ($remote) { throw "index.html still points at $($remote[0].Line.Trim())" }
+    }
+
+    "$($sources.Count) source files, fonts and images bundled"
+}
+
+# An installed app that cannot start without the network is worse than a
+# bookmark, because it looks like it should work.
+Test-Step 'the app is installable and cached' {
+    $manifest = Invoke-RestMethod "$clientUrl/manifest.webmanifest" -TimeoutSec 10
+    foreach ($field in 'name', 'start_url', 'display', 'icons') {
+        if (-not $manifest.$field) { throw "manifest is missing $field" }
+    }
+    if ($manifest.display -ne 'standalone') { throw "display is $($manifest.display), not standalone" }
+
+    # Chrome will not offer to install without both of these sizes.
+    $sizes = $manifest.icons.sizes
+    foreach ($needed in '192x192', '512x512') {
+        if ($sizes -notcontains $needed) { throw "no $needed icon in the manifest" }
+    }
+    if (-not ($manifest.icons | Where-Object { $_.purpose -eq 'maskable' })) {
+        throw 'no maskable icon - Android will crop the mark badly'
+    }
+
+    foreach ($icon in $manifest.icons) {
+        $head = Invoke-WebRequest "$clientUrl$($icon.src)" -UseBasicParsing -TimeoutSec 10
+        if ($head.StatusCode -ne 200) { throw "icon 404: $($icon.src)" }
+    }
+
+    $sw = Invoke-WebRequest "$clientUrl/sw.js" -UseBasicParsing -TimeoutSec 10
+    if ($sw.StatusCode -ne 200) { throw 'no service worker at /sw.js' }
+    if ($sw.Content -notmatch 'addEventListener\("fetch"') {
+        throw 'the service worker has no fetch handler - Chrome will not treat this as installable'
+    }
+
+    "$($manifest.name), $($manifest.icons.Count) icons, service worker present"
 }
 
 Test-Step 'model weights are local' {
@@ -68,31 +146,52 @@ Test-Step 'model weights are local' {
     "$($files.Count) files, $([math]::Round(($files | Measure-Object Length -Sum).Sum / 1MB)) MB"
 }
 
-Test-Step 'API is up' {
-    $categories = Invoke-RestMethod "$apiUrl/categories" -TimeoutSec 5
-    "$($categories.data.Count) categories"
+# Everything below shares one throwaway session, so the run does not disturb
+# whatever fridge is on screen.
+$state = Invoke-RestMethod "$apiUrl/fridge" -Headers $headers -TimeoutSec 15
+
+Test-Step 'fridge opens with no sign-in' {
+    if ($state.items.Count -lt 5) { throw 'the demo fridge did not stock' }
+    "$($state.items.Count) items, health $($state.health.score)%"
 }
 
-Test-Step 'recipe library is seeded' {
-    $recipes = Invoke-RestMethod "$apiUrl/recipes" -TimeoutSec 10
-    if ($recipes.data.Count -lt 1) { throw 'no recipes - run php artisan db:seed' }
-    "$($recipes.data.Count) recipes on page 1"
+Test-Step 'freshness is tiered' {
+    $tiers = $state.items | Where-Object { $_.freshness } | ForEach-Object { $_.freshness.tier } | Sort-Object -Unique
+    if ($tiers.Count -lt 2) { throw 'everything is in one tier - the dashboard will look dead' }
+    "$($state.health.fresh) fresh / $($state.health.soon) soon / $($state.health.today) today"
 }
 
-Test-Step 'ingredient search ranks recipes' {
-    $body = @{ ingredients = @('onion', 'garlic', 'tomato', 'egg', 'rice') } | ConvertTo-Json
-    $result = Invoke-RestMethod "$apiUrl/pantry/search" -Method Post -Body $body -ContentType 'application/json' -TimeoutSec 15
-    if ($result.data.Count -lt 1) { throw 'no matches' }
-    "$($result.data.Count) matches, $($result.meta.cook_now) cookable now"
+Test-Step 'recipes are suggested locally' {
+    if ($state.suggestions.Count -lt 1) { throw 'no suggestions' }
+    $top = $state.suggestions[0]
+    "$($top.recipe.title) - match $($top.match_percent)%, priority $($top.priority_score)"
 }
 
-Test-Step 'alias table resolves detector names' {
-    # "capsicum" only reaches Bell Pepper through the alias table. If this one
-    # fails, every scan silently loses ingredients.
-    $body = @{ ingredients = @('capsicum', 'jeera', 'tin of tomatoes') } | ConvertTo-Json
-    $result = Invoke-RestMethod "$apiUrl/pantry/search" -Method Post -Body $body -ContentType 'application/json' -TimeoutSec 15
-    if ($result.meta.ingredient_count -lt 3) { throw "only $($result.meta.ingredient_count)/3 names resolved" }
-    '3/3 resolved'
+Test-Step 'local cuisine gets its nudge' {
+    $local = $state.suggestions | Where-Object { $_.local_bonus -gt 0 }
+    if (-not $local) { throw 'no Bangladeshi or South Asian recipe surfaced' }
+    "$($local.Count) local dishes weighted up"
+}
+
+Test-Step 'dish artwork is on disk' {
+    $art = Join-Path $root ("storage\app\public\" + ($state.suggestions[0].recipe.image_path -replace '/', '\'))
+    if (-not (Test-Path $art)) { throw "missing artwork: $art" }
+    'generated, no stock photography'
+}
+
+Test-Step 'the clock moves and warns' {
+    $after = Invoke-RestMethod "$apiUrl/fridge/fast-forward" -Method Post -Headers $headers `
+        -Body (@{ days = 2 } | ConvertTo-Json) -ContentType 'application/json' -TimeoutSec 15
+    if ($after.session.day_offset -ne 2) { throw 'the day did not advance' }
+    "day $($after.session.day_offset), $($after.alerts.Count) new alert(s)"
+}
+
+Test-Step 'cooking moves the waste counter' {
+    $fresh = Invoke-RestMethod "$apiUrl/fridge" -Headers $headers -TimeoutSec 15
+    $recipeId = $fresh.suggestions[0].recipe.id
+    $cooked = Invoke-RestMethod "$apiUrl/recipes/$recipeId/cooked" -Method Post -Headers $headers `
+        -Body '{}' -ContentType 'application/json' -TimeoutSec 20
+    "$($cooked.removed.Count) used, $($cooked.waste.rescued) saved from the bin"
 }
 
 if (-not $Photo) {
@@ -103,13 +202,16 @@ if (-not $Photo) {
 }
 
 if ($Photo -and (Test-Path $Photo)) {
-    Test-Step 'photo scan end to end' {
-        $form = @{ photo = Get-Item $Photo }
-        $result = Invoke-RestMethod "$apiUrl/pantry/scan" -Method Post -Form $form -TimeoutSec 60
+    $multipart = New-MultipartPhoto -Path $Photo
+
+    Test-Step 'photo scan, end to end' {
+        $result = Invoke-RestMethod "$apiUrl/fridge/scan" -Method Post -Headers $headers `
+            -ContentType "multipart/form-data; boundary=$($multipart.Boundary)" `
+            -Body $multipart.Body -TimeoutSec 60
         "$($result.meta.ingredient_count) ingredients in $([math]::Round($result.meta.elapsed_ms)) ms"
     }
 } else {
-    Write-Host '  SKIP  photo scan end to end                 no demo photo found' -ForegroundColor Yellow
+    Write-Host '  SKIP  photo scan, end to end          no demo photo found' -ForegroundColor Yellow
     Write-Host '        drop 3-4 fridge photos into client/src/assets/demo-photos' -ForegroundColor DarkGray
 }
 

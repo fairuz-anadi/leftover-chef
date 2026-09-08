@@ -25,7 +25,7 @@ class IngredientController extends Controller
 
         return response()->json([
             'data' => $query->limit((int) $request->integer('limit', 40) ?: 40)
-                ->get(['id', 'name', 'slug', 'aisle', 'is_staple']),
+                ->get(['id', 'name', 'name_bn', 'slug', 'aisle', 'is_staple']),
         ]);
     }
 

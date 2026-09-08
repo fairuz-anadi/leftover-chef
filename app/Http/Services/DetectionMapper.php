@@ -54,6 +54,7 @@ class DetectionMapper
             $resolved->push([
                 'ingredient_id' => $ingredient->id,
                 'name' => $ingredient->name,
+                'name_bn' => $ingredient->name_bn,
                 'slug' => $ingredient->slug,
                 'aisle' => $ingredient->aisle,
                 'label' => $label,

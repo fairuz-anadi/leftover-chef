@@ -15,6 +15,7 @@ class Ingredient extends Model
     protected $fillable = [
         'slug',
         'name',
+        'name_bn',
         'aisle',
         'calories_per_100g',
         'protein_per_100g',

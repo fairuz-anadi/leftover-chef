@@ -44,3 +44,23 @@ yarn-error.log
 /client/src/assets/demo-photos/*
 !/client/src/assets/demo-photos/README.md
 !/client/src/assets/demo-photos/1-kitchen-counter.jpg
+
+# The Android project is committed — the icons and the network-security config
+# in it are ours, and a fresh clone should be able to build an APK without
+# re-running `cap add`. What is not committed is anything Gradle regenerates,
+# and local.properties, which is one machine's absolute path to its SDK.
+/client/android/.gradle
+/client/android/build
+/client/android/app/build
+/client/android/local.properties
+/client/android/capacitor-cordova-android-plugins
+/client/android/.idea
+
+# The built APK. It is 5 MB of output that changes every build and carries one
+# laptop's address baked into it; scripts/build-apk.ps1 makes a fresh one in
+# about a minute.
+*.apk
+
+# JDK and Android SDK, if anyone stages them inside the repo. They belong
+# outside it — scripts/setup-android.ps1 puts them in ../android-toolchain.
+/android-toolchain

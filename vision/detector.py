@@ -1,5 +1,5 @@
 """
-Model loading and inference for the Leftover Chef fridge detector.
+Model loading and inference for the FridgeMama fridge detector.
 
 Two backends, tried in order:
 
@@ -9,6 +9,11 @@ Two backends, tried in order:
   coco   - plain YOLOv8n on the 80 COCO classes. Only five of them are
            actually food, so this is the "the laptop could not load the
            world weights" fallback, not the plan.
+
+  finetuned - a checkpoint trained on a real fridge dataset, if one has been
+           dropped into vision/weights. Tried first when present. Its class
+           names pass straight through to Laravel, where the alias table
+           resolves them, so it needs no changes here beyond the file itself.
 
 Whichever loads, Detector.detect() returns the same shape, and every
 detection carries the canonical ingredient name the Laravel side expects.
@@ -24,7 +29,7 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
 
-log = logging.getLogger("leftover-chef.detector")
+log = logging.getLogger("fridgemama.detector")
 
 HERE = Path(__file__).resolve().parent
 WEIGHTS_DIR = Path(os.environ.get("LC_WEIGHTS_DIR", HERE / "weights"))
@@ -32,7 +37,16 @@ VOCAB_PATH = Path(os.environ.get("LC_VOCAB", HERE / "vocabulary.json"))
 
 # Ordered by preference. First one that loads wins.
 BACKENDS = [
-    ("finetuned", os.environ.get("LC_FT_WEIGHTS", "best.pt")),
+    # A fine-tuned checkpoint wins when one is present. Drop best.pt or
+    # fridge-finetuned.pt into vision/weights and it is picked up on the next
+    # restart; nothing else in the stack changes, because the response shape is identical.
+    (
+        "finetuned",
+        os.environ.get(
+            "LC_FT_WEIGHTS",
+            "best.pt" if (WEIGHTS_DIR / "best.pt").exists() else "fridge-finetuned.pt",
+        ),
+    ),
     ("world", os.environ.get("LC_WORLD_WEIGHTS", "yolov8s-worldv2.pt")),
     ("coco", os.environ.get("LC_COCO_WEIGHTS", "yolov8n.pt")),
 ]
@@ -146,6 +160,12 @@ class Detector:
         failures: list[str] = []
 
         for backend, weights in backends:
+            # The fine-tuned slot is empty until somebody drops a file in.
+            # Absence is the normal case, not an error worth logging loudly.
+            if backend == "finetuned" and not (WEIGHTS_DIR / weights).exists():
+                log.info("no fine-tuned checkpoint at %s, trying the next backend", weights)
+                continue
+
             try:
                 self._load_one(backend, weights)
                 log.info("detector ready: backend=%s weights=%s", backend, weights)
@@ -174,6 +194,9 @@ class Detector:
             model = YOLOWorld(path)
             model.set_classes(self.vocabulary["prompts"])
         else:
+            # Both "coco" and "finetuned" are ordinary detectors carrying their
+            # own class list. Calling set_classes on a fine-tuned model would
+            # throw away the thing it was trained to do.
             model = YOLO(path)
 
         self.model = model
@@ -229,7 +252,24 @@ class Detector:
         return detections, round(elapsed_ms, 1)
 
     def _to_ingredient(self, label: str) -> str | None:
-        """Detector label to canonical ingredient name, or None to drop it."""
+        """
+        Detector label to a name the ingredients table can resolve.
+
+        The order matters. A prompt we asked for maps through the vocabulary; a
+        COCO label maps through coco_map, where furniture is deliberately null.
+        Anything else is passed through rather than dropped.
+
+        That last rule is the important one. A fine-tuned model brings its own
+        class list — strawberries, heavy_cream, ground_beef — none of which are
+        prompts here. Dropping them in the sidecar would lose them before
+        Laravel ever saw them, where the alias table resolves exactly this kind
+        of name. Underscores become spaces because that is the difference
+        between "sweet_potato" and a slug the lookup understands.
+
+        Anything the ingredients table genuinely does not know still surfaces:
+        DetectionMapper reports it under `unmatched` and the UI shows it, so a
+        gap in the vocabulary is visible instead of silent.
+        """
         if not label:
             return None
 
@@ -245,21 +285,16 @@ class Detector:
         if direct:
             return direct
 
-        # 3. Normalized without underscores
-        spaced = clean.replace("_", " ")
-        if spaced in self.vocabulary["prompt_to_ingredient"]:
-            return self.vocabulary["prompt_to_ingredient"][spaced]
+        cleaned = label.replace("_", " ").replace("-", " ").strip().lower()
+        if cleaned in self.vocabulary["prompt_to_ingredient"]:
+            return self.vocabulary["prompt_to_ingredient"][cleaned]
 
-        # 4. COCO labels only reach here on the fallback backend. Anything mapped
-        # to null (bowl, fork, refrigerator) is furniture, not food.
-        if clean in self.vocabulary.get("coco_map", {}):
-            return self.vocabulary["coco_map"][clean]
+        # COCO furniture — bowl, fork, refrigerator — is mapped to null on
+        # purpose and is the one case where dropping is correct.
+        if cleaned in self.vocabulary["coco_map"]:
+            return self.vocabulary["coco_map"][cleaned]
 
-        # 5. Default fallback for fine-tuned models: clean spaced title case
-        if self.backend == "finetuned":
-            return spaced.title()
-
-        return None
+        return cleaned or None
 
     def describe(self) -> dict[str, Any]:
         class_count = (

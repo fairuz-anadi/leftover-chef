@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Ingredient;
+use App\Support\BengaliNames;
 use App\Support\ShelfLifeCatalog;
 use Illuminate\Database\Seeder;
 
@@ -16,6 +17,10 @@ use Illuminate\Database\Seeder;
  * detector phrasing like "carton of milk" or "tin of tomatoes" lives as an
  * alias row rather than a lookup table in PHP. Add a detector class, add an
  * alias.
+ *
+ * The Bengali name comes from App\Support\BengaliNames, keyed by slug, so
+ * this table stays about food data and the translations stay in one readable
+ * list.
  *
  * Columns: name, aisle, kcal, protein, carbs, fat, staple, aliases
  */
@@ -32,7 +37,7 @@ class IngredientSeeder extends Seeder
         ['Spinach', 'produce', 23, 2.9, 3.6, 0.4, false, ['baby spinach', 'spinach leaves']],
         ['Mushroom', 'produce', 22, 3.1, 3.3, 0.3, false, ['mushrooms', 'button mushrooms', 'chestnut mushrooms']],
         ['Ginger', 'produce', 80, 1.8, 17.8, 0.8, true, ['fresh ginger', 'ginger root', 'root ginger']],
-        ['Green Chilli', 'produce', 40, 1.9, 8.8, 0.4, false, ['green chili', 'chilli', 'chili', 'green chillies', 'chillies', 'chilies', 'green chilli pepper', 'chilli pepper']],
+        ['Green Chilli', 'produce', 40, 1.9, 8.8, 0.4, false, ['green chili', 'chilli', 'chili', 'green chillies', 'chillies', 'chilies', 'green chilli pepper', 'chilli pepper', 'chili_pepper', 'hot pepper']],
         ['Lemon', 'produce', 29, 1.1, 9.3, 0.3, true, ['lemons', 'lemon juice']],
         ['Lime', 'produce', 30, 0.7, 10.5, 0.2, false, ['limes', 'lime juice']],
         ['Coriander', 'produce', 23, 2.1, 3.7, 0.5, false, ['cilantro', 'fresh coriander']],
@@ -43,7 +48,7 @@ class IngredientSeeder extends Seeder
         ['Avocado', 'produce', 160, 2.0, 8.5, 14.7, false, ['avocados']],
         ['Broccoli', 'produce', 34, 2.8, 6.6, 0.4, false, []],
         ['Cauliflower', 'produce', 25, 1.9, 5.0, 0.3, false, []],
-        ['Cabbage', 'produce', 25, 1.3, 5.8, 0.1, false, ['lettuce', 'green cabbage']],
+        ['Cabbage', 'produce', 25, 1.3, 5.8, 0.1, false, ['green cabbage', 'patta kopi']],
         ['Aubergine', 'produce', 25, 1.0, 5.9, 0.2, false, ['eggplant', 'brinjal', 'aubergines']],
         ['Courgette', 'produce', 17, 1.2, 3.1, 0.3, false, ['zucchini']],
         ['Sweet Potato', 'produce', 86, 1.6, 20.1, 0.1, false, ['sweet potatoes']],
@@ -65,6 +70,8 @@ class IngredientSeeder extends Seeder
         ['Salmon', 'seafood', 208, 20.4, 0.0, 13.4, false, ['salmon fillet']],
         ['White Fish', 'seafood', 96, 20.4, 0.0, 1.4, false, ['cod', 'haddock', 'tilapia', 'fish', 'raw fish fillet', 'fish fillet']],
         ['Tuna', 'seafood', 132, 28.0, 0.0, 1.3, false, ['canned tuna']],
+        ['Hilsa', 'seafood', 310, 25.0, 0.0, 22.0, false, ['ilish', 'ilish fish', 'hilsa fish']],
+        ['Rohu', 'seafood', 97, 17.0, 0.0, 1.4, false, ['rui', 'rui fish', 'rohu fish', 'carp']],
 
         // Dairy & eggs
         ['Egg', 'dairy', 143, 12.6, 0.7, 9.5, true, ['eggs', 'carton of eggs', 'egg carton']],
@@ -88,6 +95,8 @@ class IngredientSeeder extends Seeder
         ['Black Pepper', 'pantry', 251, 10.4, 64.0, 3.3, true, ['pepper', 'ground black pepper']],
         ['Olive Oil', 'pantry', 884, 0.0, 0.0, 100.0, true, ['extra virgin olive oil']],
         ['Vegetable Oil', 'pantry', 884, 0.0, 0.0, 100.0, true, ['sunflower oil', 'cooking oil', 'oil', 'bottle of cooking oil']],
+        ['Mustard Oil', 'pantry', 884, 0.0, 0.0, 100.0, true, ['shorsher tel', 'sarson oil', 'kachi ghani']],
+        ['Mustard Paste', 'pantry', 508, 26.0, 28.0, 36.0, false, ['shorshe bata', 'mustard seeds', 'shorshe']],
         ['Soy Sauce', 'pantry', 53, 8.1, 4.9, 0.6, false, ['light soy sauce', 'dark soy sauce', 'bottle of soy sauce']],
         ['Vinegar', 'pantry', 21, 0.0, 0.9, 0.0, false, ['white vinegar', 'rice vinegar']],
         ['Honey', 'pantry', 304, 0.3, 82.4, 0.0, false, ['jar of honey']],
@@ -115,6 +124,7 @@ class IngredientSeeder extends Seeder
         ['Chilli Powder', 'spices', 282, 13.5, 49.7, 14.3, true, ['chili powder', 'red chilli powder']],
         ['Paprika', 'spices', 282, 14.1, 54.0, 12.9, false, ['smoked paprika']],
         ['Garam Masala', 'spices', 379, 14.0, 45.0, 15.0, false, []],
+        ['Panch Phoron', 'spices', 350, 15.0, 45.0, 15.0, false, ['panch phoran', 'five spice', 'paanch phoron']],
         ['Cinnamon', 'spices', 247, 4.0, 80.6, 1.2, false, ['ground cinnamon', 'cinnamon stick', 'cinnamon sticks']],
         ['Oregano', 'spices', 265, 9.0, 68.9, 4.3, false, ['dried oregano']],
         ['Thyme', 'spices', 276, 9.1, 63.9, 7.4, false, ['dried thyme']],
@@ -123,6 +133,44 @@ class IngredientSeeder extends Seeder
         ['Curry Powder', 'spices', 325, 12.7, 55.8, 13.8, false, []],
         ['Chocolate', 'pantry', 546, 4.9, 61.0, 31.0, false, ['dark chocolate', 'cocoa']],
         ['Vanilla', 'pantry', 288, 0.1, 12.7, 0.1, false, ['vanilla extract', 'vanilla essence']],
+
+        // ── Added for the fine-tuned detector's class list, and for the
+        // vegetables a Bangladeshi kitchen actually keeps.
+        ['Strawberry', 'produce', 32, 0.7, 7.7, 0.3, false, ['strawberries']],
+        ['Blueberry', 'produce', 57, 0.7, 14.5, 0.3, false, ['blueberries']],
+        ['Grapes', 'produce', 69, 0.7, 18.1, 0.2, false, ['grape']],
+        ['Watermelon', 'produce', 30, 0.6, 7.6, 0.2, false, []],
+        ['Pineapple', 'produce', 50, 0.5, 13.1, 0.1, false, []],
+        ['Papaya', 'produce', 43, 0.5, 10.8, 0.3, false, ['green papaya', 'pawpaw']],
+        ['Guava', 'produce', 68, 2.6, 14.3, 1.0, false, []],
+        ['Pear', 'produce', 57, 0.4, 15.2, 0.1, false, ['pears']],
+        ['Peach', 'produce', 39, 0.9, 9.5, 0.3, false, ['peaches']],
+        ['Kiwi', 'produce', 61, 1.1, 14.7, 0.5, false, ['kiwifruit']],
+        ['Coconut', 'produce', 354, 3.3, 15.2, 33.5, false, ['fresh coconut']],
+        ['Okra', 'produce', 33, 1.9, 7.5, 0.2, false, ['ladies finger', 'bhindi', 'dherosh']],
+        ['Bottle Gourd', 'produce', 14, 0.6, 3.4, 0.0, false, ['lauki', 'calabash', 'lau']],
+        ['Bitter Gourd', 'produce', 17, 1.0, 3.7, 0.2, false, ['karela', 'bitter melon', 'korola']],
+        ['Pointed Gourd', 'produce', 20, 2.0, 4.0, 0.3, false, ['parwal', 'potol']],
+        ['Pumpkin', 'produce', 26, 1.0, 6.5, 0.1, false, ['squash', 'kumra']],
+        ['Radish', 'produce', 16, 0.7, 3.4, 0.1, false, ['mooli', 'daikon']],
+        ['Beetroot', 'produce', 43, 1.6, 9.6, 0.2, false, ['beet', 'beets']],
+        ['Celery', 'produce', 16, 0.7, 3.0, 0.2, false, []],
+        ['Green Beans', 'produce', 31, 1.8, 7.0, 0.2, false, ['french beans', 'string beans', 'beans']],
+        ['Lettuce', 'produce', 15, 1.4, 2.9, 0.2, false, ['iceberg lettuce', 'romaine']],
+        ['Sausage', 'meat', 301, 12.0, 3.0, 27.0, false, ['sausages']],
+        ['Ham', 'meat', 145, 21.0, 1.5, 6.0, false, []],
+        ['Duck', 'meat', 337, 19.0, 0.0, 28.0, false, ['duck meat']],
+        ['Crab', 'seafood', 97, 19.0, 0.0, 1.5, false, []],
+        ['Sour Cream', 'dairy', 198, 2.4, 4.6, 19.4, false, []],
+        ['Cream Cheese', 'dairy', 342, 6.0, 4.1, 34.0, false, []],
+        ['Jam', 'pantry', 278, 0.4, 69.0, 0.1, false, ['jelly', 'fruit jam']],
+        ['Ketchup', 'pantry', 101, 1.3, 25.8, 0.1, false, ['tomato ketchup', 'tomato sauce']],
+        ['Mayonnaise', 'pantry', 680, 1.0, 0.6, 75.0, false, ['mayo']],
+        ['Orange Juice', 'pantry', 45, 0.7, 10.4, 0.2, false, ['juice', 'fruit juice']],
+        ['Walnut', 'pantry', 654, 15.2, 13.7, 65.2, false, ['walnuts']],
+        ['Pistachio', 'pantry', 560, 20.2, 27.2, 45.3, false, ['pistachios']],
+        ['Raisin', 'pantry', 299, 3.1, 79.2, 0.5, false, ['raisins', 'sultana', 'kishmish']],
+        ['Date', 'pantry', 277, 1.8, 75.0, 0.2, false, ['dates', 'khejur']],
     ];
 
     public function run(): void
@@ -132,6 +180,9 @@ class IngredientSeeder extends Seeder
                 ['slug' => Ingredient::slugify($name)],
                 [
                     'name' => $name,
+                    // Display only — the English name stays the canonical key
+                    // that recipes and the detector both resolve through.
+                    'name_bn' => BengaliNames::for(Ingredient::slugify($name)),
                     'aisle' => $aisle,
                     'calories_per_100g' => $kcal,
                     'protein_per_100g' => $protein,

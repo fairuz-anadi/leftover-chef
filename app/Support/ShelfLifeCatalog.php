@@ -98,6 +98,8 @@ class ShelfLifeCatalog
         'salmon' => 2,
         'white-fish' => 2,
         'lamb' => 3,
+        'hilsa' => 2,
+        'rohu' => 2,
         'pork' => 3,
         'bacon' => 7,
         // This row is seeded with a "canned tuna" alias, so a tin is at least
@@ -110,6 +112,44 @@ class ShelfLifeCatalog
 
         // Pantry — shelf-stable by default, so only the exceptions are listed.
         'tofu' => 7,
+        'mustard-paste' => 14,
+
+        // ── Added with the wider detector vocabulary ─────────────────
+        'strawberry' => 3,
+        'blueberry' => 7,
+        'grape' => 7,
+        'watermelon' => 7,
+        'pineapple' => 5,
+        'papaya' => 5,
+        'guava' => 5,
+        'pear' => 10,
+        'peach' => 5,
+        'kiwi' => 10,
+        'coconut' => 14,
+        'okra' => 5,
+        'bottle-gourd' => 10,
+        'bitter-gourd' => 7,
+        'pointed-gourd' => 6,
+        'pumpkin' => 21,
+        'radish' => 10,
+        'beetroot' => 14,
+        'celery' => 10,
+        'green-bean' => 6,
+        'lettuce' => 6,
+        'sausage' => 7,
+        'ham' => 7,
+        'duck' => 3,
+        'crab' => 2,
+        'sour-cream' => 10,
+        'cream-cheese' => 14,
+        'jam' => null,
+        'ketchup' => null,
+        'mayonnaise' => 30,
+        'orange-juice' => 5,
+        'walnut' => null,
+        'pistachio' => null,
+        'raisin' => null,
+        'date' => null,
     ];
 
     /** Days of shelf life for an ingredient, or null if it does not meaningfully expire. */

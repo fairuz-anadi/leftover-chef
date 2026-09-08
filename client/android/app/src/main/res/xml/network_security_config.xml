@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Android has refused plain http:// by default since API 28, and the whole
+    point of this app is a plain http:// laptop two feet away with no
+    certificate and no domain name. Without this the app installs, opens, and
+    then fails every request with a cleartext error that means nothing to
+    anybody standing at a stall.
+
+    This is deliberately a blanket base-config rather than a scoped one. The
+    scoped version would be better, but <domain> takes a hostname or a literal
+    IP address — it does not take a CIDR range — and the laptop's address is
+    whatever the hotspot handed out that morning. "192.168.0.0/16" is not
+    something this file can express, and hardcoding one address would break the
+    moment the network changed, which is precisely when nobody has time to
+    rebuild an APK.
+
+    The cost is bounded: this app talks to one address, the one typed into its
+    own "find the kitchen" screen, and it has no business on the public
+    internet at all.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true" />
+</network-security-config>

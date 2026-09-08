@@ -42,7 +42,7 @@ function Assert-Command($name, $hint) {
 }
 
 Write-Host ''
-Write-Host 'Leftover Chef - setup' -ForegroundColor White
+Write-Host 'FridgeMama - setup' -ForegroundColor White
 Write-Host '---------------------' -ForegroundColor DarkGray
 
 Assert-Command 'php'      'Install PHP 8.2+ and reopen the terminal.'
