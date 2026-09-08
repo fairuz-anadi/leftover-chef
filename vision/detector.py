@@ -37,10 +37,16 @@ VOCAB_PATH = Path(os.environ.get("LC_VOCAB", HERE / "vocabulary.json"))
 
 # Ordered by preference. First one that loads wins.
 BACKENDS = [
-    # A fine-tuned checkpoint wins when one is present. Drop the file into
-    # vision/weights and it is picked up on the next restart; nothing else in
-    # the stack changes, because the response shape is identical.
-    ("finetuned", os.environ.get("LC_FT_WEIGHTS", "fridge-finetuned.pt")),
+    # A fine-tuned checkpoint wins when one is present. Drop best.pt or
+    # fridge-finetuned.pt into vision/weights and it is picked up on the next
+    # restart; nothing else in the stack changes, because the response shape is identical.
+    (
+        "finetuned",
+        os.environ.get(
+            "LC_FT_WEIGHTS",
+            "best.pt" if (WEIGHTS_DIR / "best.pt").exists() else "fridge-finetuned.pt",
+        ),
+    ),
     ("world", os.environ.get("LC_WORLD_WEIGHTS", "yolov8s-worldv2.pt")),
     ("coco", os.environ.get("LC_COCO_WEIGHTS", "yolov8n.pt")),
 ]
@@ -88,6 +94,11 @@ def load_vocabulary(path: Path = VOCAB_PATH) -> dict[str, Any]:
 
         prompt_to_ingredient[prompt] = ingredient
 
+    finetuned_map = {
+        str(k).strip().lower(): v
+        for k, v in (raw.get("finetuned_map") or {}).items()
+    }
+
     coco_map = {
         str(k).strip().lower(): v
         for k, v in (raw.get("coco_map") or {}).items()
@@ -96,6 +107,7 @@ def load_vocabulary(path: Path = VOCAB_PATH) -> dict[str, Any]:
     return {
         "prompts": prompts,
         "prompt_to_ingredient": prompt_to_ingredient,
+        "finetuned_map": finetuned_map,
         "coco_map": coco_map,
     }
 
@@ -172,6 +184,10 @@ class Detector:
         # weights/ - the first run downloads once into the repo and every later
         # run (venue WiFi off) reads the same file.
         path = weights if os.path.isabs(weights) else str(WEIGHTS_DIR / weights)
+
+        # For fine-tuned weights, skip if local file does not exist so fallback chain works
+        if backend == "finetuned" and not os.path.exists(path):
+            raise FileNotFoundError(f"fine-tuned weights not found: {path}")
 
         if backend == "world":
             _pin_clip_cache()
@@ -257,11 +273,21 @@ class Detector:
         if not label:
             return None
 
+        clean = label.strip().lower()
+
+        # 1. Fine-tuned model explicit mapping
+        finetuned_map = self.vocabulary.get("finetuned_map", {})
+        if clean in finetuned_map:
+            return finetuned_map[clean]
+
+        # 2. Direct match from vocabulary classes
         direct = self.vocabulary["prompt_to_ingredient"].get(label)
         if direct:
             return direct
 
         cleaned = label.replace("_", " ").replace("-", " ").strip().lower()
+        if cleaned in self.vocabulary["prompt_to_ingredient"]:
+            return self.vocabulary["prompt_to_ingredient"][cleaned]
 
         # COCO furniture — bowl, fork, refrigerator — is mapped to null on
         # purpose and is the one case where dropping is correct.
@@ -271,11 +297,16 @@ class Detector:
         return cleaned or None
 
     def describe(self) -> dict[str, Any]:
+        class_count = (
+            len(self.model.names)
+            if (self.model and hasattr(self.model, "names") and self.model.names)
+            else len(self.vocabulary["prompts"])
+        )
         return {
             "ready": self.ready,
             "backend": self.backend,
             "weights": self.weights,
-            "class_count": len(self.vocabulary["prompts"]),
+            "class_count": class_count,
             "error": self.error,
         }
 
