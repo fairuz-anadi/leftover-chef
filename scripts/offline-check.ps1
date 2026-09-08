@@ -89,6 +89,24 @@ Test-Step 'detector is loaded' {
     "$($health.detector.backend) / $($health.detector.weights), $($health.detector.class_count) classes"
 }
 
+# Tahmid's check, kept: the sidecar can be perfectly offline while the client
+# still reaches for a Google font or an Unsplash photo, and you only find out
+# when the page renders bare in front of a judge.
+Test-Step 'the client pulls nothing off the internet' {
+    $sources = Get-ChildItem (Join-Path $root 'client\src') -Recurse -File |
+        Where-Object { $_.Extension -match '^\.(js|jsx|css|html)$' }
+    $hits = $sources | Select-String -Pattern 'fonts\.googleapis\.com|fonts\.gstatic\.com|unsplash\.com|cdn\.jsdelivr|cdnjs\.cloudflare|unpkg\.com'
+    if ($hits) { throw "external asset referenced in $($hits[0].Path):$($hits[0].LineNumber)" }
+
+    $index = Join-Path $root 'client\index.html'
+    if (Test-Path $index) {
+        $remote = Select-String -Path $index -Pattern 'https?://'
+        if ($remote) { throw "index.html still points at $($remote[0].Line.Trim())" }
+    }
+
+    "$($sources.Count) source files, fonts and images bundled"
+}
+
 Test-Step 'model weights are local' {
     $files = Get-ChildItem (Join-Path $root 'vision\weights') -Recurse -File
     if ($files.Count -lt 2) { throw 'vision/weights is thin - run scripts/warm-cache.ps1 on WiFi' }
