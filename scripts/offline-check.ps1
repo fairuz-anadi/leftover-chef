@@ -27,6 +27,7 @@ $ErrorActionPreference = 'Stop'
 $root      = Split-Path -Parent $PSScriptRoot
 $apiUrl    = 'http://127.0.0.1:8000/api'
 $visionUrl = 'http://127.0.0.1:8001'
+$clientUrl = 'http://127.0.0.1:5173'
 $session   = "offline-check-$([guid]::NewGuid().ToString('N').Substring(0,12))"
 $headers   = @{ 'X-Fridge-Session' = $session; 'Accept' = 'application/json' }
 
@@ -72,7 +73,7 @@ function Test-Step {
 }
 
 Write-Host ''
-Write-Host 'Leftover Chef - offline rehearsal' -ForegroundColor White
+Write-Host 'FridgeMama - offline rehearsal' -ForegroundColor White
 Write-Host '---------------------------------' -ForegroundColor DarkGray
 
 $online = Test-Connection -ComputerName '1.1.1.1' -Count 1 -Quiet -ErrorAction SilentlyContinue
@@ -105,6 +106,38 @@ Test-Step 'the client pulls nothing off the internet' {
     }
 
     "$($sources.Count) source files, fonts and images bundled"
+}
+
+# An installed app that cannot start without the network is worse than a
+# bookmark, because it looks like it should work.
+Test-Step 'the app is installable and cached' {
+    $manifest = Invoke-RestMethod "$clientUrl/manifest.webmanifest" -TimeoutSec 10
+    foreach ($field in 'name', 'start_url', 'display', 'icons') {
+        if (-not $manifest.$field) { throw "manifest is missing $field" }
+    }
+    if ($manifest.display -ne 'standalone') { throw "display is $($manifest.display), not standalone" }
+
+    # Chrome will not offer to install without both of these sizes.
+    $sizes = $manifest.icons.sizes
+    foreach ($needed in '192x192', '512x512') {
+        if ($sizes -notcontains $needed) { throw "no $needed icon in the manifest" }
+    }
+    if (-not ($manifest.icons | Where-Object { $_.purpose -eq 'maskable' })) {
+        throw 'no maskable icon - Android will crop the mark badly'
+    }
+
+    foreach ($icon in $manifest.icons) {
+        $head = Invoke-WebRequest "$clientUrl$($icon.src)" -UseBasicParsing -TimeoutSec 10
+        if ($head.StatusCode -ne 200) { throw "icon 404: $($icon.src)" }
+    }
+
+    $sw = Invoke-WebRequest "$clientUrl/sw.js" -UseBasicParsing -TimeoutSec 10
+    if ($sw.StatusCode -ne 200) { throw 'no service worker at /sw.js' }
+    if ($sw.Content -notmatch 'addEventListener\("fetch"') {
+        throw 'the service worker has no fetch handler - Chrome will not treat this as installable'
+    }
+
+    "$($manifest.name), $($manifest.icons.Count) icons, service worker present"
 }
 
 Test-Step 'model weights are local' {

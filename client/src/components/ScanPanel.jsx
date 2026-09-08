@@ -30,6 +30,23 @@ const SAMPLES = Object.entries(SAMPLE_MODULES)
 // pastels that worked on near-black wash out completely here.
 const BOX_COLOURS = ["#0d9488", "#b45309", "#2563eb", "#be185d", "#15803d", "#6d28d9"];
 
+// Can we show a live viewfinder inside the page?
+//
+// Only on a secure origin. On the laptop that is localhost, so yes. On a phone
+// that installed this from the laptop's hotspot the origin is a bare http://
+// IP address, and browsers do not expose getUserMedia there at any price —
+// navigator.mediaDevices is simply not defined, so the old code fell into its
+// catch and told the user they had no camera while they were holding one.
+//
+// The fallback is better than a workaround: `capture` hands the shot to the
+// phone's own camera app, which has the autofocus and the flash, and returns
+// the same File the upload path already scans.
+const LIVE_CAMERA =
+  typeof window !== "undefined" &&
+  window.isSecureContext &&
+  typeof navigator !== "undefined" &&
+  !!navigator.mediaDevices?.getUserMedia;
+
 export default function ScanPanel({ onConfirmed, onPhoto, showToast }) {
   const [status, setStatus] = useState(null);
   const [photoUrl, setPhotoUrl] = useState(null);
@@ -40,6 +57,7 @@ export default function ScanPanel({ onConfirmed, onPhoto, showToast }) {
   const [camera, setCamera] = useState(false);
 
   const fileInput = useRef(null);
+  const cameraInput = useRef(null);
   const videoRef = useRef(null);
   const streamRef = useRef(null);
   const objectUrl = useRef(null);
@@ -110,6 +128,11 @@ export default function ScanPanel({ onConfirmed, onPhoto, showToast }) {
   }
 
   async function startCamera() {
+    if (!LIVE_CAMERA) {
+      cameraInput.current?.click();
+      return;
+    }
+
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: "environment", width: { ideal: 1280 } },
@@ -219,6 +242,22 @@ export default function ScanPanel({ onConfirmed, onPhoto, showToast }) {
             ref={fileInput}
             type="file"
             accept="image/*"
+            className="hidden"
+            onChange={(event) => {
+              const file = event.target.files?.[0];
+              event.target.value = "";
+              if (file) runScan(file);
+            }}
+          />
+
+          {/* capture="environment" opens the rear camera directly. Ignored on
+              a desktop browser, which is why this only ever gets clicked when
+              the live viewfinder is unavailable. */}
+          <input
+            ref={cameraInput}
+            type="file"
+            accept="image/*"
+            capture="environment"
             className="hidden"
             onChange={(event) => {
               const file = event.target.files?.[0];

@@ -1,4 +1,4 @@
-# Leftover Chef vision sidecar.
+# FridgeMama vision sidecar.
 #
 # Install into vision/.venv (scripts/setup.ps1 does this). torch comes in as an
 # ultralytics dependency; on a machine that already has a CPU or CUDA build of

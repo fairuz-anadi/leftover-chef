@@ -22,12 +22,12 @@ class RecipeSeeder extends Seeder
     }
 
     private const COOKS = [
-        ['Maria Rossi', 'maria', 'maria@leftoverchef.test'],
-        ['Rahim Chowdhury', 'rahim', 'rahim@leftoverchef.test'],
-        ['Yuki Tanaka', 'yuki', 'yuki@leftoverchef.test'],
-        ['Ana Flores', 'ana', 'ana@leftoverchef.test'],
-        ['Amara Okafor', 'amara', 'amara@leftoverchef.test'],
-        ['Tomas Novak', 'tomas', 'tomas@leftoverchef.test'],
+        ['Maria Rossi', 'maria', 'maria@fridgemama.test'],
+        ['Rahim Chowdhury', 'rahim', 'rahim@fridgemama.test'],
+        ['Yuki Tanaka', 'yuki', 'yuki@fridgemama.test'],
+        ['Ana Flores', 'ana', 'ana@fridgemama.test'],
+        ['Amara Okafor', 'amara', 'amara@fridgemama.test'],
+        ['Tomas Novak', 'tomas', 'tomas@fridgemama.test'],
     ];
 
     private const RECIPES = [

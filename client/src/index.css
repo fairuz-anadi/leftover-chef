@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /*
-  Leftover Chef — one screen, light.
+  FridgeMama — one screen, light.
 
   Two rules hold the whole palette together:
 
@@ -106,6 +106,56 @@ body {
 @keyframes lc-drift {
   from { background-position: 0% 0%, 100% 0%, 50% 100%; }
   to   { background-position: 6% 4%, 94% 6%, 46% 96%; }
+}
+
+/*
+  ── Installed on a phone ──────────────────────────────────────────────────
+
+  Everything below only matters once this is on a home screen. In a browser
+  tab the chrome handles all of it; in standalone there is no chrome, and the
+  page is on its own against the notch, the home indicator and a stray
+  double-tap that zooms the shelf out from under you mid-demo.
+*/
+
+/* The header sits at the very top, so it is what ends up under the notch. */
+#root {
+  padding-top: env(safe-area-inset-top);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Landscape on a phone puts a rotated status bar down one side. */
+@media (display-mode: standalone) {
+  body {
+    /* An installed app should not rubber-band like a web page; that bounce is
+       the single clearest tell that something is "just a website". */
+    overscroll-behavior-y: none;
+  }
+}
+
+/*
+  iOS zooms the page in when a form field's text is under 16px, and never
+  zooms back out. The only field here is "add something by hand", and a judge
+  typing into it should not end up with the shelf half off-screen.
+*/
+@supports (-webkit-touch-callout: none) {
+  input,
+  select,
+  textarea {
+    font-size: max(16px, 1em);
+  }
+}
+
+/* Fingers, not mice: no accidental text selection while tapping chips. */
+@media (hover: none) and (pointer: coarse) {
+  button {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    user-select: none;
+    /* Apple's own floor for something you have to hit while standing up. */
+    min-height: 44px;
+  }
 }
 
 button,
@@ -232,6 +282,84 @@ img {
   animation: lc-sweep 1.5s ease-in-out infinite;
 }
 
+/*
+  ── The landing page ──────────────────────────────────────────────────────
+
+  Everything in the app above animates on arrival, because the element is new.
+  A landing page is different: all of it exists at once and most of it is below
+  the fold, so it animates on approach instead. `.lc-inview` is the resting
+  state, `.is-in` is what the observer adds when the section comes into view.
+*/
+.lc-inview {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 620ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 620ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.lc-inview.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Children of a revealed group come in one after another, left to right. */
+.lc-inview.is-in > .lc-step:nth-child(1) { transition-delay: 0ms; }
+.lc-inview.is-in > .lc-step:nth-child(2) { transition-delay: 90ms; }
+.lc-inview.is-in > .lc-step:nth-child(3) { transition-delay: 180ms; }
+.lc-inview.is-in > .lc-step:nth-child(4) { transition-delay: 270ms; }
+
+.lc-step {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 560ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 560ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.lc-inview.is-in > .lc-step {
+  opacity: 1;
+  transform: none;
+}
+
+/* The heart in the logo, on the hero only. Slow — a resting pulse, not an
+   alarm; the app has a separate animation for things that are actually
+   urgent and the two must not read the same. */
+@keyframes lc-beat {
+  0%, 72%, 100% { transform: scale(1); }
+  78%           { transform: scale(1.055); }
+  84%           { transform: scale(1); }
+  90%           { transform: scale(1.03); }
+}
+
+.lc-beat {
+  animation: lc-beat 3.4s ease-in-out infinite;
+  transform-origin: center;
+}
+
+/* A shelf-life bar draining, used once in the hero to show the idea in
+   motion before anyone has read a word about it. */
+@keyframes lc-drain {
+  0%   { width: 100%; background: var(--fresh); }
+  45%  { width: 46%;  background: var(--soon); }
+  80%  { width: 12%;  background: var(--today); }
+  100% { width: 12%;  background: var(--today); }
+}
+
+.lc-drain {
+  animation: lc-drain 5.5s cubic-bezier(0.4, 0, 0.5, 1) infinite alternate;
+}
+
+/* The soft halo behind the hero mark. */
+@keyframes lc-halo {
+  from { transform: scale(1); opacity: 0.55; }
+  to   { transform: scale(1.14); opacity: 0.25; }
+}
+
+.lc-halo {
+  animation: lc-halo 4.2s ease-in-out infinite alternate;
+}
+
 /* Respect anyone who has asked the OS to stop moving things. Every animation
    in the file is decorative — nothing here is the only way information is
    conveyed — so they can all simply stop. */
@@ -246,9 +374,21 @@ img {
   .lc-listen,
   .lc-sweep::after,
   .lc-card,
-  .lc-lift:hover {
+  .lc-lift:hover,
+  .lc-beat,
+  .lc-drain,
+  .lc-halo {
     animation: none !important;
     transition: none !important;
+    transform: none !important;
+  }
+
+  /* These two hide their content until an observer reveals them, so they
+     cannot simply have their transition removed — they have to arrive
+     already visible. */
+  .lc-inview,
+  .lc-step {
+    opacity: 1 !important;
     transform: none !important;
   }
 }

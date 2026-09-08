@@ -1,4 +1,4 @@
-# Leftover Chef
+# FridgeMama
 
 ### A smart fridge companion — detect, track, and cook before it spoils
 
@@ -138,6 +138,59 @@ into account — a live-demo risk a pure software pipeline does not carry.
 
 ---
 
+## Install it on a phone
+
+FridgeMama is a progressive web app: the same code, but with a manifest, an
+icon set and a service worker, so a phone can put it on its home screen and
+open it full-screen with no address bar and no tabs. That is not decoration —
+a fridge app that takes four taps and a typed URL to reach is a fridge app
+nobody opens.
+
+`start-demo.ps1` builds the client and serves the build, because a service
+worker is only registered in production. It prints two addresses:
+
+```
+Open          : http://localhost:5173
+On your phone : http://192.168.0.203:5173
+```
+
+The second one is the laptop's address on the local network. On the phone:
+
+1. Join the same WiFi as the laptop, or the laptop's hotspot.
+2. Open that address in **Chrome** (Android) or **Safari** (iPhone).
+3. **Android** — tap **Install** in the page header, or Chrome's ⋮ menu →
+   *Add to Home screen*.
+   **iPhone** — tap **Share** → *Add to Home Screen*. Safari has no install
+   API, so the button on the page tells you where Apple put theirs.
+
+It opens at `/app`, straight into the fridge — someone who has already
+installed it does not need the pitch again.
+
+**What still needs the laptop.** The detector, the recipes and the fridge all
+live on the laptop; the phone is a screen and a camera. The service worker
+caches the app shell, so the installed app opens instantly and opens *at all*
+when the laptop is asleep — but it will tell you it cannot reach the kitchen
+rather than showing you a stale fridge. Live state is never served from cache.
+
+**Camera.** On the laptop, "Use the camera" opens a viewfinder in the page. On
+a phone reached over plain `http://`, browsers do not expose `getUserMedia` at
+any price, so the button hands off to the phone's own camera app instead — same
+photo, same scan, and it gets the autofocus and the flash for free.
+
+---
+
+## The front page
+
+`/` is a landing page — the logo, what the app does, the four steps, the three
+decisions worth defending, and the install instructions. It is what sits on the
+laptop between judges and the first thing anyone sees on their own phone.
+
+`/app` is the app. Clicking the logo in its header goes back. Routing is
+`pushState` and a `popstate` listener in `src/Root.jsx`, not a router library:
+there are two screens and no third one coming.
+
+---
+
 ## Offline
 
 The venue provides no internet, so model weights live in `vision/weights`
@@ -175,7 +228,8 @@ detector-label mapping, urgency-weighted ranking, the local-cuisine bonus and
 | Script | What it does |
 | --- | --- |
 | `setup.ps1` | One-time: dependencies, database, model weights |
-| `start-demo.ps1` | Starts all three processes, waits for each, opens the browser |
+| `start-demo.ps1` | Builds the client, starts all three processes, prints the phone URL |
+| `start-demo.ps1 -Dev` | Same, but the Vite dev server with hot reload (not installable) |
 | `stop-demo.ps1` | Frees ports 5173 / 8000 / 8001 |
 | `warm-cache.ps1` | Pulls every model file while you still have WiFi |
 | `offline-check.ps1` | The rehearsal — run it with the network off |

@@ -7,7 +7,7 @@
  */
 
 const BASE = "/api";
-const SESSION_KEY = "leftoverchef_session";
+const SESSION_KEY = "fridgemama_session";
 
 function sessionId() {
   let id = null;

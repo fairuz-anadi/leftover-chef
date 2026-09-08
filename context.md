@@ -1,6 +1,6 @@
 # context.md
 
-Working notes for **Leftover Chef** — what it is, how the pieces fit, and why
+Working notes for **FridgeMama** — what it is, how the pieces fit, and why
 they are the way they are. Read this before changing anything structural, and
 update it when you do.
 
@@ -300,6 +300,66 @@ cleanup — not an oversight.
 
 ---
 
+## 10a. The name, the mark, and the two screens
+
+The project was called Leftover Chef through the rebuild. It is **FridgeMama**
+now — every string, cache key, session key and script header moved with it in
+one pass, so there is no half-renamed corner to find at the venue.
+
+The mark is a fridge with a heart where the lower door handle would be, drawn
+in `components/Logo.jsx` as two-colour SVG rather than imported as a file: it
+stays sharp at any size, inherits the page's colours, and costs no request at a
+venue with no network. `scripts/` has no icon step — the PNG home-screen icons
+are generated from the same geometry and committed under `client/public/icons`.
+
+There are now **two screens**, not one:
+
+- `/` — the landing page. What sits on the laptop between judges, and what a
+  phone lands on first. Logo, the four steps, the three decisions worth
+  defending, and how to install it.
+- `/app` — the app, unchanged. Still one screen, still the whole loop.
+
+`src/Root.jsx` chooses between them with `pushState` and a `popstate` listener.
+That is deliberately not a router library: two screens, no third one coming,
+and a dependency is a thing that can fail to install at a venue.
+
+The manifest's `start_url` is `/app`, so an installed icon opens the fridge —
+somebody who has put this on their home screen does not need the pitch again.
+
+### Installable
+
+`client/public/manifest.webmanifest` and `client/public/sw.js` make this a
+progressive web app. The service worker is hand-written rather than generated,
+because a build-time PWA plugin means an npm install and this project's whole
+argument is that it runs with the WiFi off.
+
+Two strategies, split by what the thing is. The app shell is cache-first —
+hashed filenames never change within a build, so serving them from disk is both
+correct and instant. `/api/*` is **network-only**: a fridge is live state, and
+showing a judge yesterday's shelf is worse than showing them an error.
+
+A service worker only registers in a production build, so `start-demo.ps1` now
+builds the client and serves the build. `-Dev` switches back to the dev server
+with hot reload, and nothing installs in that mode — by design, since a worker
+left over from a build would happily serve a stale bundle over the top of the
+one being edited.
+
+Two things this forced:
+
+- **Vite binds to every interface**, not loopback, so a phone can reach it. The
+  start script prints the LAN address. Nothing is authenticated, which is fine
+  on a hotspot and is the identity model anyway — but it is a reason not to run
+  this on a café's WiFi.
+- **The camera has two paths.** `getUserMedia` exists only on a secure origin.
+  A phone reaching the laptop over plain `http://` has no such thing —
+  `navigator.mediaDevices` is simply undefined — so the old code fell into its
+  catch and told the user they had no camera while they were holding one.
+  `ScanPanel` now falls back to `<input capture="environment">`, which hands
+  off to the phone's own camera app and returns the same File. Better than a
+  workaround: it gets the autofocus and the flash.
+
+---
+
 ## 11. State of things
 
 **Done and verified**
@@ -308,7 +368,11 @@ cleanup — not an oversight.
   confirmed → dated → fast-forward → notification → reveal → cooked → counter
   moved.
 - 44 PHPUnit tests pass. `npm run build` and eslint clean.
-- `offline-check.ps1` passes 10/10 against the running stack.
+- `offline-check.ps1` passes 12/12 against the running stack.
+- The service worker registers and activates in real Chrome, with the shell
+  cached and the manifest served as `application/manifest+json`. It does *not*
+  register in an embedded browser view — that is the view's restriction, not a
+  fault in the app, and it cost an hour to establish.
 
 **Not done**
 
@@ -320,6 +384,15 @@ cleanup — not an oversight.
 - **The 500-word project report** (rulebook §06) must reach the organisers
   before the presentation slot. Failing to submit it is a disqualification
   ground.
+- **The install prompt has not been seen fire.** Chrome only offers
+  `beforeinstallprompt` after a genuine user interaction with the origin, which
+  no automated check can produce. Everything it depends on is verified —
+  manifest, both icon sizes, a maskable icon, an active worker with a fetch
+  handler — and the manual route (Chrome ⋮ → *Add to Home screen*, Safari
+  *Share* → *Add to Home Screen*) never needed the event at all. Install it on
+  a real phone once before the venue.
+- **The team is not named on the landing page.** Add the names when you know
+  exactly who should be on it.
 
 ---
 

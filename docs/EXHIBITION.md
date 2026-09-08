@@ -70,7 +70,7 @@ presentation slot**. §10 lists failure to submit as a disqualification ground.
 
 ### Draft (494 words, title included)
 
-> **Leftover Chef — A Smart Fridge Companion**
+> **FridgeMama — A Smart Fridge Companion**
 >
 > **Problem.** Roughly a third of the food produced for human consumption is
 > never eaten, and much of that loss is domestic. Two everyday failures cause
@@ -81,7 +81,7 @@ presentation slot**. §10 lists failure to submit as a disqualification ground.
 > needs using. Existing expiry-tracking applications ask the user to type in
 > every item and every date, which is why people abandon them within a week.
 >
-> **Solution.** Leftover Chef removes the data entry. The user photographs the
+> **Solution.** FridgeMama removes the data entry. The user photographs the
 > inside of their fridge; a computer-vision model identifies the ingredients and
 > returns them as labelled regions drawn over the photograph. The user confirms
 > or corrects that list, and each accepted item receives an expiry countdown
@@ -202,10 +202,22 @@ food waste is roughly 8–10% of global greenhouse emissions.
 | 4 | **Rehearse the 90 seconds twice** | Time is strictly maintained; it must be running before judges arrive | 1 h |
 | 5 | **Build the Fridge Frame prop** | The one wow-factor item that is not code | 1 h |
 | 6 | **Pack the multi-plug** | Mandatory per rulebook §07 | — |
+| 7 | **Install it on your own phone the night before** | The install prompt is the one thing that depends on the judge's own browser. Do it once yourself so you know where the button is on Android and on iPhone. | 15 min |
+| 8 | **Decide: hotspot or venue WiFi** | The phone reaches the laptop over the local network. A phone hotspot from your own handset is the reliable answer; venue WiFi may not let two devices see each other. | 15 min |
 
 **Also worth doing:** print the ranking formula (`0.6 × match + 0.4 × urgency`)
 on a card for the desk — judges photograph things like that; and put a 40-second
 screen recording on a phone at the desk for when the queue backs up.
+
+**Handing a judge the app.** `start-demo.ps1` prints a `http://192.168.…`
+address; write it on the card too. A judge on your hotspot opens that, taps
+**Install**, and has FridgeMama on their own home screen before they leave the
+stall — which is a considerably better thing to be remembered by than a URL.
+Their phone gets its own fridge, because identity is a per-browser session id,
+so they cannot disturb the demo state you are about to show the next one.
+
+If nothing else works, the landing page at `/` has the install steps written
+out for both platforms, and the demo runs perfectly well on the laptop alone.
 
 ---
 

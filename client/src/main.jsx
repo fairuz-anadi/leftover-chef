@@ -8,10 +8,36 @@ import '@fontsource/ibm-plex-mono'
 import '@fontsource/noto-sans-bengali/400.css'
 import '@fontsource/noto-sans-bengali/600.css'
 import './index.css'
-import App from './App.jsx'
+import Root from './Root.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <App />
+    <Root />
   </StrictMode>,
 )
+
+/**
+ * Install the service worker, which is what turns this from a page into
+ * something you keep on a home screen.
+ *
+ * Production only. In dev, Vite serves modules that must never be cached, and
+ * a worker left registered by an earlier `npm run build` will happily serve a
+ * stale bundle over the top of the one being edited — so dev actively tears
+ * any registration down rather than merely skipping it.
+ */
+if ('serviceWorker' in navigator) {
+  if (import.meta.env.PROD) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').catch((error) => {
+        // Not fatal: the app is perfectly usable uninstalled, and saying so in
+        // the console beats a silent rejection nobody ever sees.
+        console.warn('FridgeMama: offline support unavailable —', error.message)
+      })
+    })
+  } else {
+    navigator.serviceWorker
+      .getRegistrations()
+      .then((registrations) => registrations.forEach((r) => r.unregister()))
+      .catch(() => {})
+  }
+}

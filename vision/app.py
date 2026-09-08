@@ -1,5 +1,5 @@
 """
-Leftover Chef vision sidecar.
+FridgeMama vision sidecar.
 
 A tiny FastAPI service that turns a fridge photo into a list of ingredients.
 It binds to localhost only and never calls out to the network at request time,
@@ -28,12 +28,12 @@ logging.basicConfig(
     level=os.environ.get("LC_LOG_LEVEL", "INFO"),
     format="%(asctime)s %(levelname)-7s %(name)s  %(message)s",
 )
-log = logging.getLogger("leftover-chef.api")
+log = logging.getLogger("fridgemama.api")
 
 MAX_UPLOAD_BYTES = int(os.environ.get("LC_MAX_UPLOAD_BYTES", 12 * 1024 * 1024))
 ALLOWED_TYPES = {"image/jpeg", "image/png", "image/webp", "image/bmp"}
 
-app = FastAPI(title="Leftover Chef Vision", version="1.0.0")
+app = FastAPI(title="FridgeMama Vision", version="1.0.0")
 
 # Laravel is the only real client, but allowing the Vite dev origin keeps the
 # service pokeable from the browser console while building.
@@ -78,7 +78,7 @@ def warm_up() -> None:
 @app.get("/health")
 def health() -> dict:
     return {
-        "service": "leftover-chef-vision",
+        "service": "fridgemama-vision",
         "status": "ok" if detector.ready else "degraded",
         "detector": detector.describe(),
     }

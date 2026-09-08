@@ -2,6 +2,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { api, recipeImage } from "./api";
 import { FreshnessBadge } from "./components/Freshness";
 import HealthDial from "./components/HealthDial";
+import InstallButton from "./components/InstallButton";
+import Logo from "./components/Logo";
 import RecipeReveal from "./components/RecipeReveal";
 import ScanPanel from "./components/ScanPanel";
 import Shelf from "./components/Shelf";
@@ -9,14 +11,14 @@ import VoiceAsk from "./components/VoiceAsk";
 import WastePanel from "./components/WastePanel";
 
 /**
- * Leftover Chef — the whole app, one screen.
+ * FridgeMama — the whole app, one screen.
  *
  * The loop the proposal describes, in the order it happens:
  * detect → track → warn → cook → measure. There is nothing else to navigate
  * to, no account to make and no menu, because every extra click is a second
  * of a ninety-second demo spent on something that is not the point.
  */
-export default function App() {
+export default function App({ onHome }) {
   const [state, setState] = useState(null);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
@@ -136,19 +138,20 @@ export default function App() {
     <div className="mx-auto w-full max-w-[1400px] px-5 pb-20 pt-6">
       {/* ── Header ──────────────────────────────────────────── */}
       <header className="flex flex-wrap items-center gap-x-5 gap-y-3">
-        <div className="flex items-center gap-3">
-          <span className="grid h-10 w-10 place-items-center rounded-xl bg-[var(--raised)] text-xl">
-            🧊
-          </span>
-          <div>
-            <h1 className="m-0 text-xl font-bold tracking-tight text-[var(--text)]">Leftover Chef</h1>
-            <p className="m-0 text-xs text-[var(--faint)]">
-              Point your phone — it tells you what to eat before it&apos;s too late.
-            </p>
-          </div>
-        </div>
+        <button
+          type="button"
+          onClick={onHome}
+          title="Back to the front page"
+          className="flex items-center gap-3 rounded-xl border-0 bg-transparent p-0 text-left"
+        >
+          <Logo
+            size={38}
+            tagline="Point your phone — it tells you what to eat before it's too late."
+          />
+        </button>
 
         <div className="ml-auto flex flex-wrap items-center gap-2">
+          <InstallButton />
           <span className="rounded-full border border-[var(--line)] px-3 py-1.5 font-mono text-xs text-[var(--dim)]">
             Day {state.session.day_offset + 1}
           </span>

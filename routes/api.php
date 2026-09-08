@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| Leftover Chef API
+| FridgeMama API
 |--------------------------------------------------------------------------
 |
 | One screen, one loop: detect → track → warn → cook → measure.

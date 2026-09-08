@@ -1,5 +1,5 @@
 """
-Model loading and inference for the Leftover Chef fridge detector.
+Model loading and inference for the FridgeMama fridge detector.
 
 Two backends, tried in order:
 
@@ -29,7 +29,7 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
 
-log = logging.getLogger("leftover-chef.detector")
+log = logging.getLogger("fridgemama.detector")
 
 HERE = Path(__file__).resolve().parent
 WEIGHTS_DIR = Path(os.environ.get("LC_WEIGHTS_DIR", HERE / "weights"))
