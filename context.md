@@ -4,6 +4,10 @@ Working notes for **Leftover Chef** — what it is, how the pieces fit, and why
 they are the way they are. This is the file to read before changing anything
 structural, and the file to update when you do.
 
+For the exhibition side of things — feature inventory, roadmap, the 500-word
+report, SDG/CEP mapping, demo script and judge Q&A — see
+[docs/PROJECT-DOSSIER.md](docs/PROJECT-DOSSIER.md).
+
 **Last updated:** 8 September 2026
 
 ---

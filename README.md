@@ -194,6 +194,11 @@ saved photos are the primary path.
 
 ## Further reading
 
-**[context.md](context.md)** — the design decisions and why they were made, the
-bug the alias table depended on, what is done and what is not, and the
-three-minute demo script.
+**[context.md](context.md)** — the engineering record: design decisions and why
+they were made, the bug the alias table depended on, and what is done and what
+is not.
+
+**[docs/PROJECT-DOSSIER.md](docs/PROJECT-DOSSIER.md)** — the exhibition
+dossier: the full feature inventory, the roadmap including the fine-tuning
+pipeline, a ready-to-submit 500-word report, the SDG and CEP mapping, the
+three-minute demo script and the questions judges ask.
