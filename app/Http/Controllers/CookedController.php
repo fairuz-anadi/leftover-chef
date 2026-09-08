@@ -51,7 +51,7 @@ class CookedController extends Controller
             ] + $this->state($session));
         }
 
-        $result = $this->consumption->consume($session, $ids);
+        $result = $this->consumption->consume($session, $ids, $recipe);
         $this->ledger->recordRescues($session, $result['rescued']);
 
         return response()->json([
@@ -70,6 +70,8 @@ class CookedController extends Controller
             'items.*.expires_on' => 'nullable|date',
             'items.*.expiry_estimated' => 'sometimes|boolean',
             'items.*.source' => 'nullable|string|max:20',
+            'items.*.detected_as' => 'nullable|string|max:120',
+            'items.*.confidence' => 'nullable|numeric|min:0|max:1',
         ]);
 
         $session = $this->fridge($request);

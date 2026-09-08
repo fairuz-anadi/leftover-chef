@@ -298,6 +298,56 @@ class FridgeLoopTest extends TestCase
         $this->assertGreaterThan(10, count($response->json('items')));
     }
 
+    /**
+     * Carried forward from Tahmid's hardening of the previous build: cooking
+     * one dish must not become a way to empty the whole shelf, however the id
+     * list was assembled.
+     */
+    public function test_cooking_cannot_remove_things_the_recipe_does_not_use(): void
+    {
+        $this->seed(\Database\Seeders\RecipeSeeder::class);
+
+        $recipe = \App\Models\Recipe::where('title', 'Spaghetti Aglio e Olio')->firstOrFail();
+        $required = $recipe->ingredientRecords->reject(fn ($i) => (bool) $i->pivot->is_optional);
+
+        $this->stock(array_fill_keys($required->pluck('name')->all(), 5) + ['Mango' => 5]);
+
+        $everything = PantryItem::where('session_id', self::SESSION)->pluck('id')->all();
+
+        $this->fridge()
+            ->postJson("/api/recipes/{$recipe->id}/cooked", ['pantry_item_ids' => $everything])
+            ->assertOk();
+
+        $left = collect($this->fridge()->getJson('/api/fridge')->json('items'))->pluck('name');
+
+        $this->assertTrue($left->contains('Mango'), 'a mango has nothing to do with aglio e olio');
+    }
+
+    /** Undo must not launder a camera-added item into a hand-typed one. */
+    public function test_undo_puts_back_the_scan_provenance_too(): void
+    {
+        $this->seed(\Database\Seeders\RecipeSeeder::class);
+
+        $this->fridge()->postJson('/api/fridge/scan/confirm', [
+            'items' => [['name' => 'Green Chilli', 'detected_as' => 'green chilli pepper', 'confidence' => 0.77]],
+        ])->assertCreated();
+
+        $recipe = \App\Models\Recipe::where('title', 'Spaghetti Aglio e Olio')->firstOrFail();
+        $removed = $this->fridge()->postJson("/api/recipes/{$recipe->id}/cooked")->json('removed');
+
+        $this->assertSame('green chilli pepper', $removed[0]['detected_as']);
+
+        $this->fridge()->postJson('/api/fridge/restore', ['items' => $removed])->assertOk();
+
+        $back = PantryItem::where('session_id', self::SESSION)
+            ->whereHas('ingredient', fn ($q) => $q->where('name', 'Green Chilli'))
+            ->firstOrFail();
+
+        $this->assertSame('scan', $back->source);
+        $this->assertSame('green chilli pepper', $back->detected_as);
+        $this->assertEqualsWithDelta(0.77, $back->confidence, 0.0001);
+    }
+
     public function test_the_freshness_service_agrees_with_itself_about_the_tiers(): void
     {
         $freshness = new FreshnessService();

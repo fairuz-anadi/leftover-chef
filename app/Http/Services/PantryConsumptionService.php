@@ -79,13 +79,21 @@ class PantryConsumptionService
      * @param  array<int, int>  $pantryItemIds
      * @return array{removed: array<int, array<string, mixed>>, rescued: array<int, array<string, mixed>>}
      */
-    public function consume(FridgeSession $session, array $pantryItemIds): array
+    public function consume(FridgeSession $session, array $pantryItemIds, Recipe $recipe): array
     {
         $statuses = $this->freshness->statuses($session);
+
+        // Scoped to what the recipe actually requires, not just to what the
+        // caller asked for. Cooking one dish must not be a way to empty the
+        // whole shelf, however the id list was assembled.
+        $required = $recipe->ingredientRecords
+            ->reject(fn ($ingredient) => (bool) $ingredient->pivot->is_optional)
+            ->pluck('id');
 
         $items = $session->pantryItems()
             ->with('ingredient:id,name,slug')
             ->whereIn('id', $pantryItemIds)
+            ->whereIn('ingredient_id', $required)
             ->get()
             ->filter(fn (PantryItem $item) => $item->ingredient !== null);
 
@@ -94,6 +102,8 @@ class PantryConsumptionService
             'expires_on' => $item->expires_on?->toDateString(),
             'expiry_estimated' => (bool) $item->expiry_estimated,
             'source' => $item->source,
+            'detected_as' => $item->detected_as,
+            'confidence' => $item->confidence,
         ])->values();
 
         // Worked out before the delete — afterwards there is nothing left to
@@ -135,6 +145,8 @@ class PantryConsumptionService
                     'expires_on' => $item['expires_on'] ?? null,
                     'expiry_estimated' => (bool) ($item['expiry_estimated'] ?? false),
                     'source' => $item['source'] ?? 'manual',
+                    'detected_as' => $item['detected_as'] ?? null,
+                    'confidence' => $item['confidence'] ?? null,
                 ]
             );
 
