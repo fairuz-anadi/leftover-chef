@@ -209,6 +209,17 @@ food waste is roughly 8–10% of global greenhouse emissions.
 on a card for the desk — judges photograph things like that; and put a 40-second
 screen recording on a phone at the desk for when the queue backs up.
 
+**Two ways to hand it over.** The browser install needs nothing but the
+address — it is the one to lead with, and the one that works on an iPhone. The
+APK (`scripts/build-apk.ps1`, output in the repo root) is for a judge who wants
+a file, or who would rather not type an address: it already has the laptop's
+address inside it. Carry it on a USB stick and on the laptop, because a phone
+that will not accept a file over Bluetooth in a crowded hall is a real thing.
+
+Either way the laptop must be running and on the same network. Say so before
+they ask — "the phone is a screen and a camera, the AI runs here" is a better
+answer given up front than extracted.
+
 **Handing a judge the app.** `start-demo.ps1` prints a `http://192.168.…`
 address; write it on the card too. A judge on your hotspot opens that, taps
 **Install**, and has FridgeMama on their own home screen before they leave the

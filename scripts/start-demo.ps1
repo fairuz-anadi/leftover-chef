@@ -108,8 +108,11 @@ if (-not $SkipVision) {
 }
 
 # -- 2. Laravel API ---------------------------------------------------------
+# Bound to every interface, like the client, because the Android app talks to
+# Laravel directly rather than through Vite's proxy. Same exposure the client
+# already has: fine on a hotspot, and a reason not to run this on a cafe's WiFi.
 Write-Step 'Starting the API on :8000...'
-Start-InWindow -Title 'FridgeMama - api' -WorkingDirectory $root -Command 'php artisan serve --host=127.0.0.1 --port=8000'
+Start-InWindow -Title 'FridgeMama - api' -WorkingDirectory $root -Command 'php artisan serve --host=0.0.0.0 --port=8000'
 
 if (Wait-ForUrl -Url "$apiUrl/api/fridge" -TimeoutSeconds 45 -Label 'API') {
     Write-Ok 'API ready'
@@ -162,6 +165,11 @@ Write-Host '  Open          : ' -NoNewline; Write-Host $clientUrl -ForegroundCol
 if ($lanIp -and -not $Dev) {
     Write-Host '  On your phone : ' -NoNewline; Write-Host "http://${lanIp}:5173" -ForegroundColor White
     Write-Host '                  same WiFi or the laptop hotspot, then tap Install.' -ForegroundColor DarkGray
+}
+
+if ($lanIp) {
+    Write-Host '  In the APK    : ' -NoNewline; Write-Host $lanIp -ForegroundColor White
+    Write-Host '                  type this on the app''s "Find the kitchen" screen.' -ForegroundColor DarkGray
 }
 
 Write-Host '  No login - the fridge belongs to the browser session.' -ForegroundColor DarkGray

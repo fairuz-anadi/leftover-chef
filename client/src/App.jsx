@@ -4,6 +4,7 @@ import { FreshnessBadge } from "./components/Freshness";
 import HealthDial from "./components/HealthDial";
 import InstallButton from "./components/InstallButton";
 import Logo from "./components/Logo";
+import { isNativeApp } from "./api";
 import RecipeReveal from "./components/RecipeReveal";
 import ScanPanel from "./components/ScanPanel";
 import Shelf from "./components/Shelf";
@@ -18,7 +19,7 @@ import WastePanel from "./components/WastePanel";
  * to, no account to make and no menu, because every extra click is a second
  * of a ninety-second demo spent on something that is not the point.
  */
-export default function App({ onHome }) {
+export default function App({ onHome = null, onChangeKitchen = null }) {
   const [state, setState] = useState(null);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
@@ -119,8 +120,12 @@ export default function App({ onHome }) {
 
   if (!state) {
     return (
-      <div className="grid min-h-screen place-items-center gap-3 text-center text-sm text-[var(--dim)]">
-        <p>Couldn&apos;t reach the app.</p>
+      <div className="grid min-h-screen place-items-center gap-3 px-6 text-center text-sm text-[var(--dim)]">
+        <p className="m-0 max-w-xs">
+          {isNativeApp
+            ? "Couldn't reach the kitchen. Check the laptop is running and both devices are on the same WiFi."
+            : "Couldn't reach the app."}
+        </p>
         <button
           type="button"
           onClick={load}
@@ -128,6 +133,15 @@ export default function App({ onHome }) {
         >
           Try again
         </button>
+        {onChangeKitchen && (
+          <button
+            type="button"
+            onClick={onChangeKitchen}
+            className="rounded-full px-4 py-2 text-xs font-semibold text-[var(--accent)]"
+          >
+            Change the kitchen address
+          </button>
+        )}
       </div>
     );
   }
@@ -138,17 +152,24 @@ export default function App({ onHome }) {
     <div className="mx-auto w-full max-w-[1400px] px-5 pb-20 pt-6">
       {/* ── Header ──────────────────────────────────────────── */}
       <header className="flex flex-wrap items-center gap-x-5 gap-y-3">
-        <button
-          type="button"
-          onClick={onHome}
-          title="Back to the front page"
-          className="flex items-center gap-3 rounded-xl border-0 bg-transparent p-0 text-left"
-        >
+        {onHome ? (
+          <button
+            type="button"
+            onClick={onHome}
+            title="Back to the front page"
+            className="flex items-center gap-3 rounded-xl border-0 bg-transparent p-0 text-left"
+          >
+            <Logo
+              size={38}
+              tagline="Point your phone — it tells you what to eat before it's too late."
+            />
+          </button>
+        ) : (
           <Logo
             size={38}
             tagline="Point your phone — it tells you what to eat before it's too late."
           />
-        </button>
+        )}
 
         <div className="ml-auto flex flex-wrap items-center gap-2">
           <InstallButton />

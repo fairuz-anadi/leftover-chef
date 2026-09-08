@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { api } from "../api";
+import { api, isNativeApp } from "../api";
 
 /**
  * Fridge photo scan — the front door of the whole app.
@@ -32,6 +32,11 @@ const BOX_COLOURS = ["#0d9488", "#b45309", "#2563eb", "#be185d", "#15803d", "#6d
 
 // Can we show a live viewfinder inside the page?
 //
+// Not in the Android app. Its origin is http://localhost, which counts as
+// secure, so getUserMedia is present and would be tried — and then fail,
+// because the WebView has no camera permission behind it. Handing off to the
+// phone's camera app needs no permission and takes the better photo anyway.
+//
 // Only on a secure origin. On the laptop that is localhost, so yes. On a phone
 // that installed this from the laptop's hotspot the origin is a bare http://
 // IP address, and browsers do not expose getUserMedia there at any price —
@@ -42,6 +47,7 @@ const BOX_COLOURS = ["#0d9488", "#b45309", "#2563eb", "#be185d", "#15803d", "#6d
 // phone's own camera app, which has the autofocus and the flash, and returns
 // the same File the upload path already scans.
 const LIVE_CAMERA =
+  !isNativeApp &&
   typeof window !== "undefined" &&
   window.isSecureContext &&
   typeof navigator !== "undefined" &&

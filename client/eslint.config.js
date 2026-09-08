@@ -5,7 +5,10 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
-  globalIgnores(['dist']),
+  // 'android' holds a copy of dist that `cap sync` puts there, plus Gradle's
+  // own output. Linting a minified bundle is 285 KB of noise and one very
+  // confusing failure.
+  globalIgnores(['dist', 'android']),
   {
     files: ['**/*.{js,jsx}'],
     extends: [

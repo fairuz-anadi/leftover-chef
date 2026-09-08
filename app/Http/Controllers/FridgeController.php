@@ -37,8 +37,20 @@ class FridgeController extends Controller
         // A brand-new visitor opens on the demo fridge rather than an empty
         // one: a freshness dashboard with nothing in it teaches nobody
         // anything, and the judge has ninety seconds.
-        if ($session->wasRecentlyCreated) {
+        //
+        // Keyed off the column rather than wasRecentlyCreated, which is only
+        // true on the request that created the row. The Android app checks the
+        // connection before it fetches anything, so by the time it asks for
+        // the fridge the session already exists and nothing would stock.
+        //
+        // Both halves matter. The column is what stops a fridge somebody
+        // emptied on purpose refilling itself on the next page load; the
+        // emptiness check is what stops the demo contents landing on top of a
+        // fridge that was filled some other way — by a test, or by a scan
+        // confirmed before the shelf was ever fetched.
+        if ($session->stocked_at === null && $session->pantryItems()->doesntExist()) {
             $this->demo->stock($session);
+            $session->forceFill(['stocked_at' => now()])->save();
         }
 
         return response()->json($this->state($session));

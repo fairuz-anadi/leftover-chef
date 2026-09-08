@@ -358,6 +358,65 @@ Two things this forced:
   off to the phone's own camera app and returns the same File. Better than a
   workaround: it gets the autofocus and the flash.
 
+### The APK
+
+The web app installs from a browser and needs no toolchain at all. The APK is
+for the other case — handing somebody a file, or wanting the app in the drawer
+rather than on a home screen. Capacitor wraps the same `dist/`; there is no
+second codebase and no second build of the UI.
+
+`scripts/setup-android.ps1` fetches a JDK, the Android SDK and Gradle into
+`../android-toolchain`, outside the repo. `scripts/build-apk.ps1` produces
+`FridgeMama.apk`. Android Studio is not involved.
+
+**The APK carries the screens, not the fridge.** That is the honest description
+and it is also the interesting one: the detector, the recipes and the shelf all
+stay on the laptop, so the phone has to be told where the laptop is. The
+address is baked in at build time and editable on the app's first screen,
+because it is whatever the hotspot handed out that morning.
+
+Four things this needed, each of which is a real difference between a page and
+an app:
+
+- **A configurable API base.** In a browser `/api` is same-origin, which is why
+  a phone visiting the printed address needs no configuration. In the APK the
+  screens are served out of the package, so a relative path resolves to a file
+  that is not there. `src/api.js` decides at runtime off `window.Capacitor` —
+  one build, two homes.
+- **Cleartext HTTP.** Android has refused plain `http://` since API 28, and the
+  laptop has no certificate and no domain name. `network_security_config.xml`
+  permits it. It is a blanket `base-config` rather than a scoped one on
+  purpose: `<domain>` takes a hostname or a literal IP, not a CIDR range, so
+  "the private address ranges" is not something that file can say.
+- **Laravel on every interface.** `php artisan serve --host=0.0.0.0`, because
+  the app talks to Laravel directly instead of through Vite's proxy. Same
+  exposure the client already had. CORS needed nothing — `config/cors.php` was
+  already open for `api/*` and `HandleCors` is in the global stack.
+- **The phone's camera app.** The APK's origin is `http://localhost`, which
+  counts as a secure context, so `getUserMedia` exists and would be tried —
+  and then fail, because the WebView has no camera permission behind it. The
+  file-chooser path needs no permission and gets the autofocus and the flash.
+
+### The stocking bug the APK found
+
+Worth recording, because it was invisible until something called the API in a
+different order.
+
+A new fridge opens on the demo contents. That used to be keyed off
+`$session->wasRecentlyCreated`, which is true only on the request that created
+the row — so it held exactly as long as `GET /fridge` was the first call any
+client ever made. The Android app checks the connection before it saves the
+laptop's address, and that check creates the session. Every APK user would have
+opened on an empty shelf: no error, no clue, just the one screen that teaches a
+judge nothing.
+
+It is a `stocked_at` column now, and the condition is *both* that column being
+null *and* the shelf being empty. The column stops a fridge somebody emptied on
+purpose refilling itself on the next page load; the emptiness check stops the
+demo contents landing on top of a fridge that was filled another way — which is
+what six tests started failing about the moment the column alone was used.
+Two tests cover it.
+
 ---
 
 ## 11. State of things
@@ -367,7 +426,7 @@ Two things this forced:
 - The whole loop, end to end in a browser: photo → 6 ingredients in ~280 ms →
   confirmed → dated → fast-forward → notification → reveal → cooked → counter
   moved.
-- 44 PHPUnit tests pass. `npm run build` and eslint clean.
+- 46 PHPUnit tests pass. `npm run build` and eslint clean.
 - `offline-check.ps1` passes 12/12 against the running stack.
 - The service worker registers and activates in real Chrome, with the shell
   cached and the manifest served as `application/manifest+json`. It does *not*

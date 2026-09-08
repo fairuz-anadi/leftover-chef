@@ -10,8 +10,10 @@ use Illuminate\Support\Carbon;
  *
  * There are no accounts. The client generates an id, keeps it in localStorage
  * and sends it on every request; this row is everything the server knows about
- * that visitor. A judge who picks up the laptop gets the demo fridge; a judge
- * who opens it on their own phone gets an empty one, and neither has to sign in.
+ * that visitor. Every new fridge opens on the demo contents, whoever it belongs
+ * to — a freshness dashboard with nothing in it teaches nobody anything — and
+ * `stocked_at` records that it happened, so emptying the shelf on purpose is
+ * not undone by the next page load.
  *
  * `day_offset` is the demo clock. Read "today" from here rather than from
  * Carbon::today() anywhere expiry is involved, or the fast-forward button will
@@ -22,9 +24,12 @@ class FridgeSession extends Model
     /** How far the fast-forward button is allowed to run. */
     public const MAX_OFFSET = 30;
 
-    protected $fillable = ['session_id', 'day_offset'];
+    protected $fillable = ['session_id', 'day_offset', 'stocked_at'];
 
-    protected $casts = ['day_offset' => 'integer'];
+    protected $casts = [
+        'day_offset' => 'integer',
+        'stocked_at' => 'datetime',
+    ];
 
     public function pantryItems()
     {

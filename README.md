@@ -179,6 +179,41 @@ photo, same scan, and it gets the autofocus and the flash for free.
 
 ---
 
+## The APK
+
+The web app installs from a browser and needs no toolchain. The APK exists for
+the other case: handing somebody a file, or wanting the app in the app drawer
+rather than on a home screen.
+
+```powershell
+.\scripts\setup-android.ps1     # once: JDK, Android SDK, Gradle (~1 GB)
+.\scriptsuild-apk.ps1         # about a minute after that
+```
+
+Out comes `FridgeMama.apk` in the repo root. Copy it to a phone, open it,
+allow the install, done — Android will warn about installing from an unknown
+source, which is what sideloading looks like and is expected.
+
+**The APK carries the screens, not the fridge.** The detector, the recipes and
+the shelf are all still on the laptop, so the app has to be told where the
+laptop is. That address is baked in at build time from the machine you built
+on, and the app's first screen lets you change it — because the address is
+whatever the hotspot handed out that morning.
+
+```powershell
+.\scriptsuild-apk.ps1 -Kitchen 192.168.43.1
+```
+
+Three things this needed that the web app did not:
+
+| | |
+| --- | --- |
+| **A configurable API base** | In a browser `/api` is same-origin. In the APK the screens are served out of the package, so a relative path resolves to a file that is not there. `src/api.js` decides between them at runtime off `window.Capacitor`. |
+| **Cleartext HTTP** | Android has refused plain `http://` since API 28, and the laptop has no certificate and no domain name. `network_security_config.xml` permits it, with the reasoning written in the file. |
+| **The phone's camera app** | The APK's origin is `http://localhost`, which counts as secure, so `getUserMedia` exists and would be tried — then fail, because the WebView has no camera permission behind it. It hands off to the camera app instead, which needs no permission and takes the better photo. |
+
+---
+
 ## The front page
 
 `/` is a landing page — the logo, what the app does, the four steps, the three
@@ -211,7 +246,7 @@ network.
 ## Tests
 
 ```bash
-php artisan test           # 44 tests
+php artisan test           # 46 tests
 cd client && npm run lint
 ```
 
@@ -233,6 +268,8 @@ detector-label mapping, urgency-weighted ranking, the local-cuisine bonus and
 | `stop-demo.ps1` | Frees ports 5173 / 8000 / 8001 |
 | `warm-cache.ps1` | Pulls every model file while you still have WiFi |
 | `offline-check.ps1` | The rehearsal — run it with the network off |
+| `setup-android.ps1` | One-time: JDK, Android SDK and Gradle, outside the repo |
+| `build-apk.ps1` | Builds `FridgeMama.apk` with the laptop's address baked in |
 
 ---
 

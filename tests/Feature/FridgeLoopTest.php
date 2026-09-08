@@ -364,4 +364,38 @@ class FridgeLoopTest extends TestCase
         $this->assertSame(1.0, $freshness->urgency(0));
         $this->assertSame(0.0, $freshness->urgency(FreshnessService::HORIZON_DAYS));
     }
+
+    /**
+     * The Android app asks the detector whether it is alive before it saves
+     * the laptop's address, and that call creates the session. Stocking used
+     * to key off `wasRecentlyCreated`, so by the time the fridge was fetched
+     * the row was no longer new and the judge opened on an empty shelf.
+     */
+    public function test_a_fridge_stocks_even_when_another_endpoint_saw_the_session_first(): void
+    {
+        $this->fridge('apk-first-run')->getJson('/api/fridge/scan/status')->assertOk();
+
+        $response = $this->fridge('apk-first-run')->getJson('/api/fridge')->assertOk();
+
+        $this->assertNotEmpty(
+            $response->json('items'),
+            'the fridge opened empty because something touched the session first',
+        );
+    }
+
+    public function test_an_emptied_fridge_stays_empty_across_a_reload(): void
+    {
+        $first = $this->fridge('empties-on-purpose')->getJson('/api/fridge')->assertOk();
+        $this->assertNotEmpty($first->json('items'));
+
+        foreach ($first->json('items') as $item) {
+            $this->fridge('empties-on-purpose')->deleteJson("/api/fridge/items/{$item['id']}")->assertOk();
+        }
+
+        // Re-stocking here would undo somebody's deliberate work every time
+        // the page reloaded.
+        $again = $this->fridge('empties-on-purpose')->getJson('/api/fridge')->assertOk();
+        $this->assertSame([], $again->json('items'));
+    }
+
 }
