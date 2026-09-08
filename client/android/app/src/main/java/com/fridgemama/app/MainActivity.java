@@ -1,4 +1,4 @@
-package bd.edu.aust.fridgemama;
+package com.fridgemama.app;
 
 import com.getcapacitor.BridgeActivity;
 

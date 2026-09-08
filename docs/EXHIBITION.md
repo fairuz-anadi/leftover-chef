@@ -4,7 +4,7 @@ Everything that is not code: what to say, what to submit, and what is left to
 do. [`context.md`](../context.md) is the engineering record;
 [`README.md`](../README.md) is how to run it.
 
-**AUST CSE Carnival 8.0 — Software & AI** · 9 September 2026
+9 September 2026
 Easteak Ahmed (lead) · Saleh Mahmud Sami (front-end) · Fairuz Anadi (back-end)
 
 ---

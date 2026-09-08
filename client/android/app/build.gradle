@@ -1,10 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace "bd.edu.aust.fridgemama"
+    namespace "com.fridgemama.app"
     compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "bd.edu.aust.fridgemama"
+        applicationId "com.fridgemama.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

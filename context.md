@@ -17,9 +17,8 @@ Photograph the inside of your fridge. A vision model names what is in it, the
 app tracks how long each thing has left, warns you when something is about to
 go, and tells you what to cook with it — then counts what you actually saved.
 
-Built to the project proposal for the **AUST CSE Carnival 8.0 Software & AI
-segment** (9 September 2026). The proposal is the scope: if a feature is not in
-it, it is not here, and a lot that used to be has been removed.
+Built to the written project proposal. The proposal is the scope: if a feature
+is not in it, it is not here, and a lot that used to be has been removed.
 
 **Team:** Easteak Ahmed (lead) · Saleh Mahmud Sami (front-end) ·
 Fairuz Anadi (back-end).

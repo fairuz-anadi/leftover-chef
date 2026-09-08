@@ -1,5 +1,5 @@
 {
-  "appId": "bd.edu.aust.fridgemama",
+  "appId": "com.fridgemama.app",
   "appName": "FridgeMama",
   "webDir": "dist",
   "android": {

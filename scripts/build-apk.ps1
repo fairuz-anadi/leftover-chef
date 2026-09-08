@@ -137,10 +137,18 @@ Write-Ok 'Client built and synced'
 Write-Step 'Compiling the APK (first run is slow)...'
 Push-Location $androidDir
 try {
-    & .\gradlew.bat assembleDebug --no-daemon --console=plain 2>&1 |
-        Select-String -Pattern 'BUILD|error:|FAILED|What went wrong' -Context 0, 3 |
-        ForEach-Object { $_.ToString() }
-    if ($LASTEXITCODE -ne 0) { throw 'the Gradle build failed - see the output above' }
+    # No 2>&1 here. In Windows PowerShell 5.1 redirecting a native command's
+    # stderr wraps every line in an ErrorRecord, so javac's routine
+    # "Note: some input files use unchecked operations" becomes a terminating
+    # error and kills a build that actually succeeded. Gradle's own output is
+    # already on the console; the exit code is the thing to trust.
+    $log = Join-Path $env:TEMP 'fridgemama-gradle.log'
+    & .\gradlew.bat assembleDebug --no-daemon --console=plain | Tee-Object -FilePath $log | Out-Null
+
+    if ($LASTEXITCODE -ne 0) {
+        Get-Content $log -Tail 40 | ForEach-Object { Write-Host "  $_" -ForegroundColor DarkGray }
+        throw "the Gradle build failed - full log at $log"
+    }
 } finally {
     Pop-Location
 }

@@ -2,6 +2,6 @@
 <resources>
     <string name="app_name">FridgeMama</string>
     <string name="title_activity_main">FridgeMama</string>
-    <string name="package_name">bd.edu.aust.fridgemama</string>
-    <string name="custom_url_scheme">bd.edu.aust.fridgemama</string>
+    <string name="package_name">com.fridgemama.app</string>
+    <string name="custom_url_scheme">com.fridgemama.app</string>
 </resources>

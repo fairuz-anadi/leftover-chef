@@ -191,7 +191,7 @@ export default function Landing({ onOpen }) {
 
         <div className="hero-copy lc-rise">
           <p className="kicker">
-            <span className="kicker-pulse" /> AUST CSE Carnival 8.0 · Software &amp; AI
+            <span className="kicker-pulse" /> Your intelligent fridge companion
           </p>
 
           <h1>
@@ -426,7 +426,7 @@ export default function Landing({ onOpen }) {
       <footer className="landing-footer">
         <Logo size={30} />
         <p>Detect. Track. Cook. Waste less.</p>
-        <span>AUST CSE Carnival 8.0 · Software &amp; AI · runs entirely on-device</span>
+        <span>Runs entirely on-device · no account, no internet</span>
       </footer>
     </div>
   );

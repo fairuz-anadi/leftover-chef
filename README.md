@@ -10,7 +10,8 @@ app tracks how long each thing has left, warns you when something is about to
 go, and tells you what to cook with it. Everything runs on the laptop — no
 cloud, no accounts, no internet.
 
-Built for the **AUST CSE Carnival 8.0 — Software & AI segment**, 9 September 2026.
+Built to a written project proposal, which is the scope: if a feature is not
+in it, it is not here.
 
 ---
 
