@@ -71,5 +71,15 @@ services:
       - "${MAIL_PORT:-1025}:1025"
       - "${MAIL_UI_PORT:-8025}:8025"
 
+  adminer:
+    image: adminer:latest
+    container_name: leftoverchef_adminer
+    restart: unless-stopped
+    ports:
+      - "${ADMINER_PORT:-8080}:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
 volumes:
   postgres_data:

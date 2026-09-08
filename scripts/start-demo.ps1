@@ -51,7 +51,7 @@ function Start-InWindow {
 
     Start-Process powershell.exe `
         -WorkingDirectory $WorkingDirectory `
-        -ArgumentList '-NoExit', '-Command', "`$Host.UI.RawUI.WindowTitle='$Title'; $Command" `
+        -ArgumentList '-NoExit', '-ExecutionPolicy', 'Bypass', '-Command', "`$Host.UI.RawUI.WindowTitle='$Title'; $Command" `
         -WindowStyle Minimized
 }
 
