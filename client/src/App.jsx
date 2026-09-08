@@ -25,6 +25,9 @@ export default function App() {
   const [openRecipe, setOpenRecipe] = useState(null);
   const [fridgePhoto, setFridgePhoto] = useState(null);
   const [adding, setAdding] = useState("");
+  // Bumped by "Reset demo" so the scan panel remounts and forgets the last
+  // judge's photo along with everything else.
+  const [scanKey, setScanKey] = useState(0);
 
   const toastTimer = useRef(null);
 
@@ -88,6 +91,22 @@ export default function App() {
     }
   }
 
+  /**
+   * Put the screen back for the next judge, not just the database.
+   *
+   * Resetting the fridge while their predecessor's photo is still sitting in
+   * the scan panel is the kind of thing nobody notices in rehearsal and
+   * everybody notices at a stall.
+   */
+  async function resetDemo() {
+    setAlert(null);
+    setOpenRecipe(null);
+    setFridgePhoto(null);
+    setAdding("");
+    setScanKey((n) => n + 1);
+    await act(() => api.reset());
+  }
+
   if (loading) {
     return (
       <div className="grid min-h-screen place-items-center text-sm text-[var(--faint)]">
@@ -143,7 +162,7 @@ export default function App() {
           </button>
           <button
             type="button"
-            onClick={() => act(() => api.reset())}
+            onClick={resetDemo}
             disabled={busy}
             className="rounded-full border border-[var(--line)] px-3 py-1.5 text-xs text-[var(--faint)] transition hover:text-[var(--text)] disabled:opacity-40"
           >
@@ -185,7 +204,7 @@ export default function App() {
       <main className="mt-6 grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_360px]">
         {/* ── Left: scan, shelf, suggestions ─────────────────── */}
         <div className="grid gap-5">
-          <ScanPanel onConfirmed={load} onPhoto={setFridgePhoto} showToast={showToast} />
+          <ScanPanel key={scanKey} onConfirmed={load} onPhoto={setFridgePhoto} showToast={showToast} />
 
           <section className="rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-5">
             <div className="flex flex-wrap items-baseline justify-between gap-2">
