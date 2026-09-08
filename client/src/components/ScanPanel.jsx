@@ -26,7 +26,9 @@ const SAMPLES = Object.entries(SAMPLE_MODULES)
   .map(([path, url]) => ({ url, name: path.split("/").pop() }))
   .sort((a, b) => a.name.localeCompare(b.name));
 
-const BOX_COLOURS = ["#56d9c8", "#ffc043", "#8ab4ff", "#ff8fb1", "#3ddc84", "#c9a2ff"];
+// Chosen to stay legible as a label background on a light page — the
+// pastels that worked on near-black wash out completely here.
+const BOX_COLOURS = ["#0d9488", "#b45309", "#2563eb", "#be185d", "#15803d", "#6d28d9"];
 
 export default function ScanPanel({ onConfirmed, onPhoto, showToast }) {
   const [status, setStatus] = useState(null);
@@ -174,11 +176,11 @@ export default function ScanPanel({ onConfirmed, onPhoto, showToast }) {
   const detectorReady = status?.online && status?.detector?.ready;
 
   return (
-    <section className="rounded-2xl border border-[#2a3438] bg-[#141a1c] p-5">
+    <section className="rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-5">
       <header className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="m-0 text-lg font-bold tracking-tight text-[#eef3f3]">Scan your fridge</h2>
-          <p className="m-0 mt-1 text-sm text-[#93a3a6]">
+          <h2 className="m-0 text-lg font-bold tracking-tight text-[var(--text)]">Scan your fridge</h2>
+          <p className="m-0 mt-1 text-sm text-[var(--dim)]">
             One photo. We name what is in it — you confirm before anything is logged.
           </p>
         </div>
@@ -186,7 +188,7 @@ export default function ScanPanel({ onConfirmed, onPhoto, showToast }) {
       </header>
 
       {status && !detectorReady && (
-        <p className="mt-4 rounded-lg border border-[#5a3a1a] bg-[rgba(255,192,67,0.08)] px-3 py-2 text-xs text-[#ffc043]">
+        <p className="mt-4 rounded-lg border border-[var(--soon-line)] bg-[var(--soon-soft)] px-3 py-2 text-xs text-[var(--soon)]">
           The detector isn&apos;t running. Start it with{" "}
           <code className="font-mono">scripts/start-demo.ps1</code> — everything else still works,
           and you can add items by hand.
@@ -200,14 +202,14 @@ export default function ScanPanel({ onConfirmed, onPhoto, showToast }) {
             <button
               type="button"
               onClick={() => fileInput.current?.click()}
-              className="rounded-full bg-[#56d9c8] px-5 py-2.5 text-sm font-semibold text-[#06201d] transition hover:brightness-110"
+              className="rounded-full bg-[var(--accent)] px-5 py-2.5 text-sm font-semibold text-[var(--on-accent)] transition hover:brightness-110"
             >
               Upload a photo
             </button>
             <button
               type="button"
               onClick={startCamera}
-              className="rounded-full border border-[#2a3438] px-5 py-2.5 text-sm font-semibold text-[#eef3f3] transition hover:border-[#56d9c8] hover:text-[#56d9c8]"
+              className="rounded-full border border-[var(--line)] px-5 py-2.5 text-sm font-semibold text-[var(--text)] transition hover:border-[var(--accent)] hover:text-[var(--accent)]"
             >
               Use the camera
             </button>
@@ -227,7 +229,7 @@ export default function ScanPanel({ onConfirmed, onPhoto, showToast }) {
 
           {SAMPLES.length > 0 && (
             <div className="mt-5">
-              <p className="mb-2 text-[10px] uppercase tracking-widest text-[#61706f]">
+              <p className="mb-2 text-[10px] uppercase tracking-widest text-[var(--faint)]">
                 Or a saved shelf
               </p>
               <div className="flex flex-wrap gap-2.5">
@@ -236,7 +238,7 @@ export default function ScanPanel({ onConfirmed, onPhoto, showToast }) {
                     key={sample.name}
                     type="button"
                     onClick={() => scanSample(sample)}
-                    className="overflow-hidden rounded-xl border border-[#2a3438] transition hover:border-[#56d9c8]"
+                    className="overflow-hidden rounded-xl border border-[var(--line)] transition hover:border-[var(--accent)]"
                   >
                     <img src={sample.url} alt="" className="h-16 w-24 object-cover" />
                   </button>
@@ -255,20 +257,20 @@ export default function ScanPanel({ onConfirmed, onPhoto, showToast }) {
             autoPlay
             playsInline
             muted
-            className="w-full rounded-xl border border-[#2a3438] bg-black"
+            className="w-full rounded-xl border border-[var(--line)] bg-black"
           />
           <div className="mt-3 flex gap-2">
             <button
               type="button"
               onClick={capture}
-              className="rounded-full bg-[#56d9c8] px-5 py-2.5 text-sm font-semibold text-[#06201d]"
+              className="rounded-full bg-[var(--accent)] px-5 py-2.5 text-sm font-semibold text-[var(--on-accent)]"
             >
               Capture
             </button>
             <button
               type="button"
               onClick={stopCamera}
-              className="rounded-full border border-[#2a3438] px-5 py-2.5 text-sm font-semibold"
+              className="rounded-full border border-[var(--line)] px-5 py-2.5 text-sm font-semibold"
             >
               Cancel
             </button>
@@ -282,7 +284,7 @@ export default function ScanPanel({ onConfirmed, onPhoto, showToast }) {
           <div>
             <BoxedPhoto src={photoUrl} image={result?.image} items={kept} scanning={scanning} />
             {result && (
-              <p className="mt-2 font-mono text-[10px] text-[#61706f]">
+              <p className="mt-2 font-mono text-[10px] text-[var(--faint)]">
                 {result.meta.backend === "world" ? "open-vocabulary" : result.meta.backend} ·{" "}
                 {result.meta.detection_count} detections · {Math.round(result.meta.elapsed_ms)} ms ·
                 on this laptop
@@ -292,13 +294,13 @@ export default function ScanPanel({ onConfirmed, onPhoto, showToast }) {
 
           {result && (
             <div>
-              <p className="m-0 mb-2 text-[10px] uppercase tracking-widest text-[#61706f]">
+              <p className="m-0 mb-2 text-[10px] uppercase tracking-widest text-[var(--faint)]">
                 {kept.length > 0
                   ? `Found ${kept.length} — tap to drop anything wrong`
                   : "Nothing kept"}
               </p>
 
-              <div className="flex flex-wrap gap-2">
+              <div className="lc-stagger flex flex-wrap gap-2">
                 {(result.data ?? []).map((item, index) => (
                   <button
                     key={item.slug}
@@ -317,15 +319,18 @@ export default function ScanPanel({ onConfirmed, onPhoto, showToast }) {
                     }
                     className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm transition ${
                       dropped.has(item.slug)
-                        ? "border-[#2a3438] text-[#61706f] line-through"
-                        : "bg-[#1c2427] text-[#eef3f3]"
+                        ? "border-[var(--line)] text-[var(--faint)] line-through"
+                        : "bg-[var(--raised)] text-[var(--text)]"
                     }`}
                   >
                     <span className="font-semibold">{item.name}</span>
-                    {item.count > 1 && !dropped.has(item.slug) && (
-                      <span className="font-mono text-[10px] text-[#93a3a6]">×{item.count}</span>
+                    {item.name_bn && !dropped.has(item.slug) && (
+                      <span className="text-xs text-[var(--faint)]">{item.name_bn}</span>
                     )}
-                    <span className="font-mono text-[10px] text-[#61706f]">
+                    {item.count > 1 && !dropped.has(item.slug) && (
+                      <span className="font-mono text-[10px] text-[var(--dim)]">×{item.count}</span>
+                    )}
+                    <span className="font-mono text-[10px] text-[var(--faint)]">
                       {Math.round(item.confidence * 100)}%
                     </span>
                   </button>
@@ -333,14 +338,14 @@ export default function ScanPanel({ onConfirmed, onPhoto, showToast }) {
               </div>
 
               {result.unmatched?.length > 0 && (
-                <p className="mt-3 mb-0 text-xs text-[#61706f]">
+                <p className="mt-3 mb-0 text-xs text-[var(--faint)]">
                   Seen but not in the vocabulary:{" "}
                   {result.unmatched.map((item) => item.name).join(", ")}
                 </p>
               )}
 
               {datedCount > 0 && (
-                <p className="mt-3 mb-0 text-xs text-[#93a3a6]">
+                <p className="mt-3 mb-0 text-xs text-[var(--dim)]">
                   {datedCount} will get an estimated use-by date from typical shelf life.
                 </p>
               )}
@@ -350,14 +355,14 @@ export default function ScanPanel({ onConfirmed, onPhoto, showToast }) {
                   type="button"
                   onClick={confirm}
                   disabled={kept.length === 0 || saving}
-                  className="rounded-full bg-[#3ddc84] px-5 py-2.5 text-sm font-semibold text-[#06210f] disabled:opacity-40"
+                  className="rounded-full bg-[var(--fresh)] px-5 py-2.5 text-sm font-semibold text-[var(--on-fresh)] disabled:opacity-40"
                 >
                   {saving ? "Adding…" : `Add ${kept.length} to my fridge`}
                 </button>
                 <button
                   type="button"
                   onClick={reset}
-                  className="rounded-full border border-[#2a3438] px-5 py-2.5 text-sm font-semibold"
+                  className="rounded-full border border-[var(--line)] px-5 py-2.5 text-sm font-semibold"
                 >
                   Another photo
                 </button>
@@ -383,7 +388,7 @@ function BoxedPhoto({ src, image, items, scanning }) {
   const height = image?.height || 1;
 
   return (
-    <div className="relative overflow-hidden rounded-xl border border-[#2a3438] bg-black/40">
+    <div className="relative overflow-hidden rounded-xl border border-[var(--line)] bg-black/40">
       <img src={src} alt="Your fridge" className="w-full" />
 
       {items.map((item, index) =>
@@ -407,7 +412,7 @@ function BoxedPhoto({ src, image, items, scanning }) {
             >
               <span
                 style={{ backgroundColor: colour }}
-                className={`absolute left-[-2px] whitespace-nowrap px-1.5 py-0.5 text-[10px] font-bold leading-tight text-[#06201d] ${
+                className={`absolute left-[-2px] whitespace-nowrap px-1.5 py-0.5 text-[10px] font-bold leading-tight text-[var(--on-accent)] ${
                   flipInside ? "top-[-1px] rounded-b" : "-top-[1px] -translate-y-full rounded-t"
                 }`}
               >
@@ -419,8 +424,8 @@ function BoxedPhoto({ src, image, items, scanning }) {
       )}
 
       {scanning && (
-        <div className="absolute inset-0 grid place-items-center bg-black/55">
-          <span className="rounded-full bg-black/70 px-4 py-2 text-sm font-semibold text-[#56d9c8]">
+        <div className="lc-sweep absolute inset-0 grid place-items-center overflow-hidden bg-white/55">
+          <span className="relative z-10 rounded-full bg-[var(--surface)] px-4 py-2 text-sm font-semibold text-[var(--accent)] shadow-[var(--shadow-md)]">
             Looking…
           </span>
         </div>
@@ -431,17 +436,17 @@ function BoxedPhoto({ src, image, items, scanning }) {
 
 function DetectorBadge({ status, ready }) {
   if (!status) {
-    return <span className="font-mono text-[10px] text-[#61706f]">checking detector…</span>;
+    return <span className="font-mono text-[10px] text-[var(--faint)]">checking detector…</span>;
   }
 
   return (
     <span
       className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-[10px] ${
-        ready ? "bg-[rgba(61,220,132,0.12)] text-[#3ddc84]" : "bg-[rgba(255,93,93,0.12)] text-[#ff5d5d]"
+        ready ? "bg-[var(--fresh-soft)] text-[var(--fresh)]" : "bg-[var(--today-soft)] text-[var(--today)]"
       }`}
     >
       <span
-        className={`h-1.5 w-1.5 rounded-full ${ready ? "bg-[#3ddc84]" : "bg-[#ff5d5d]"}`}
+        className={`h-1.5 w-1.5 rounded-full ${ready ? "bg-[var(--fresh)]" : "bg-[var(--today)]"}`}
       />
       {ready ? `on-device · ${status.detector.class_count} classes` : "detector offline"}
     </span>

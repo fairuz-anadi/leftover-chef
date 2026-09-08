@@ -156,6 +156,35 @@ edits it.
 button moves the whole screen at once instead of half of it. If you add anything
 that reads the clock, read it from the session.
 
+### Bengali names
+
+Every ingredient carries `name_bn`, shown under or beside the English name
+everywhere it appears. `App\Support\BengaliNames` holds the translations keyed
+by slug; the migration only adds a nullable column, and an ingredient without a
+Bengali name simply shows in English.
+
+**The English name stays the canonical key.** Recipes, the detector vocabulary
+and the alias table all resolve through it, so this is a display layer and
+nothing downstream has to know it exists. Where a word is a loan word in
+everyday Bengali — মাশরুম, পাস্তা, চকলেট — that is what is written, because it
+is what people actually say.
+
+Inter carries no Bengali glyphs, so Noto Sans Bengali is bundled and sits after
+Inter in the font stack: Latin keeps Inter's metrics and Bengali falls through
+to a face that has the letters. Bundled, not fetched, like everything else.
+
+### What "the cupboard stays" means
+
+Cooking a dish removes the perishables it used and leaves the cupboard alone.
+That rule is keyed on **shelf life**, not on `ingredients.is_staple`.
+
+The first version used `is_staple`, which was wrong in a way worth remembering:
+that flag means "common pantry item" and is set on eggs, onions, tomatoes, milk
+and chicken — all things you genuinely eat. Keyed off it, cooking the
+top-recommended dish removed *nothing* from a normal fridge and the waste
+counter never moved. An ingredient with no meaningful use-by date is the
+cupboard; everything else is food.
+
 ---
 
 ## 7. What is real and what is simulated
@@ -235,11 +264,13 @@ app/Http/Services/
 
 app/Support/
   ShelfLifeCatalog.php         how long each ingredient keeps
+  BengaliNames.php             every ingredient in Bengali, keyed by slug
   DishArtwork.php              generated plated-dish SVGs
   CuisineCatalog.php           country/region, which the local bias reads
 
 client/src/
   App.jsx                      the whole screen
+  index.css                    the entire palette, as tokens — retheming is here
   freshness.js                 the tier colours, shared
   components/ScanPanel.jsx     photo → boxes → chips → confirm
   components/Shelf.jsx         the fridge, worst first
@@ -276,7 +307,7 @@ cleanup — not an oversight.
 - The whole loop, end to end in a browser: photo → 6 ingredients in ~280 ms →
   confirmed → dated → fast-forward → notification → reveal → cooked → counter
   moved.
-- 42 PHPUnit tests pass. `npm run build` and eslint clean.
+- 44 PHPUnit tests pass. `npm run build` and eslint clean.
 - `offline-check.ps1` passes 10/10 against the running stack.
 
 **Not done**

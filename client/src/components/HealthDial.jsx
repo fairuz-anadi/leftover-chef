@@ -36,7 +36,7 @@ export default function HealthDial({ health }) {
             cy={size / 2}
             r={radius}
             fill="none"
-            stroke="#212a2d"
+            stroke="var(--track)"
             strokeWidth={stroke}
           />
           {segments.map((segment) => {
@@ -64,10 +64,10 @@ export default function HealthDial({ health }) {
 
         <div className="absolute inset-0 grid place-items-center text-center">
           <div>
-            <div className="font-mono text-3xl font-bold leading-none text-[#eef3f3]">
+            <div className="font-mono text-3xl font-bold leading-none text-[var(--text)]">
               {health.score}%
             </div>
-            <div className="mt-1 text-[10px] uppercase tracking-widest text-[#61706f]">fresh</div>
+            <div className="mt-1 text-[10px] uppercase tracking-widest text-[var(--faint)]">fresh</div>
           </div>
         </div>
       </div>
@@ -78,9 +78,9 @@ export default function HealthDial({ health }) {
         <Row tier="today" count={health.today} />
         {health.undated > 0 && (
           <div className="flex items-center gap-2.5 text-sm">
-            <span className="h-2.5 w-2.5 shrink-0 rounded-full border border-dashed border-[#3a464a]" />
-            <dt className="flex-1 text-[#61706f]">Cupboard staples</dt>
-            <dd className="m-0 font-mono text-[#61706f]">{health.undated}</dd>
+            <span className="h-2.5 w-2.5 shrink-0 rounded-full border border-dashed border-[var(--line)]" />
+            <dt className="flex-1 text-[var(--faint)]">Cupboard staples</dt>
+            <dd className="m-0 font-mono text-[var(--faint)]">{health.undated}</dd>
           </div>
         )}
       </dl>
@@ -89,13 +89,15 @@ export default function HealthDial({ health }) {
 }
 
 function Row({ tier, count }) {
-  const { label, colour } = TIERS[tier];
+  const { label, bn, colour } = TIERS[tier];
 
   return (
     <div className="flex items-center gap-2.5 text-sm">
       <span style={{ backgroundColor: colour }} className="h-2.5 w-2.5 shrink-0 rounded-full" />
-      <dt className="flex-1 text-[#93a3a6]">{label}</dt>
-      <dd className="m-0 font-mono font-semibold text-[#eef3f3]">{count}</dd>
+      <dt className="flex-1 text-[var(--dim)]">
+        {label} <span className="text-xs text-[var(--faint)]">{bn}</span>
+      </dt>
+      <dd className="m-0 font-mono font-semibold text-[var(--text)]">{count}</dd>
     </div>
   );
 }

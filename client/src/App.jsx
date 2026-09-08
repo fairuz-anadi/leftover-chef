@@ -90,7 +90,7 @@ export default function App() {
 
   if (loading) {
     return (
-      <div className="grid min-h-screen place-items-center text-sm text-[#61706f]">
+      <div className="grid min-h-screen place-items-center text-sm text-[var(--faint)]">
         Opening the fridge…
       </div>
     );
@@ -98,12 +98,12 @@ export default function App() {
 
   if (!state) {
     return (
-      <div className="grid min-h-screen place-items-center gap-3 text-center text-sm text-[#93a3a6]">
+      <div className="grid min-h-screen place-items-center gap-3 text-center text-sm text-[var(--dim)]">
         <p>Couldn&apos;t reach the app.</p>
         <button
           type="button"
           onClick={load}
-          className="rounded-full border border-[#2a3438] px-4 py-2 font-semibold"
+          className="rounded-full border border-[var(--line)] px-4 py-2 font-semibold"
         >
           Try again
         </button>
@@ -118,26 +118,26 @@ export default function App() {
       {/* ── Header ──────────────────────────────────────────── */}
       <header className="flex flex-wrap items-center gap-x-5 gap-y-3">
         <div className="flex items-center gap-3">
-          <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#1c2427] text-xl">
+          <span className="grid h-10 w-10 place-items-center rounded-xl bg-[var(--raised)] text-xl">
             🧊
           </span>
           <div>
-            <h1 className="m-0 text-xl font-bold tracking-tight text-[#eef3f3]">Leftover Chef</h1>
-            <p className="m-0 text-xs text-[#61706f]">
+            <h1 className="m-0 text-xl font-bold tracking-tight text-[var(--text)]">Leftover Chef</h1>
+            <p className="m-0 text-xs text-[var(--faint)]">
               Point your phone — it tells you what to eat before it&apos;s too late.
             </p>
           </div>
         </div>
 
         <div className="ml-auto flex flex-wrap items-center gap-2">
-          <span className="rounded-full border border-[#2a3438] px-3 py-1.5 font-mono text-xs text-[#93a3a6]">
+          <span className="rounded-full border border-[var(--line)] px-3 py-1.5 font-mono text-xs text-[var(--dim)]">
             Day {state.session.day_offset + 1}
           </span>
           <button
             type="button"
             onClick={fastForward}
             disabled={busy}
-            className="rounded-full bg-[#1c2427] px-4 py-1.5 text-sm font-semibold text-[#56d9c8] transition hover:bg-[#242e31] disabled:opacity-40"
+            className="rounded-full bg-[var(--raised)] px-4 py-1.5 text-sm font-semibold text-[var(--accent)] transition hover:bg-[var(--hover)] disabled:opacity-40"
           >
             Fast-forward a day →
           </button>
@@ -145,7 +145,7 @@ export default function App() {
             type="button"
             onClick={() => act(() => api.reset())}
             disabled={busy}
-            className="rounded-full border border-[#2a3438] px-3 py-1.5 text-xs text-[#61706f] transition hover:text-[#eef3f3] disabled:opacity-40"
+            className="rounded-full border border-[var(--line)] px-3 py-1.5 text-xs text-[var(--faint)] transition hover:text-[var(--text)] disabled:opacity-40"
           >
             Reset demo
           </button>
@@ -155,17 +155,17 @@ export default function App() {
       {/* ── Notification simulation ─────────────────────────── */}
       {alert && (
         <div
-          className="lc-rise mt-5 flex flex-wrap items-center gap-3 rounded-2xl border border-[#ff5d5d]/50 bg-[rgba(255,93,93,0.1)] px-5 py-4"
+          className="lc-rise mt-5 flex flex-wrap items-center gap-3 rounded-2xl border border-[var(--today)]/50 bg-[rgba(255,93,93,0.1)] px-5 py-4"
           role="status"
         >
           <span className="text-2xl">🔔</span>
           <div className="min-w-0 flex-1">
-            <p className="m-0 text-sm font-semibold text-[#ff5d5d]">
+            <p className="m-0 text-sm font-semibold text-[var(--today)]">
               {alert.items.length === 1
                 ? `Your ${alert.items[0].name} expires today`
                 : `${alert.items.length} things expire today`}
             </p>
-            <p className="m-0 text-xs text-[#93a3a6]">
+            <p className="m-0 text-xs text-[var(--dim)]">
               {alert.items.map((row) => row.name).join(", ")} — cook something with{" "}
               {alert.items.length === 1 ? "it" : "them"} tonight.
             </p>
@@ -174,7 +174,7 @@ export default function App() {
             <button
               type="button"
               onClick={() => setOpenRecipe(suggestions[0].recipe.id)}
-              className="rounded-full bg-[#ff5d5d] px-4 py-2 text-sm font-semibold text-white"
+              className="rounded-full bg-[var(--today)] px-4 py-2 text-sm font-semibold text-white"
             >
               Try {suggestions[0].recipe.title}
             </button>
@@ -187,10 +187,10 @@ export default function App() {
         <div className="grid gap-5">
           <ScanPanel onConfirmed={load} onPhoto={setFridgePhoto} showToast={showToast} />
 
-          <section className="rounded-2xl border border-[#2a3438] bg-[#141a1c] p-5">
+          <section className="rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-5">
             <div className="flex flex-wrap items-baseline justify-between gap-2">
-              <h2 className="m-0 text-lg font-bold tracking-tight text-[#eef3f3]">In the fridge</h2>
-              <span className="font-mono text-xs text-[#61706f]">
+              <h2 className="m-0 text-lg font-bold tracking-tight text-[var(--text)]">In the fridge</h2>
+              <span className="font-mono text-xs text-[var(--faint)]">
                 {items.length} items · {health.at_risk} need using
               </span>
             </div>
@@ -226,20 +226,20 @@ export default function App() {
             </div>
           </section>
 
-          <section className="rounded-2xl border border-[#2a3438] bg-[#141a1c] p-5">
+          <section className="rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-5">
             <div className="flex flex-wrap items-baseline justify-between gap-2">
-              <h2 className="m-0 text-lg font-bold tracking-tight text-[#eef3f3]">Cook this</h2>
-              <span className="text-xs text-[#61706f]">
+              <h2 className="m-0 text-lg font-bold tracking-tight text-[var(--text)]">Cook this</h2>
+              <span className="text-xs text-[var(--faint)]">
                 Ranked by what you have and what&apos;s about to go
               </span>
             </div>
 
             {suggestions.length === 0 ? (
-              <p className="mt-4 rounded-xl border border-dashed border-[#2a3438] p-8 text-center text-sm text-[#61706f]">
+              <p className="mt-4 rounded-xl border border-dashed border-[var(--line)] p-8 text-center text-sm text-[var(--faint)]">
                 Add a few ingredients and suggestions appear here.
               </p>
             ) : (
-              <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+              <div className="lc-stagger mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
                 {suggestions.map((suggestion) => (
                   <SuggestionCard
                     key={suggestion.recipe.id}
@@ -254,15 +254,15 @@ export default function App() {
 
         {/* ── Right: the measurements ────────────────────────── */}
         <aside className="grid gap-5 lg:sticky lg:top-6">
-          <section className="rounded-2xl border border-[#2a3438] bg-[#141a1c] p-5">
-            <h2 className="m-0 mb-4 text-sm font-semibold uppercase tracking-widest text-[#61706f]">
+          <section className="rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-5">
+            <h2 className="m-0 mb-4 text-sm font-semibold uppercase tracking-widest text-[var(--faint)]">
               Fridge health
             </h2>
             <HealthDial health={health} />
           </section>
 
-          <section className="rounded-2xl border border-[#2a3438] bg-[#141a1c] p-5">
-            <h2 className="m-0 mb-4 text-sm font-semibold uppercase tracking-widest text-[#61706f]">
+          <section className="rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-5">
+            <h2 className="m-0 mb-4 text-sm font-semibold uppercase tracking-widest text-[var(--faint)]">
               Food waste saved
             </h2>
             <WastePanel waste={waste} leaderboard={leaderboard} />
@@ -271,23 +271,26 @@ export default function App() {
           <VoiceAsk suggestions={suggestions} atRisk={atRisk} showToast={showToast} />
 
           {missing.length > 0 && (
-            <section className="rounded-2xl border border-[#2a3438] bg-[#141a1c] p-5">
-              <h2 className="m-0 mb-1 text-sm font-semibold uppercase tracking-widest text-[#61706f]">
+            <section className="rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-5">
+              <h2 className="m-0 mb-1 text-sm font-semibold uppercase tracking-widest text-[var(--faint)]">
                 What am I missing?
               </h2>
-              <p className="m-0 mb-3 text-xs text-[#61706f]">
+              <p className="m-0 mb-3 text-xs text-[var(--faint)]">
                 One thing on the way home unlocks these.
               </p>
-              <ul className="m-0 grid list-none gap-2 p-0">
+              <ul className="lc-stagger m-0 grid list-none gap-2 p-0">
                 {missing.map((row) => (
                   <li key={row.ingredient_id} className="text-sm">
                     <div className="flex items-baseline gap-2">
-                      <span className="font-semibold text-[#eef3f3]">{row.name}</span>
-                      <span className="font-mono text-[10px] text-[#56d9c8]">
+                      <span className="font-semibold text-[var(--text)]">{row.name}</span>
+                      {row.name_bn && (
+                        <span className="text-xs text-[var(--faint)]">{row.name_bn}</span>
+                      )}
+                      <span className="font-mono text-[10px] text-[var(--accent)]">
                         +{row.unlocks} recipe{row.unlocks === 1 ? "" : "s"}
                       </span>
                     </div>
-                    <p className="m-0 truncate text-xs text-[#61706f]">{row.recipes.join(", ")}</p>
+                    <p className="m-0 truncate text-xs text-[var(--faint)]">{row.recipes.join(", ")}</p>
                   </li>
                 ))}
               </ul>
@@ -310,10 +313,10 @@ export default function App() {
         <div
           className={`lc-rise fixed bottom-5 left-1/2 z-[60] -translate-x-1/2 rounded-full px-5 py-3 text-sm font-semibold shadow-lg ${
             toast.kind === "error"
-              ? "bg-[#ff5d5d] text-white"
+              ? "bg-[var(--today)] text-white"
               : toast.kind === "warn"
-                ? "bg-[#ffc043] text-[#221700]"
-                : "bg-[#3ddc84] text-[#06210f]"
+                ? "bg-[var(--soon)] text-[var(--on-soon)]"
+                : "bg-[var(--fresh)] text-[var(--on-fresh)]"
           }`}
           role="status"
         >
@@ -367,25 +370,25 @@ function AddItem({ value, onChange, onAdd, busy }) {
           value={value}
           onChange={(event) => onChange(event.target.value)}
           placeholder="Add something by hand…"
-          className="min-w-0 flex-1 rounded-full border border-[#2a3438] bg-[#0a0e0f] px-4 py-2 text-sm placeholder:text-[#4a595c] focus:border-[#56d9c8] focus:outline-none"
+          className="min-w-0 flex-1 rounded-full border border-[var(--line)] bg-[var(--bg)] px-4 py-2 text-sm placeholder:text-[var(--placeholder)] focus:border-[var(--accent)] focus:outline-none"
         />
         <button
           type="submit"
           disabled={busy || !value.trim()}
-          className="shrink-0 rounded-full bg-[#1c2427] px-4 py-2 text-sm font-semibold text-[#56d9c8] disabled:opacity-40"
+          className="shrink-0 rounded-full bg-[var(--raised)] px-4 py-2 text-sm font-semibold text-[var(--accent)] disabled:opacity-40"
         >
           Add
         </button>
       </form>
 
       {options.length > 0 && (
-        <ul className="absolute z-20 mt-1 grid w-full list-none gap-0.5 rounded-xl border border-[#2a3438] bg-[#1c2427] p-1.5 shadow-xl">
+        <ul className="absolute z-20 mt-1 grid w-full list-none gap-0.5 rounded-xl border border-[var(--line)] bg-[var(--raised)] p-1.5 shadow-xl">
           {options.slice(0, 6).map((option) => (
             <li key={option.id}>
               <button
                 type="button"
                 onClick={() => onAdd(option.name)}
-                className="w-full rounded-lg px-3 py-1.5 text-left text-sm text-[#93a3a6] transition hover:bg-[#242e31] hover:text-[#eef3f3]"
+                className="w-full rounded-lg px-3 py-1.5 text-left text-sm text-[var(--dim)] transition hover:bg-[var(--hover)] hover:text-[var(--text)]"
               >
                 {option.name}
               </button>
@@ -405,7 +408,7 @@ function SuggestionCard({ suggestion, onOpen }) {
     <button
       type="button"
       onClick={onOpen}
-      className="group overflow-hidden rounded-xl border border-[#2a3438] bg-[#1c2427] text-left transition hover:border-[#56d9c8]/60"
+      className="lc-card lc-lift group overflow-hidden rounded-xl border border-[var(--line)] bg-[var(--surface)] text-left transition hover:border-[var(--accent)]"
     >
       <div className="relative">
         <img
@@ -413,19 +416,19 @@ function SuggestionCard({ suggestion, onOpen }) {
           alt=""
           className="h-28 w-full object-cover transition group-hover:scale-[1.03]"
         />
-        <span className="absolute right-2 top-2 rounded-full bg-black/70 px-2 py-0.5 font-mono text-[10px] font-bold text-[#eef3f3]">
+        <span className="absolute right-2 top-2 rounded-full bg-black/70 px-2 py-0.5 font-mono text-[10px] font-bold text-[var(--text)]">
           {suggestion.match_percent}%
         </span>
         {suggestion.local_bonus > 0 && (
-          <span className="absolute left-2 top-2 rounded-full bg-[#56d9c8] px-2 py-0.5 font-mono text-[10px] font-bold text-[#06201d]">
+          <span className="absolute left-2 top-2 rounded-full bg-[var(--accent)] px-2 py-0.5 font-mono text-[10px] font-bold text-[var(--on-accent)]">
             local
           </span>
         )}
       </div>
 
       <div className="p-3.5">
-        <p className="m-0 truncate text-sm font-bold text-[#eef3f3]">{recipe.title}</p>
-        <p className="m-0 mt-0.5 truncate text-[11px] text-[#61706f]">
+        <p className="m-0 truncate text-sm font-bold text-[var(--text)]">{recipe.title}</p>
+        <p className="m-0 mt-0.5 truncate text-[11px] text-[var(--faint)]">
           {recipe.cuisine_country}
           {recipe.total_minutes ? ` · ${recipe.total_minutes} min` : ""}
           {suggestion.missing.length > 0 ? ` · need ${suggestion.missing.length}` : " · ready now"}

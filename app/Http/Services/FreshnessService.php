@@ -44,7 +44,7 @@ class FreshnessService
     public function statuses(FridgeSession $session): Collection
     {
         return $session->pantryItems()
-            ->with('ingredient:id,name,slug,aisle,is_staple')
+            ->with('ingredient:id,name,name_bn,slug,aisle,is_staple')
             ->whereNotNull('expires_on')
             ->get()
             ->filter(fn (PantryItem $item) => $item->ingredient !== null)
@@ -137,6 +137,7 @@ class FreshnessService
             'ingredient_id' => (int) $item->ingredient_id,
             'pantry_item_id' => (int) $item->id,
             'name' => (string) $item->ingredient->name,
+            'name_bn' => $item->ingredient->name_bn,
             'aisle' => (string) $item->ingredient->aisle,
             'is_staple' => (bool) $item->ingredient->is_staple,
             'expires_on' => $item->expires_on->toDateString(),

@@ -204,9 +204,12 @@ class FridgeLoopTest extends TestCase
         $this->assertSame(0, $response->json('waste.lost'));
         $this->assertSame(100, $response->json('waste.save_rate'));
 
-        // Staples survive: you do not run out of salt because you cooked once.
+        // The cupboard survives: you do not run out of salt by cooking once.
         $left = collect($this->fridge()->getJson('/api/fridge')->json('items'))->pluck('name');
         $this->assertTrue($left->contains('Salt'));
+        $this->assertTrue($left->contains('Olive Oil'));
+        // …but the perishables it actually used are gone.
+        $this->assertFalse($left->contains('Green Chilli'));
     }
 
     public function test_binning_something_counts_against_the_save_rate(): void

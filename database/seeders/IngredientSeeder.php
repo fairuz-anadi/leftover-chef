@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Ingredient;
+use App\Support\BengaliNames;
 use App\Support\ShelfLifeCatalog;
 use Illuminate\Database\Seeder;
 
@@ -16,6 +17,10 @@ use Illuminate\Database\Seeder;
  * detector phrasing like "carton of milk" or "tin of tomatoes" lives as an
  * alias row rather than a lookup table in PHP. Add a detector class, add an
  * alias.
+ *
+ * The Bengali name comes from App\Support\BengaliNames, keyed by slug, so
+ * this table stays about food data and the translations stay in one readable
+ * list.
  *
  * Columns: name, aisle, kcal, protein, carbs, fat, staple, aliases
  */
@@ -65,6 +70,8 @@ class IngredientSeeder extends Seeder
         ['Salmon', 'seafood', 208, 20.4, 0.0, 13.4, false, ['salmon fillet']],
         ['White Fish', 'seafood', 96, 20.4, 0.0, 1.4, false, ['cod', 'haddock', 'tilapia', 'fish', 'raw fish fillet', 'fish fillet']],
         ['Tuna', 'seafood', 132, 28.0, 0.0, 1.3, false, ['canned tuna']],
+        ['Hilsa', 'seafood', 310, 25.0, 0.0, 22.0, false, ['ilish', 'ilish fish', 'hilsa fish']],
+        ['Rohu', 'seafood', 97, 17.0, 0.0, 1.4, false, ['rui', 'rui fish', 'rohu fish', 'carp']],
 
         // Dairy & eggs
         ['Egg', 'dairy', 143, 12.6, 0.7, 9.5, true, ['eggs', 'carton of eggs', 'egg carton']],
@@ -88,6 +95,8 @@ class IngredientSeeder extends Seeder
         ['Black Pepper', 'pantry', 251, 10.4, 64.0, 3.3, true, ['pepper', 'ground black pepper']],
         ['Olive Oil', 'pantry', 884, 0.0, 0.0, 100.0, true, ['extra virgin olive oil']],
         ['Vegetable Oil', 'pantry', 884, 0.0, 0.0, 100.0, true, ['sunflower oil', 'cooking oil', 'oil', 'bottle of cooking oil']],
+        ['Mustard Oil', 'pantry', 884, 0.0, 0.0, 100.0, true, ['shorsher tel', 'sarson oil', 'kachi ghani']],
+        ['Mustard Paste', 'pantry', 508, 26.0, 28.0, 36.0, false, ['shorshe bata', 'mustard seeds', 'shorshe']],
         ['Soy Sauce', 'pantry', 53, 8.1, 4.9, 0.6, false, ['light soy sauce', 'dark soy sauce', 'bottle of soy sauce']],
         ['Vinegar', 'pantry', 21, 0.0, 0.9, 0.0, false, ['white vinegar', 'rice vinegar']],
         ['Honey', 'pantry', 304, 0.3, 82.4, 0.0, false, ['jar of honey']],
@@ -115,6 +124,7 @@ class IngredientSeeder extends Seeder
         ['Chilli Powder', 'spices', 282, 13.5, 49.7, 14.3, true, ['chili powder', 'red chilli powder']],
         ['Paprika', 'spices', 282, 14.1, 54.0, 12.9, false, ['smoked paprika']],
         ['Garam Masala', 'spices', 379, 14.0, 45.0, 15.0, false, []],
+        ['Panch Phoron', 'spices', 350, 15.0, 45.0, 15.0, false, ['panch phoran', 'five spice', 'paanch phoron']],
         ['Cinnamon', 'spices', 247, 4.0, 80.6, 1.2, false, ['ground cinnamon', 'cinnamon stick', 'cinnamon sticks']],
         ['Oregano', 'spices', 265, 9.0, 68.9, 4.3, false, ['dried oregano']],
         ['Thyme', 'spices', 276, 9.1, 63.9, 7.4, false, ['dried thyme']],
@@ -132,6 +142,9 @@ class IngredientSeeder extends Seeder
                 ['slug' => Ingredient::slugify($name)],
                 [
                     'name' => $name,
+                    // Display only — the English name stays the canonical key
+                    // that recipes and the detector both resolve through.
+                    'name_bn' => BengaliNames::for(Ingredient::slugify($name)),
                     'aisle' => $aisle,
                     'calories_per_100g' => $kcal,
                     'protein_per_100g' => $protein,

@@ -16,9 +16,10 @@ use App\Models\Recipe;
  * finished on Tuesday, the dashboard reports a health score for food that no
  * longer exists, and the waste counter has nothing to count.
  *
- * Staples stay. `ingredients.is_staple` marks the things nobody restocks per
- * meal, so salt and oil are offered but unticked — you do not run out of salt
- * because you cooked one dish.
+ * The cupboard stays. Anything with no meaningful use-by date — salt, oil,
+ * rice, every spice — is offered but unticked, because you do not run out of
+ * salt by cooking one dish. Everything perishable is ticked, because that is
+ * the food that actually got eaten.
  */
 class PantryConsumptionService
 {
@@ -40,7 +41,7 @@ class PantryConsumptionService
         $statuses = $this->freshness->statuses($session);
 
         $held = $session->pantryItems()
-            ->with('ingredient:id,name,slug,aisle,is_staple')
+            ->with('ingredient:id,name,name_bn,slug,aisle,is_staple')
             ->get()
             ->keyBy('ingredient_id');
 
@@ -50,19 +51,27 @@ class PantryConsumptionService
             ->filter(fn (?PantryItem $item) => $item !== null && $item->ingredient !== null)
             ->unique('id')
             ->map(function (PantryItem $item) use ($statuses) {
-                $staple = (bool) $item->ingredient->is_staple;
+                // What stays is decided by shelf life, not by `is_staple`.
+                // That flag means "common pantry item" and is set on eggs,
+                // onions, tomatoes and milk — all things you genuinely use up.
+                // Keying off it meant cooking removed nothing at all from a
+                // typical fridge, which broke the loop the app is built on.
+                // An ingredient with no meaningful use-by date is the cupboard;
+                // everything else is food that gets eaten.
+                $cupboard = $item->ingredient->shelfLifeDays() === null;
 
                 return [
                     'pantry_item_id' => $item->id,
                     'ingredient_id' => (int) $item->ingredient_id,
                     'name' => $item->ingredient->name,
-                    'is_staple' => $staple,
-                    'consume_by_default' => !$staple,
+                    'name_bn' => $item->ingredient->name_bn,
+                    'is_cupboard' => $cupboard,
+                    'consume_by_default' => !$cupboard,
                     'freshness' => $statuses->get($item->ingredient_id),
                 ];
             })
             ->sortBy([
-                fn (array $a, array $b) => $a['is_staple'] <=> $b['is_staple'],
+                fn (array $a, array $b) => $a['is_cupboard'] <=> $b['is_cupboard'],
                 fn (array $a, array $b) => strcmp($a['name'], $b['name']),
             ])
             ->values()

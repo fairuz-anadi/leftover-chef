@@ -98,6 +98,8 @@ class ShelfLifeCatalog
         'salmon' => 2,
         'white-fish' => 2,
         'lamb' => 3,
+        'hilsa' => 2,
+        'rohu' => 2,
         'pork' => 3,
         'bacon' => 7,
         // This row is seeded with a "canned tuna" alias, so a tin is at least
@@ -110,6 +112,7 @@ class ShelfLifeCatalog
 
         // Pantry — shelf-stable by default, so only the exceptions are listed.
         'tofu' => 7,
+        'mustard-paste' => 14,
     ];
 
     /** Days of shelf life for an ingredient, or null if it does not meaningfully expire. */

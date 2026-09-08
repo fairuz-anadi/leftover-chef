@@ -113,7 +113,8 @@ a stateless "image in, boxes out" service that knows nothing about ingredients.
 
 **Detection** is YOLO-World, open-vocabulary: it takes text prompts instead of a
 fixed class list, so `vision/vocabulary.json` asks it for *"carton of milk"* and
-*"tin of tomatoes"* — 49 fridge classes with no labelled dataset. Roughly
+*"tin of tomatoes"* — 49 fridge classes with no labelled dataset. Every
+ingredient also carries its Bengali name, shown beside the English one. Roughly
 **200 ms per photo on CPU**, no GPU. Detector labels reach ingredient rows
 through the alias table in `IngredientSeeder`; there is no mapping code in PHP.
 
@@ -157,7 +158,7 @@ network.
 ## Tests
 
 ```bash
-php artisan test           # 42 tests
+php artisan test           # 44 tests
 cd client && npm run lint
 ```
 

@@ -14,7 +14,7 @@ export function FreshnessBadge({ freshness }) {
 
   if (!tier) {
     return (
-      <span className="rounded-full border border-dashed border-[#2a3438] px-2 py-0.5 font-mono text-[10px] text-[#61706f]">
+      <span className="rounded-full border border-dashed border-[var(--line)] px-2 py-0.5 font-mono text-[10px] text-[var(--faint)]">
         keeps
       </span>
     );
@@ -49,10 +49,10 @@ export function FreshnessBar({ freshness }) {
   const pct = tier ? Math.max(freshness.life_remaining * 100, freshness.tier === "today" ? 4 : 6) : 0;
 
   return (
-    <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#212a2d]">
+    <div className="h-1.5 w-full overflow-hidden rounded-full bg-[var(--track)]">
       <div
         className="lc-bar h-full rounded-full"
-        style={{ width: `${pct}%`, backgroundColor: tier?.colour ?? "#2a3438" }}
+        style={{ width: `${pct}%`, backgroundColor: tier?.colour ?? "var(--line)" }}
       />
     </div>
   );

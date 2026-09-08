@@ -92,38 +92,38 @@ export default function VoiceAsk({ suggestions, atRisk, showToast }) {
   }
 
   return (
-    <div className="rounded-2xl border border-[#2a3438] bg-[#141a1c] p-5">
+    <div className="rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-5">
       <div className="flex items-center gap-3">
         <button
           type="button"
           onClick={listening ? () => recognition.current?.stop() : listen}
           className={`grid h-11 w-11 shrink-0 place-items-center rounded-full text-lg transition ${
             listening
-              ? "lc-listen bg-[#ff5d5d] text-white"
-              : "bg-[#1c2427] text-[#56d9c8] hover:bg-[#242e31]"
+              ? "lc-listen bg-[var(--today)] text-white"
+              : "bg-[var(--raised)] text-[var(--accent)] hover:bg-[var(--hover)]"
           }`}
           aria-label="Ask what to cook"
         >
           🎙
         </button>
         <div className="min-w-0">
-          <p className="m-0 text-sm font-semibold text-[#eef3f3]">
+          <p className="m-0 text-sm font-semibold text-[var(--text)]">
             {listening ? "Listening…" : "Ask what to cook"}
           </p>
-          <p className="m-0 text-xs text-[#61706f]">
+          <p className="m-0 text-xs text-[var(--faint)]">
             {listenSupported ? '"What can I make for dinner?"' : "Tap to hear the answer"}
           </p>
         </div>
         <button
           type="button"
           onClick={ask}
-          className="ml-auto shrink-0 rounded-full border border-[#2a3438] px-3 py-1.5 text-xs font-semibold text-[#93a3a6] transition hover:border-[#56d9c8] hover:text-[#56d9c8]"
+          className="ml-auto shrink-0 rounded-full border border-[var(--line)] px-3 py-1.5 text-xs font-semibold text-[var(--dim)] transition hover:border-[var(--accent)] hover:text-[var(--accent)]"
         >
           Answer
         </button>
       </div>
 
-      {said && <p className="mt-3 mb-0 text-sm leading-relaxed text-[#93a3a6]">“{said}”</p>}
+      {said && <p className="mt-3 mb-0 text-sm leading-relaxed text-[var(--dim)]">“{said}”</p>}
     </div>
   );
 }

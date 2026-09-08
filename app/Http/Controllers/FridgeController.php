@@ -176,13 +176,14 @@ class FridgeController extends Controller
         $statuses = $this->freshness->statuses($session);
 
         $items = $session->pantryItems()
-            ->with('ingredient:id,name,slug,aisle,is_staple')
+            ->with('ingredient:id,name,name_bn,slug,aisle,is_staple')
             ->get()
             ->filter(fn (PantryItem $item) => $item->ingredient !== null)
             ->map(fn (PantryItem $item) => [
                 'id' => $item->id,
                 'ingredient_id' => $item->ingredient_id,
                 'name' => $item->ingredient->name,
+                'name_bn' => $item->ingredient->name_bn,
                 'aisle' => $item->ingredient->aisle,
                 'is_staple' => (bool) $item->ingredient->is_staple,
                 'source' => $item->source,

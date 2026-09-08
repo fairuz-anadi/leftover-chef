@@ -30,7 +30,7 @@ class RecipeController extends Controller
     public function show(Request $request, Recipe $recipe)
     {
         $session = $this->fridge($request);
-        $recipe->load('ingredientRecords:id,name,slug,aisle,is_staple');
+        $recipe->load('ingredientRecords:id,name,name_bn,slug,aisle,is_staple');
 
         $owned = $session->pantryItems()->pluck('ingredient_id')->map(fn ($id) => (int) $id);
         $statuses = $this->freshness->statuses($session);
@@ -50,6 +50,7 @@ class RecipeController extends Controller
                 'ingredients' => $recipe->ingredientRecords->map(fn ($ingredient) => [
                     'id' => $ingredient->id,
                     'name' => $ingredient->name,
+                    'name_bn' => $ingredient->name_bn,
                     'raw_text' => $ingredient->pivot->raw_text,
                     'is_optional' => (bool) $ingredient->pivot->is_optional,
                     'in_fridge' => $owned->contains($ingredient->id),

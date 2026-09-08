@@ -11,14 +11,14 @@ import { FreshnessBadge, FreshnessBar } from "./Freshness";
 export default function Shelf({ items, alertIds, onSetDate, onRemove, onBin }) {
   if (items.length === 0) {
     return (
-      <p className="rounded-xl border border-dashed border-[#2a3438] p-8 text-center text-sm text-[#61706f]">
+      <p className="rounded-xl border border-dashed border-[var(--line)] p-8 text-center text-sm text-[var(--faint)]">
         Nothing in here yet. Scan a photo, or add something by hand.
       </p>
     );
   }
 
   return (
-    <ul className="m-0 grid list-none gap-2 p-0">
+    <ul className="lc-stagger m-0 grid list-none gap-2 p-0">
       {items.map((item) => (
         <ShelfItem
           key={item.id}
@@ -40,17 +40,26 @@ function ShelfItem({ item, alarmed, onSetDate, onRemove, onBin }) {
 
   return (
     <li
-      className={`rounded-xl border border-[#2a3438] bg-[#141a1c] px-3.5 py-3 ${
+      className={`lc-card rounded-xl border border-[var(--line)] bg-[var(--surface)] px-3.5 py-3 ${
         alarmed ? "lc-alarm" : ""
       }`}
     >
       <div className="flex items-center gap-3">
-        <span className="flex-1 truncate text-sm font-semibold text-[#eef3f3]">
-          {item.name}
-          {item.source === "scan" && (
-            <span title="Added from a photo" className="ml-1.5 text-[11px]">
-              📷
-            </span>
+        <span className="min-w-0 flex-1">
+          <span className="block truncate text-sm font-semibold text-[var(--text)]">
+            {item.name}
+            {item.source === "scan" && (
+              <span title="Added from a photo" className="ml-1.5 text-[11px]">
+                📷
+              </span>
+            )}
+          </span>
+          {/* The Bengali name sits under the English one rather than replacing
+              it: the recipes, the detector and the alias table all speak
+              English, so showing both keeps the shelf readable to whoever is
+              standing in front of it. */}
+          {item.name_bn && (
+            <span className="block truncate text-xs text-[var(--faint)]">{item.name_bn}</span>
           )}
         </span>
 
@@ -70,7 +79,7 @@ function ShelfItem({ item, alarmed, onSetDate, onRemove, onBin }) {
               }
               if (event.key === "Escape") setEditing(false);
             }}
-            className="rounded-md border border-[#2a3438] bg-[#0a0e0f] px-2 py-1 font-mono text-xs"
+            className="rounded-md border border-[var(--line)] bg-[var(--bg)] px-2 py-1 font-mono text-xs"
           />
         ) : (
           <button
@@ -91,7 +100,7 @@ function ShelfItem({ item, alarmed, onSetDate, onRemove, onBin }) {
             type="button"
             onClick={() => onBin(item)}
             title="Threw it away — counts against the save rate"
-            className="rounded-full border border-[#4a2a2a] px-2 py-0.5 font-mono text-[10px] text-[#ff5d5d] transition hover:bg-[rgba(255,93,93,0.12)]"
+            className="rounded-full border border-[var(--today-line)] px-2 py-0.5 font-mono text-[10px] text-[var(--today)] transition hover:bg-[var(--today-soft)]"
           >
             binned
           </button>
@@ -100,7 +109,7 @@ function ShelfItem({ item, alarmed, onSetDate, onRemove, onBin }) {
             type="button"
             onClick={() => onRemove(item)}
             aria-label={`Remove ${item.name}`}
-            className="grid h-5 w-5 place-items-center rounded-full text-xs text-[#61706f] transition hover:bg-[#242e31] hover:text-[#eef3f3]"
+            className="grid h-5 w-5 place-items-center rounded-full text-xs text-[var(--faint)] transition hover:bg-[var(--hover)] hover:text-[var(--text)]"
           >
             ×
           </button>

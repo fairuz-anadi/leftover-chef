@@ -52,7 +52,7 @@ class RecipeSuggestionService
             return collect();
         }
 
-        return Recipe::with(['ingredientRecords:id,name,slug,aisle'])
+        return Recipe::with(['ingredientRecords:id,name,name_bn,slug,aisle'])
             ->get()
             ->map(fn (Recipe $recipe) => $this->score($recipe, $owned, $statuses, $localBias))
             ->reject(fn (array $row) => $row['required_count'] === 0 || count($row['missing']) > $maxMissing)
@@ -82,7 +82,7 @@ class RecipeSuggestionService
         $cheapAisles = ['produce', 'pantry', 'dairy', 'bakery'];
         $blocked = [];
 
-        foreach (Recipe::with('ingredientRecords:id,name,slug,aisle')->get() as $recipe) {
+        foreach (Recipe::with('ingredientRecords:id,name,name_bn,slug,aisle')->get() as $recipe) {
             $required = $recipe->ingredientRecords->reject(fn ($i) => (bool) $i->pivot->is_optional);
             $missing = $required->reject(fn ($i) => $owned->contains($i->id));
 
@@ -97,6 +97,7 @@ class RecipeSuggestionService
                 $blocked[$key] ??= [
                     'ingredient_id' => $ingredient->id,
                     'name' => $ingredient->name,
+                    'name_bn' => $ingredient->name_bn,
                     'aisle' => $ingredient->aisle,
                     'unlocks' => 0,
                     'recipes' => [],
@@ -158,7 +159,9 @@ class RecipeSuggestionService
             'match_percent' => $matchPercent,
             'have_count' => $have->count(),
             'required_count' => $requiredCount,
-            'missing' => $missing->map(fn ($i) => ['id' => $i->id, 'name' => $i->name, 'aisle' => $i->aisle])->values()->all(),
+            'missing' => $missing->map(fn ($i) => [
+                'id' => $i->id, 'name' => $i->name, 'name_bn' => $i->name_bn, 'aisle' => $i->aisle,
+            ])->values()->all(),
             'rescues' => $rescues->all(),
             'urgency_score' => $urgencyScore,
             'local_bonus' => $bonus,

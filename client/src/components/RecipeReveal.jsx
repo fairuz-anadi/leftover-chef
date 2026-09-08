@@ -88,17 +88,17 @@ export default function RecipeReveal({ recipeId, fridgePhoto, onClose, onCooked,
       aria-modal="true"
       onClick={(event) => event.target === event.currentTarget && onClose()}
     >
-      <div className="lc-reveal max-h-[92vh] w-full max-w-4xl overflow-y-auto rounded-2xl border border-[#2a3438] bg-[#141a1c] p-6">
+      <div className="lc-reveal max-h-[92vh] w-full max-w-4xl overflow-y-auto rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-6">
         {!recipe ? (
-          <p className="py-16 text-center text-sm text-[#61706f]">Plating up…</p>
+          <p className="py-16 text-center text-sm text-[var(--faint)]">Plating up…</p>
         ) : (
           <>
             <div className="flex items-start justify-between gap-4">
               <div>
-                <h2 className="m-0 text-2xl font-bold tracking-tight text-[#eef3f3]">
+                <h2 className="m-0 text-2xl font-bold tracking-tight text-[var(--text)]">
                   {recipe.title}
                 </h2>
-                <p className="m-0 mt-1 text-sm text-[#93a3a6]">
+                <p className="m-0 mt-1 text-sm text-[var(--dim)]">
                   {recipe.cuisine_country} · {recipe.difficulty}
                   {recipe.total_minutes ? ` · ${recipe.total_minutes} min` : ""}
                 </p>
@@ -107,7 +107,7 @@ export default function RecipeReveal({ recipeId, fridgePhoto, onClose, onCooked,
                 type="button"
                 onClick={onClose}
                 aria-label="Close"
-                className="grid h-8 w-8 shrink-0 place-items-center rounded-full text-[#61706f] transition hover:bg-[#242e31] hover:text-[#eef3f3]"
+                className="grid h-8 w-8 shrink-0 place-items-center rounded-full text-[var(--faint)] transition hover:bg-[var(--hover)] hover:text-[var(--text)]"
               >
                 ×
               </button>
@@ -125,15 +125,15 @@ export default function RecipeReveal({ recipeId, fridgePhoto, onClose, onCooked,
                   <img
                     src={fridgePhoto}
                     alt="Your fridge"
-                    className="h-48 w-full rounded-xl border border-[#2a3438] object-cover"
+                    className="h-48 w-full rounded-xl border border-[var(--line)] object-cover"
                   />
                 ) : (
-                  <div className="grid h-48 w-full place-items-center rounded-xl border border-dashed border-[#2a3438] px-6 text-center text-xs leading-relaxed text-[#61706f]">
+                  <div className="grid h-48 w-full place-items-center rounded-xl border border-dashed border-[var(--line)] px-6 text-center text-xs leading-relaxed text-[var(--faint)]">
                     Scan your fridge and your photo appears here, next to the dish
                     it turns into.
                   </div>
                 )}
-                <figcaption className="mt-1.5 text-[10px] uppercase tracking-widest text-[#61706f]">
+                <figcaption className="mt-1.5 text-[10px] uppercase tracking-widest text-[var(--faint)]">
                   {fridgePhoto ? "What you had" : "Your fridge"}
                 </figcaption>
               </figure>
@@ -141,9 +141,9 @@ export default function RecipeReveal({ recipeId, fridgePhoto, onClose, onCooked,
                 <img
                   src={recipeImage(recipe.image_path)}
                   alt={recipe.title}
-                  className="h-48 w-full rounded-xl border border-[#56d9c8]/40 object-cover"
+                  className="h-48 w-full rounded-xl border border-[var(--accent)]/40 object-cover"
                 />
-                <figcaption className="mt-1.5 text-[10px] uppercase tracking-widest text-[#56d9c8]">
+                <figcaption className="mt-1.5 text-[10px] uppercase tracking-widest text-[var(--accent)]">
                   What you get
                 </figcaption>
               </figure>
@@ -151,22 +151,22 @@ export default function RecipeReveal({ recipeId, fridgePhoto, onClose, onCooked,
 
             {receipt ? (
               <div className="mt-6">
-                <h3 className="m-0 text-base font-bold text-[#3ddc84]">Enjoy it 🎉</h3>
-                <p className="mt-1.5 mb-0 text-sm text-[#93a3a6]">{receipt.message}</p>
+                <h3 className="m-0 text-base font-bold text-[var(--fresh)]">Enjoy it 🎉</h3>
+                <p className="mt-1.5 mb-0 text-sm text-[var(--dim)]">{receipt.message}</p>
 
                 {receipt.rescued?.length > 0 && (
-                  <div className="mt-4 rounded-xl border border-[#3ddc84]/40 bg-[rgba(61,220,132,0.08)] p-4">
-                    <p className="m-0 text-xs font-semibold uppercase tracking-widest text-[#3ddc84]">
+                  <div className="mt-4 rounded-xl border border-[var(--fresh)]/40 bg-[var(--fresh-soft)] p-4">
+                    <p className="m-0 text-xs font-semibold uppercase tracking-widest text-[var(--fresh)]">
                       Saved from the bin
                     </p>
                     <div className="mt-2 flex flex-wrap gap-2">
                       {receipt.rescued.map((item) => (
                         <span
                           key={item.ingredient_id}
-                          className="rounded-full bg-[#1c2427] px-3 py-1 text-sm text-[#eef3f3]"
+                          className="rounded-full bg-[var(--raised)] px-3 py-1 text-sm text-[var(--text)]"
                         >
                           {item.name}
-                          <span className="ml-1.5 font-mono text-[10px] text-[#93a3a6]">
+                          <span className="ml-1.5 font-mono text-[10px] text-[var(--dim)]">
                             {item.label}
                           </span>
                         </span>
@@ -179,7 +179,7 @@ export default function RecipeReveal({ recipeId, fridgePhoto, onClose, onCooked,
                   <button
                     type="button"
                     onClick={onClose}
-                    className="rounded-full bg-[#56d9c8] px-5 py-2.5 text-sm font-semibold text-[#06201d]"
+                    className="rounded-full bg-[var(--accent)] px-5 py-2.5 text-sm font-semibold text-[var(--on-accent)]"
                   >
                     Back to my fridge
                   </button>
@@ -187,7 +187,7 @@ export default function RecipeReveal({ recipeId, fridgePhoto, onClose, onCooked,
                     type="button"
                     onClick={undo}
                     disabled={busy}
-                    className="rounded-full border border-[#2a3438] px-5 py-2.5 text-sm font-semibold disabled:opacity-40"
+                    className="rounded-full border border-[var(--line)] px-5 py-2.5 text-sm font-semibold disabled:opacity-40"
                   >
                     {busy ? "Putting back…" : "Undo"}
                   </button>
@@ -196,15 +196,15 @@ export default function RecipeReveal({ recipeId, fridgePhoto, onClose, onCooked,
             ) : (
               <div className="mt-6 grid gap-6 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
                 <div>
-                  <h3 className="m-0 mb-2 text-xs font-semibold uppercase tracking-widest text-[#61706f]">
+                  <h3 className="m-0 mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--faint)]">
                     Method
                   </h3>
-                  <ol className="m-0 grid list-decimal gap-2 pl-5 text-sm leading-relaxed text-[#93a3a6]">
+                  <ol className="m-0 grid list-decimal gap-2 pl-5 text-sm leading-relaxed text-[var(--dim)]">
                     {recipe.steps.map((step) => (
                       <li key={step.index}>
                         {step.text}
                         {step.timer_seconds ? (
-                          <span className="ml-1.5 font-mono text-[10px] text-[#56d9c8]">
+                          <span className="ml-1.5 font-mono text-[10px] text-[var(--accent)]">
                             {Math.round(step.timer_seconds / 60)} min
                           </span>
                         ) : null}
@@ -214,29 +214,33 @@ export default function RecipeReveal({ recipeId, fridgePhoto, onClose, onCooked,
                 </div>
 
                 <div>
-                  <h3 className="m-0 mb-2 text-xs font-semibold uppercase tracking-widest text-[#61706f]">
+                  <h3 className="m-0 mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--faint)]">
                     Ingredients
                   </h3>
                   <ul className="m-0 grid list-none gap-1.5 p-0 text-sm">
                     {recipe.ingredients.map((item) => (
                       <li key={item.id} className="flex items-center gap-2">
-                        <span className={item.in_fridge ? "text-[#eef3f3]" : "text-[#61706f]"}>
+                        <span className={item.in_fridge ? "text-[var(--text)]" : "text-[var(--faint)]"}>
                           {item.raw_text}
+                          {item.name_bn && (
+                            <span className="ml-1.5 text-xs text-[var(--faint)]">{item.name_bn}</span>
+                          )}
                         </span>
                         {item.in_fridge ? (
                           <FreshnessBadge freshness={item.freshness} />
                         ) : (
-                          <span className="font-mono text-[10px] text-[#ff8fb1]">need</span>
+                          <span className="font-mono text-[10px] text-[var(--need)]">need</span>
                         )}
                       </li>
                     ))}
                   </ul>
 
                   {recipe.consumes.length > 0 && (
-                    <div className="mt-5 rounded-xl border border-[#2a3438] p-3.5">
-                      <p className="m-0 mb-2 text-xs text-[#93a3a6]">
-                        Cooking this takes these out. Staples stay — you don&apos;t run out of salt
-                        because you cooked one dish.
+                    <div className="mt-5 rounded-xl border border-[var(--line)] p-3.5">
+                      <p className="m-0 mb-2 text-xs text-[var(--dim)]">
+                        Cooking this takes these out. Untick anything you have some left of.
+                        Cupboard items start unticked — you don&apos;t run out of salt because
+                        you cooked one dish.
                       </p>
                       <div className="grid gap-1">
                         {recipe.consumes.map((row) => (
@@ -256,11 +260,16 @@ export default function RecipeReveal({ recipeId, fridgePhoto, onClose, onCooked,
                                   return next;
                                 })
                               }
-                              className="h-3.5 w-3.5 accent-[#3ddc84]"
+                              className="h-3.5 w-3.5 accent-[var(--fresh)]"
                             />
-                            <span className="flex-1 text-[#eef3f3]">{row.name}</span>
-                            {row.is_staple && (
-                              <span className="font-mono text-[10px] text-[#61706f]">staple</span>
+                            <span className="flex-1 text-[var(--text)]">
+                              {row.name}
+                              {row.name_bn && (
+                                <span className="ml-1.5 text-xs text-[var(--faint)]">{row.name_bn}</span>
+                              )}
+                            </span>
+                            {row.is_cupboard && (
+                              <span className="font-mono text-[10px] text-[var(--faint)]">cupboard</span>
                             )}
                           </label>
                         ))}
@@ -272,7 +281,7 @@ export default function RecipeReveal({ recipeId, fridgePhoto, onClose, onCooked,
                     type="button"
                     onClick={cook}
                     disabled={busy}
-                    className="mt-4 w-full rounded-full bg-[#3ddc84] px-5 py-2.5 text-sm font-semibold text-[#06210f] disabled:opacity-40"
+                    className="mt-4 w-full rounded-full bg-[var(--fresh)] px-5 py-2.5 text-sm font-semibold text-[var(--on-fresh)] disabled:opacity-40"
                   >
                     {busy ? "Updating…" : `I cooked this${consume.size ? ` · ${consume.size} used` : ""}`}
                   </button>

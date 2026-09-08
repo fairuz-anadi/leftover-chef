@@ -215,11 +215,11 @@ screen recording on a phone at the desk for when the queue backs up.
 | --- | --- |
 | Detector classes | **49**, zero-shot, one line of JSON to add one |
 | Detection time | **~200–300 ms** per photo, **CPU only** |
-| Recipes | **32**, across 23 countries |
-| Ingredient vocabulary | **92**, of which **50** carry a shelf life |
+| Recipes | **40**, across 23 countries — **10 Bangladeshi** |
+| Ingredient vocabulary | **97**, all named in Bengali, **52** with a shelf life |
 | Freshness tiers | **3** · horizon **7 days** |
 | Ranking | **0.6** match · **0.4** urgency · **+8** Bangladeshi |
 | API surface | **14 endpoints** (was 57 before the scope cut) |
-| Tests | **42 passing** |
+| Tests | **44 passing** |
 | Processes to start | **3**, via **1** command |
 | Model cache | **~370 MB**, entirely local |
