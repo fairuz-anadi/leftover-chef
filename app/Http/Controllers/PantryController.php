@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Services\PantryConsumptionService;
 use App\Http\Services\UseItUpService;
 use App\Models\Ingredient;
 use App\Models\PantryItem;
@@ -227,6 +228,36 @@ class PantryController extends Controller
         return $headline . ' ' . ($dated === 1
             ? 'One use-by date estimated — tap it to correct.'
             : "{$dated} use-by dates estimated — tap any to correct.");
+    }
+
+    /**
+     * Put back what "I cooked this" took out.
+     *
+     * The undo behind the cook button. Rows come back exactly as they were —
+     * date, estimate flag, provenance — because a misclick should cost one tap,
+     * not a re-scan.
+     */
+    public function restore(Request $request, PantryConsumptionService $consumption)
+    {
+        $validated = $request->validate([
+            'items' => 'required|array|min:1',
+            'items.*.name' => 'required|string|max:120',
+            'items.*.quantity' => 'nullable|numeric|min:0',
+            'items.*.unit' => 'nullable|string|max:30',
+            'items.*.expires_on' => 'nullable|date',
+            'items.*.expiry_estimated' => 'sometimes|boolean',
+            'items.*.source' => 'nullable|string|max:20',
+        ]);
+
+        $restored = $consumption->restore($request->user(), $validated['items']);
+
+        return response()->json([
+            'message' => $restored === 1
+                ? '1 ingredient put back.'
+                : "{$restored} ingredients put back.",
+            'data' => $this->itemsFor($request),
+            'meta' => $this->expiryMeta($request),
+        ]);
     }
 
     /** GET /api/pantry/expiring — the "cook this tonight" shelf. */

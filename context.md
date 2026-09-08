@@ -249,6 +249,36 @@ argued over and revised, and they should read as a list. Ingredients invented on
 the fly by `Ingredient::resolve()` have no seeded value and fall back to an
 aisle default.
 
+### Closing the loop: "I cooked this"
+
+Scan puts food in and the ranking says what to cook, but until now nothing took
+it back out. A shelf that still claims you own spinach you ate on Tuesday makes
+the expiry ranking wrong in the most irritating way available — it keeps
+recommending a rescue that already happened.
+
+The last step of cook mode is now **I cooked this**, which opens a tick list of
+what this recipe uses that you actually hold, and removes what you confirm.
+
+- **Staples stay.** `ingredients.is_staple` already marks the 26 things nobody
+  restocks per meal, so salt and olive oil are offered but unticked. You do not
+  run out of salt because you cooked one dish.
+- **Only required ingredients you hold.** A recipe does not consume the garlic
+  you were going to buy, and an optional garnish should not empty your parsley.
+- **The plan is read when you finish, not when you started.** A recipe takes
+  half an hour and the shelf can move underneath it — someone signs in, or edits
+  the fridge in another tab. `openFinish()` refetches; it is one query and it
+  removes a whole class of "it said I had nothing".
+- **There is an undo.** The response carries each removed row in full — date,
+  estimate flag, provenance — and `POST /api/pantry/restore` puts them back
+  exactly. A feature whose whole promise is "and it's gone" needs a way back
+  from a misclick.
+- **It reports what it saved.** Rescues are computed *before* the delete, since
+  afterwards there is nothing to read the urgency off, and the panel says
+  "Saved from the bin: Green Chilli — had 6d left".
+
+No migration: `is_staple`, `expires_on` and the pantry rows were all already
+there. The feature is `PantryConsumptionService` plus two endpoints.
+
 ---
 
 ## 7. Where things live
@@ -274,12 +304,14 @@ app/Support/
 
 app/Http/Services/
   VisionClient.php          HTTP to the sidecar, degrades to a clear 503
+  PantryConsumptionService.php  what a recipe eats, removing it, putting it back
   DetectionMapper.php       detections → ingredient rows, dedupe, unmatched
   UseItUpService.php        expiry → urgency → rescue score
   PantryMatchService.php    recipe matching + priority ranking
 
 app/Http/Controllers/
   FridgeScanController.php  POST /api/pantry/scan, GET /api/pantry/scan/status
+  CookedController.php      POST /api/recipes/{recipe}/cooked
   PantryController.php      the fridge: add, confirm scan, set dates, expiring
 
 client/src/
@@ -297,9 +329,13 @@ client/src/
 | `POST` | `/api/pantry/scan/confirm` | yes | Commit confirmed chips (additive) |
 | `GET` | `/api/pantry/expiring` | yes | The "cook this tonight" shelf |
 | `PATCH` | `/api/pantry/{item}` | yes | Set or clear a use-by date (and clear the estimated flag) |
+| `POST` | `/api/recipes/{recipe}/cooked` | yes | "I cooked this" — take the ingredients out |
+| `POST` | `/api/pantry/restore` | yes | Undo the above |
 
 `POST /api/pantry/search` gained `use_it_up_score`, `rescues` and
 `priority_score` per match, and `expiring_soon` / `rescues_waste` in `meta`.
+`GET /api/recipes/{recipe}/cook` gained `pantry_usage` — what finishing the
+recipe would take out of the signed-in cook's fridge.
 
 ### Schema changes
 
@@ -350,7 +386,10 @@ Re-seed on the morning of and the shelf is correct.
   rescues tomorrow's spinach above an 82% one that rescues nothing.
 - Expiry estimation on scan: confirming a photo dates the perishables from
   `ShelfLifeCatalog`, marks the guesses, and leaves cupboard staples undated.
-- 86 PHPUnit tests pass, 42 of them new. `npm run build` clean, eslint clean.
+- "I cooked this" closes the loop: the plan lists what the recipe eats,
+  staples stay, rescues are named, and an undo puts everything back with its
+  date intact. Verified live against the demo fridge, 25 → 23 → 25.
+- 98 PHPUnit tests pass, 54 of them new. `npm run build` clean, eslint clean.
 
 **Not done**
 

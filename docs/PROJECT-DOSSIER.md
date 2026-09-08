@@ -71,9 +71,9 @@ to say.
 | Criterion | Our position | The line to use |
 | --- | --- | --- |
 | **Idea** | A daily problem every judge has personally had, tied to a real SDG, with a mechanism nobody expects (open-vocabulary detection) | *"Every one of you has stood in front of a fridge at 7pm. We photographed that moment."* |
-| **Features** | 55 API endpoints, 14 screens, and the scan is one feature on top of a complete cooking platform — planner, shopping list, cook mode, nutrition, cuisine map | Don't list features. Show the scan, then say *"and that sits on a full platform — here's the shopping list it generates from your week."* |
+| **Features** | 57 API endpoints, 14 screens, and the scan is one feature on top of a complete cooking platform — planner, shopping list, cook mode, nutrition, cuisine map | Don't list features. Show the scan, then say *"and that sits on a full platform — here's the shopping list it generates from your week."* |
 | **Design** | Coherent token-driven design system, the detection boxes drawn over the user's own photo, confidence on every chip, explanations next to every score | The boxes **are** the design argument. Let them land before you talk. |
-| **Implementation** | Three-process local architecture, 86 automated tests, a real bug fixed in the inherited code, honest degradation when the detector is down | *"The alias table was silently dropping ingredients. We found it, fixed it, and wrote the test that stops it coming back."* |
+| **Implementation** | Three-process local architecture, 98 automated tests, a real bug fixed in the inherited code, honest degradation when the detector is down | *"The alias table was silently dropping ingredients. We found it, fixed it, and wrote the test that stops it coming back."* |
 | **Social impact** | SDG 12.3 explicitly — halve per-capita food waste. The expiry ranking is the intervention, not a slogan bolted on | *"The ranking exists to stop food being thrown away. Take it out and the project has no reason to exist."* |
 | **Deployment** | Docker Compose for the web tier, one-command local start, SQLite→PostgreSQL path, offline rehearsal script | *"One command brings up three processes and waits for each to answer — because a demo you have to fix on stage is a demo you have lost."* |
 | **Clean code** | Every non-obvious decision carries a comment saying *why*, services are small and single-purpose, no mapping tables where a data row will do | Open `UseItUpService.php` on the laptop. The scoring maths is nine lines and reads like prose. |
@@ -150,7 +150,28 @@ aspirational.
 - **It vanishes cleanly.** With no dates set anywhere, the second term is zero
   for every recipe and the ranking collapses to plain match percentage.
 
-### 3.3 The cooking platform underneath
+### 3.3 "I cooked this" — closing the loop
+
+- **Finishing a recipe takes its ingredients back out of the fridge.** Without
+  this the shelf keeps claiming you own spinach you ate on Tuesday, and the
+  expiry ranking spends the week recommending a rescue that already happened.
+- **Staples stay.** Salt and olive oil are offered but unticked — you don't run
+  out of salt because you cooked one dish. The 26 staples were already marked in
+  the data; nothing new had to be decided.
+- **Only what you actually hold, and only required ingredients.** A recipe does
+  not consume the garlic you were going to buy, and an optional garnish should
+  not empty your parsley.
+- **The fridge is read when you finish, not when you started.** A recipe takes
+  half an hour; someone might sign in or edit the shelf in another tab meanwhile.
+- **It names what it saved** — *"Saved from the bin: Green Chilli, had 6 days
+  left"* — computed before the delete, because afterwards there is nothing left
+  to measure.
+- **There is an undo.** Every removed row comes back with its date, estimate
+  flag and provenance intact. A feature whose promise is "and it's gone" needs a
+  way back from a misclick.
+- No migration needed: the whole thing rides on data that was already there.
+
+### 3.4 The cooking platform underneath
 
 Inherited from the FridgeToFork codebase and fully working:
 
@@ -169,7 +190,7 @@ Inherited from the FridgeToFork codebase and fully working:
 | **Admin dashboard** | Moderate recipes, users, reviews and contact submissions |
 | **Auth** | Email/username + password, Google Identity Services, Sanctum bearer tokens, admin middleware |
 
-### 3.4 The demo and operations rig
+### 3.5 The demo and operations rig
 
 - `setup.ps1` — one-time: PHP, npm and Python dependencies, database, model weights.
 - `start-demo.ps1` — starts all three processes, **polls each until it answers**,
@@ -187,9 +208,9 @@ Inherited from the FridgeToFork codebase and fully working:
   Expiry dates are **relative** (`addDays(2)`), so re-seeding on the morning of
   the exhibition always produces a live "expiring tomorrow" shelf.
 
-### 3.5 Engineering quality
+### 3.6 Engineering quality
 
-- **86 automated tests, 225 assertions**, all passing.
+- **98 automated tests, 266 assertions**, all passing.
   - `FridgeScanTest` — alias resolution, chip collapsing, unknown labels, the
     no-write-on-scan rule, sidecar-down handling, non-image rejection.
   - `UseItUpRankingTest` — urgency curve, the expiring shelf order, diminishing
@@ -198,6 +219,8 @@ Inherited from the FridgeToFork codebase and fully working:
     and without an `Accept` header.
   - `ExpiryEstimationTest` — the shelf-life catalog, and every rule about when
     a date may and may not be guessed.
+  - `CookedItGoneTest` — the consumption plan, staples surviving, other people's
+    fridges being untouchable, and undo restoring a row exactly as it was.
   - `RecipePlatformTest` — end-to-end coverage of the eight original functional
     requirements.
 - **Two real bugs found and fixed in the inherited code**, both with regression
@@ -265,9 +288,9 @@ is a question judges ask.
   now dates the perishables from `ShelfLifeCatalog`, marks the guesses, and
   leaves cupboard staples alone. This was the highest-leverage item on the list
   and the manual step it removed is gone.
-- **"Cook this and it's gone" button.** Finish a recipe in cook mode → the
-  ingredients it consumed are decremented or removed from the fridge. Closes the
-  loop between the two halves of the app.
+- ~~**"Cook this and it's gone" button.**~~ **Shipped** — see §3.3. Finishing a
+  recipe now removes what it used, keeps the staples, names what it rescued and
+  offers an undo. The two halves of the app finally meet.
 - **Portion-aware shopping list.** Already grouped by aisle; add quantities
   summed across the planned week.
 - **Mobile-first pass on the scan screen.** The natural device for photographing
@@ -457,7 +480,7 @@ disqualification ground. Treat the deadline as the deadline.
 > remaining, so users learn which foods they habitually lose, not merely what to
 > cook.
 >
-> **Status.** Fully implemented and operational, covered by eighty-six automated
+> **Status.** Fully implemented and operational, covered by ninety-eight automated
 > tests, comprising a complete cooking platform: recipe library, meal planner,
 > aisle-grouped shopping list, guided cooking mode with timers, and nutrition
 > analysis.
@@ -523,8 +546,9 @@ time. Open on the demo cook, signed in.
 | 1:25 | **Confirm.** Results reorder live | *"Two of these I can cook right now — and it dated the perishables itself, so I never typed a use-by date."* |
 | 1:45 | **Point at the top card** | *"This one is first at 78% — below a 100% match — because it uses the spinach that dies tomorrow. Seventy percent cookability, thirty percent waste avoided. You can check the arithmetic; it's on the card."* |
 | 2:15 | **Start cooking.** Timer running | *"Steps with timers parsed out of the instructions."* |
-| 2:35 | **The close** | *"A third of the world's food is never eaten. Most of it dies in a fridge like this one. That's SDG 12, and it's the ranking function, not the tagline."* |
-| 2:50 | **The kill shot, if they linger** | *"Would you like me to turn the WiFi off and do it again?"* |
+| 2:30 | **Skip to the last step, hit "I cooked this"** | *"And when you're done it comes back out of the fridge — staples stay, and it tells you what you just saved from the bin. That's the loop closed."* |
+| 2:45 | **The close** | *"A third of the world's food is never eaten. Most of it dies in a fridge like this one. That's SDG 12, and it's the ranking function, not the tagline."* |
+| 2:55 | **The kill shot, if they linger** | *"Would you like me to turn the WiFi off and do it again?"* |
 
 **Rules for the run:** one person drives, one narrates, one watches the laptop.
 Never apologise for a wrong detection — drop it and say *"that's what the confirm
@@ -673,9 +697,9 @@ Memorise five of these. They make answers sound like measurements.
 | Ingredient vocabulary | **92 ingredients**, **290 recipe-ingredient links**, 26 staples, **50 with a shelf life** |
 | Detector classes | **49**, zero-shot, extensible by one line of JSON |
 | Detection time | **~190–475 ms** per photo, **CPU only**, no GPU |
-| API surface | **55 endpoints** |
+| API surface | **57 endpoints** |
 | Front end | **14 screens**, React 19 + Tailwind 4 |
-| Automated tests | **86 tests, 225 assertions**, all passing |
+| Automated tests | **98 tests, 266 assertions**, all passing |
 | Application code | **~17,000 lines** across PHP, JSX, Python and PowerShell |
 | Model cache | **~390 MB**, fully local |
 | Processes to start | **3**, via **1** command |

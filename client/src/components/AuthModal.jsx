@@ -1,4 +1,4 @@
-import { useEffect, useId, useState } from "react";
+import { useEffect, useState } from "react";
 
 const initialLogin = { email: "", password: "" };
 const initialSignup = {
@@ -9,7 +9,7 @@ const initialSignup = {
   password_confirmation: "",
 };
 
-function GoogleButton({ mode, onGoogleLogin, setError }) {
+function GoogleButton({ onGoogleLogin, setError }) {
   const handleGoogleLogin = async () => {
     setError("");
     try {
@@ -110,15 +110,6 @@ export default function AuthModal({
     }
   }
 
-  async function handleGoogleLogin() {
-    setError("");
-    try {
-      await onGoogleLogin();
-    } catch (err) {
-      setError(err.message || "Google sign-in failed.");
-    }
-  }
-
   const handleInputChange = (setter, field, value) => {
     setError("");
     setter((current) => ({ ...current, [field]: value }));
@@ -212,7 +203,7 @@ export default function AuthModal({
         </form>
 
         <div className="auth-divider"><span>or continue with Google</span></div>
-        <GoogleButton mode={mode} onGoogleLogin={onGoogleLogin} setError={setError} />
+        <GoogleButton onGoogleLogin={onGoogleLogin} setError={setError} />
         <p className="auth-switch">
           {mode === "login" ? "Need an account?" : "Already a member?"}{" "}
           <button

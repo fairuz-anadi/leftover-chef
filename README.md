@@ -51,6 +51,9 @@ replaces the search. **SDG 12 — Responsible Consumption and Production.**
 - **Use-by dates estimated for you** — confirming a scan dates the perishables
   from typical shelf life, so the ranking works without anyone typing a date.
   Guesses are marked with a `~`; cupboard staples get no date at all.
+- **"I cooked this"** — finishing a recipe takes its ingredients back out of
+  your fridge, tells you what it saved from the bin, and has an undo. Staples
+  stay; you don't run out of salt because you cooked one dish.
 - Plus the platform underneath: a 32-recipe library, cuisine map, guided cook
   mode with timers, meal planner, auto shopping list, nutrition estimates,
   profiles with diets and allergies, reviews and an admin dashboard.
@@ -160,7 +163,7 @@ reports anything that quietly wanted the network.
 ## Tests
 
 ```bash
-php artisan test           # 86 tests
+php artisan test           # 98 tests
 cd client && npm run lint
 ```
 
@@ -171,7 +174,9 @@ and that the published score matches the running order. `ApiErrorShapeTest`
 pins every `/api` route to JSON status codes, with and without an `Accept`
 header — a redirect where a 401 belongs is the kind of thing only a network tab
 reveals. `ExpiryEstimationTest` covers the shelf-life catalog and every rule
-about when a date may and may not be guessed.
+about when a date may and may not be guessed, and `CookedItGoneTest` covers
+consumption — staples surviving, other people's fridges being untouchable, and
+undo restoring a row exactly as it was.
 
 ---
 

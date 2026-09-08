@@ -318,6 +318,24 @@ export const api = {
       { errorMessage: "We couldn't save those ingredients." }
     ),
 
+  // ── "I cooked this" ───────────────────────────────────────────────────
+  // Closes the loop: the fridge stops claiming you own what you just ate.
+  markCooked: (recipeId, pantryItemIds) =>
+    request(
+      `/recipes/${recipeId}/cooked`,
+      {
+        method: "POST",
+        body: JSON.stringify(pantryItemIds ? { pantry_item_ids: pantryItemIds } : {}),
+      },
+      { errorMessage: "We couldn't update your fridge." }
+    ),
+  restorePantry: (items) =>
+    request(
+      "/pantry/restore",
+      { method: "POST", body: JSON.stringify({ items }) },
+      { errorMessage: "We couldn't put those back." }
+    ),
+
   // ── Cuisine Map Explorer ──────────────────────────────────────────────
   cuisines: () => request("/cuisines", {}, { errorMessage: "We couldn't load the cuisine map right now." }),
   cuisine: (code) =>

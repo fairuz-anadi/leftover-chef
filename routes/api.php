@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\CookedController;
 use App\Http\Controllers\CookModeController;
 use App\Http\Controllers\CuisineController;
 use App\Http\Controllers\DashboardController;
@@ -59,6 +60,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('recipes/{recipe}', [RecipeController::class, 'update']);
     Route::post('recipes/{recipe}', [RecipeController::class, 'update']);
     Route::delete('recipes/{recipe}', [RecipeController::class, 'destroy']);
+    // "I cooked this" - takes the ingredients back out of the fridge.
+    Route::post('recipes/{recipe}/cooked', [CookedController::class, 'store']);
     Route::post('recipes/{recipe}/favorite', [FavoriteController::class, 'store']);
     Route::delete('recipes/{recipe}/favorite', [FavoriteController::class, 'destroy']);
     Route::post('recipes/{recipe}/reviews', [ReviewController::class, 'store']);
@@ -74,6 +77,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('pantry/expiring', [PantryController::class, 'expiring']);
     Route::post('pantry', [PantryController::class, 'store']);
     Route::post('pantry/scan/confirm', [PantryController::class, 'confirmScan']);
+    Route::post('pantry/restore', [PantryController::class, 'restore']);
     Route::put('pantry', [PantryController::class, 'sync']);
     Route::patch('pantry/{pantryItem}', [PantryController::class, 'update']);
     Route::delete('pantry/{pantryItem}', [PantryController::class, 'destroy']);

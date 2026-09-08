@@ -17,6 +17,13 @@ export default function CookMode() {
   const [checked, setChecked] = useState(() => new Set());
   const [voiceOn, setVoiceOn] = useState(false);
   const [loading, setLoading] = useState(true);
+  // The finish flow: null until they say they cooked it, then the panel, then
+  // the receipt with an undo on it.
+  const [finishing, setFinishing] = useState(false);
+  const [consume, setConsume] = useState(() => new Set());
+  const [saving, setSaving] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [receipt, setReceipt] = useState(null);
   const { showToast } = useToast();
 
   const speechSupported = typeof window !== "undefined" && "speechSynthesis" in window;
@@ -47,6 +54,63 @@ export default function CookMode() {
 
   const steps = payload?.steps ?? [];
   const step = steps[stepIndex];
+  const usage = payload?.pantry_usage ?? [];
+
+  /**
+   * Read the fridge at the moment they finish, not when they started.
+   *
+   * A recipe takes half an hour and the shelf can move underneath it — someone
+   * signs in, or edits the fridge in another tab. Refetching here is one query
+   * and removes a whole class of "it said I had nothing".
+   */
+  async function openFinish() {
+    setReceipt(null);
+    setFinishing(true);
+    setRefreshing(true);
+
+    try {
+      const response = await api.cookMode(recipeId, servings ?? undefined);
+      setPayload(response.data);
+
+      // Pre-tick the perishables and leave the staples alone; you do not run
+      // out of salt because you cooked one dish.
+      const fresh = response.data.pantry_usage ?? [];
+      setConsume(new Set(fresh.filter((row) => row.consume_by_default).map((row) => row.pantry_item_id)));
+    } catch (error) {
+      showToast(error.message, "error");
+    } finally {
+      setRefreshing(false);
+    }
+  }
+
+  async function confirmCooked(ids) {
+    setSaving(true);
+    try {
+      const response = await api.markCooked(recipeId, ids);
+      setReceipt(response);
+      showToast(response.message);
+    } catch (error) {
+      showToast(error.message, "error");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function undoCooked() {
+    if (!receipt?.removed?.length) return;
+
+    setSaving(true);
+    try {
+      const response = await api.restorePantry(receipt.removed);
+      setReceipt(null);
+      setFinishing(false);
+      showToast(response.message);
+    } catch (error) {
+      showToast(error.message, "error");
+    } finally {
+      setSaving(false);
+    }
+  }
 
   const speak = useCallback(
     (text) => {
@@ -197,12 +261,13 @@ export default function CookMode() {
                 </button>
 
                 {stepIndex === steps.length - 1 ? (
-                  <Link
-                    to="/recipes"
+                  <button
+                    type="button"
+                    onClick={openFinish}
                     className="rounded-[var(--r-pill)] bg-[var(--accent)] px-6 py-2.5 text-sm font-semibold text-white"
                   >
-                    Finish 🎉
-                  </Link>
+                    I cooked this 🎉
+                  </button>
                 ) : (
                   <button
                     type="button"
@@ -293,6 +358,199 @@ export default function CookMode() {
 
           <NutritionPanel nutrition={nutrition} servings={servings ?? recipe.servings} />
         </aside>
+      </div>
+
+      {finishing && (
+        <FinishPanel
+          usage={usage}
+          refreshing={refreshing}
+          consume={consume}
+          setConsume={setConsume}
+          receipt={receipt}
+          saving={saving}
+          onConfirm={confirmCooked}
+          onUndo={undoCooked}
+          onClose={() => setFinishing(false)}
+        />
+      )}
+    </div>
+  );
+}
+
+/**
+ * "You cooked it — shall I take these out of your fridge?"
+ *
+ * Two states in one panel. Before: a tick list of what this recipe uses that
+ * you actually have, perishables ticked and staples not. After: a receipt
+ * naming what went, what it saved from the bin, and an undo — because a
+ * feature whose whole promise is "and it's gone" needs a way back from a
+ * misclick.
+ */
+function FinishPanel({ usage, refreshing, consume, setConsume, receipt, saving, onConfirm, onUndo, onClose }) {
+  const selected = usage.filter((row) => consume.has(row.pantry_item_id));
+
+  function toggle(id) {
+    setConsume((current) => {
+      const next = new Set(current);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  }
+
+  return (
+    <div
+      className="fixed inset-0 z-50 grid place-items-center bg-black/45 p-4"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Finish cooking"
+    >
+      <div className="max-h-[88vh] w-full max-w-lg overflow-y-auto rounded-[var(--r-lg)] bg-[var(--surface-strong)] p-6 shadow-[var(--shadow-xl)]">
+        {refreshing ? (
+          <p className="m-0 py-6 text-center text-sm text-[var(--muted)]">Checking your fridge…</p>
+        ) : receipt ? (
+          <>
+            <h2 className="m-0 font-[var(--font-display)] text-2xl font-black text-[var(--text)]">
+              Enjoy it 🎉
+            </h2>
+            <p className="mt-2 mb-0 text-sm leading-relaxed text-[var(--muted)]">{receipt.message}</p>
+
+            {receipt.rescued?.length > 0 && (
+              <div className="mt-4 rounded-[var(--r-md)] border-2 border-[var(--accent)] bg-[var(--accent-glow)] p-4">
+                <p className="m-0 text-sm font-semibold text-[var(--brand-deep)]">
+                  Saved from the bin
+                </p>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {receipt.rescued.map((item) => (
+                    <span
+                      key={item.ingredient_id}
+                      className="rounded-[var(--r-pill)] bg-white/80 px-3 py-1 text-sm font-semibold text-[var(--brand-deep)]"
+                    >
+                      {item.name}
+                      <span className="ml-1.5 font-[var(--font-mono)] text-[11px] font-normal opacity-70">
+                        had {item.days_left <= 0 ? "expired" : `${item.days_left}d left`}
+                      </span>
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {receipt.removed?.length > 0 && (
+              <p className="mt-4 mb-0 text-xs text-[var(--muted)]">
+                Taken out: {receipt.removed.map((item) => item.name).join(", ")}
+              </p>
+            )}
+
+            <div className="mt-6 flex flex-wrap gap-2">
+              <Link
+                to="/fridge"
+                className="rounded-[var(--r-pill)] bg-[var(--brand)] px-5 py-2.5 text-sm font-semibold text-white"
+              >
+                Back to my fridge
+              </Link>
+              {receipt.removed?.length > 0 && (
+                <button
+                  type="button"
+                  onClick={onUndo}
+                  disabled={saving}
+                  className="rounded-[var(--r-pill)] border border-[var(--border-strong)] px-5 py-2.5 text-sm font-semibold disabled:opacity-40"
+                >
+                  {saving ? "Putting back…" : "Undo — put them back"}
+                </button>
+              )}
+            </div>
+          </>
+        ) : (
+          <>
+            <h2 className="m-0 font-[var(--font-display)] text-2xl font-black text-[var(--text)]">
+              Take these out of your fridge?
+            </h2>
+
+            {usage.length === 0 ? (
+              <>
+                <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
+                  Nothing to remove — none of this recipe&apos;s ingredients are on your
+                  saved shelf. Sign in and stock your fridge and this will keep it in step
+                  with what you actually cook.
+                </p>
+                <div className="mt-6 flex gap-2">
+                  <Link
+                    to="/recipes"
+                    className="rounded-[var(--r-pill)] bg-[var(--brand)] px-5 py-2.5 text-sm font-semibold text-white"
+                  >
+                    Done
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    className="rounded-[var(--r-pill)] border border-[var(--border-strong)] px-5 py-2.5 text-sm font-semibold"
+                  >
+                    Keep cooking
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <p className="mt-2 mb-4 text-sm leading-relaxed text-[var(--muted)]">
+                  Untick anything you have some left of. Cupboard staples start unticked —
+                  you don&apos;t run out of salt because you cooked one dish.
+                </p>
+
+                <ul className="m-0 grid list-none gap-1.5 p-0">
+                  {usage.map((row) => (
+                    <li key={row.pantry_item_id}>
+                      <label className="flex cursor-pointer items-center gap-3 rounded-[var(--r-sm)] px-2 py-2 text-sm hover:bg-[rgba(20,24,27,0.04)]">
+                        <input
+                          type="checkbox"
+                          checked={consume.has(row.pantry_item_id)}
+                          onChange={() => toggle(row.pantry_item_id)}
+                          className="h-4 w-4 accent-[var(--brand)]"
+                        />
+                        <span className="flex-1 font-semibold text-[var(--text)]">{row.name}</span>
+
+                        {row.expiry && row.expiry.state !== "fresh" && (
+                          <span className="rounded-[var(--r-pill)] bg-[var(--accent-glow)] px-2 py-0.5 font-[var(--font-mono)] text-[10px] text-[var(--accent)]">
+                            {row.expiry.days_left <= 0
+                              ? "overdue"
+                              : `${row.expiry.days_left}d left`}
+                          </span>
+                        )}
+
+                        {row.is_staple && (
+                          <span className="font-[var(--font-mono)] text-[10px] text-[var(--muted-light)]">
+                            staple
+                          </span>
+                        )}
+                      </label>
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="mt-6 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => onConfirm(selected.map((row) => row.pantry_item_id))}
+                    disabled={saving}
+                    className="rounded-[var(--r-pill)] bg-[var(--accent)] px-5 py-2.5 text-sm font-semibold text-white disabled:opacity-40"
+                  >
+                    {saving
+                      ? "Updating…"
+                      : selected.length === 0
+                        ? "Finish without removing"
+                        : `Take out ${selected.length}`}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    className="rounded-[var(--r-pill)] border border-[var(--border-strong)] px-5 py-2.5 text-sm font-semibold"
+                  >
+                    Keep cooking
+                  </button>
+                </div>
+              </>
+            )}
+          </>
+        )}
       </div>
     </div>
   );

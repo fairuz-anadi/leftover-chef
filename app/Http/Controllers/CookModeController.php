@@ -3,13 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Http\Services\GuidedCookService;
+use App\Http\Services\PantryConsumptionService;
 use App\Models\Recipe;
 use Illuminate\Http\Request;
 
 class CookModeController extends Controller
 {
-    public function __construct(private GuidedCookService $guide)
-    {
+    public function __construct(
+        private GuidedCookService $guide,
+        private PantryConsumptionService $consumption,
+    ) {
     }
 
     public function __invoke(Request $request, Recipe $recipe)
@@ -20,7 +23,8 @@ class CookModeController extends Controller
         $servings = max(1, min($servings, 20));
         $scale = $servings / max(1, (int) ($recipe->servings ?: 1));
 
-        $pantryIds = $request->user('sanctum')?->pantryItems()->pluck('ingredient_id') ?? collect();
+        $user = $request->user('sanctum');
+        $pantryIds = $user?->pantryItems()->pluck('ingredient_id') ?? collect();
 
         return response()->json([
             'data' => [
@@ -40,6 +44,10 @@ class CookModeController extends Controller
                     'in_pantry' => $pantryIds->contains($ingredient->id),
                 ])->values(),
                 'nutrition' => $recipe->nutrition,
+                // What finishing this recipe would take back out of the fridge,
+                // so the finish panel can be filled in before it is opened.
+                // Empty for a signed-out cook, who has no saved fridge.
+                'pantry_usage' => $this->consumption->plan($user, $recipe),
             ],
         ]);
     }
