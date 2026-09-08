@@ -21,31 +21,31 @@ const CATEGORIES = [
 const RECIPES = [
   {
     featured: true,
-    img: "https://images.unsplash.com/photo-1547592180-85f173990554?w=800&q=80",
+    img: home,
     cuisine: "Moroccan",
     title: "Slow-Cooked Lamb & Apricot Tagine",
     desc: "A warming Moroccan classic packed with fragrant spices, tender lamb, sweet apricots, and toasted almonds. Perfect for gatherings.",
   },
   {
-    img: "https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?w=600&q=80",
+    img: home,
     cuisine: "Vietnamese",
     title: "Hanoi-Style Beef Pho",
     desc: "Silky broth, rice noodles and fresh herbs.",
   },
   {
-    img: "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=600&q=80",
+    img: home,
     cuisine: "Turkish",
     title: "Crispy Adana Chicken Wraps",
     desc: "Smoky minced chicken with pomegranate drizzle.",
   },
   {
-    img: "https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=600&q=80",
+    img: home,
     cuisine: "Indian",
     title: "Creamy Butter Chicken",
     desc: "Tender chicken simmered in a rich, velvety tomato and butter sauce with warming aromatic spices.",
   },
   {
-    img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&q=80",
+    img: home,
     cuisine: "Mediterranean",
     title: "Chickpea & Roasted Pepper Wraps",
     desc: "Quick, vibrant, plant-based perfection.",
@@ -201,7 +201,7 @@ export default function Home() {
       <section className="hm-cta">
         <div className="hm-cta-inner">
           <img
-            src="https://images.unsplash.com/photo-1543353071-873f17a7a088?w=1400&q=80"
+            src={home}
             alt="Community cooking"
             className="hm-cta-bg"
           />

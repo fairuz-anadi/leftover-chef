@@ -47,7 +47,7 @@ class CookedController extends Controller
             ]);
         }
 
-        $result = $this->consumption->consume($user, $ids);
+        $result = $this->consumption->consume($user, $ids, $recipe);
         $count = count($result['removed']);
 
         return response()->json([

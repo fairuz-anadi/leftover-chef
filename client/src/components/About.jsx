@@ -1,4 +1,5 @@
 import "./About.css";
+import home from "../assets/home.jpg";
 
 const AUDIENCE = [
   {
@@ -48,7 +49,7 @@ export default function About() {
         <div className="ab-hero-img-wrap">
           <div className="ab-hero-img-frame">
             <img
-              src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=700&q=80"
+              src={home}
               alt="Cooking together"
               className="ab-hero-img"
             />
@@ -72,12 +73,12 @@ export default function About() {
           </div>
           <div className="ab-mission-imgs">
             <img
-              src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&q=80"
+              src={home}
               alt="Delicious food"
               className="ab-mission-img ab-mission-img-1"
             />
             <img
-              src="https://images.unsplash.com/photo-1466637574441-749b8f19452f?w=400&q=80"
+              src={home}
               alt="Cooking prep"
               className="ab-mission-img ab-mission-img-2"
             />
@@ -120,7 +121,7 @@ export default function About() {
       <section className="ab-cta">
         <div className="ab-cta-inner">
           <img
-            src="https://images.unsplash.com/photo-1543353071-873f17a7a088?w=1200&q=80"
+            src={home}
             alt="Community cooking"
             className="ab-cta-bg"
           />
