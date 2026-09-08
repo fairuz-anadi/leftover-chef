@@ -247,6 +247,8 @@ class PantryController extends Controller
             'items.*.expires_on' => 'nullable|date',
             'items.*.expiry_estimated' => 'sometimes|boolean',
             'items.*.source' => 'nullable|string|max:20',
+            'items.*.detected_as' => 'nullable|string|max:120',
+            'items.*.confidence' => 'nullable|numeric|min:0|max:1',
         ]);
 
         $restored = $consumption->restore($request->user(), $validated['items']);

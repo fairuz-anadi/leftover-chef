@@ -1,3 +1,5 @@
+import home from "../assets/home.jpg";
+
 const AUDIENCE = [
   {
     emoji: "🌱",
@@ -60,7 +62,7 @@ export default function About() {
         <div style={{ position: "relative" }}>
           <div style={{ borderRadius: "var(--r-xl)", overflow: "hidden", boxShadow: "var(--shadow-xl)", aspectRatio: "4/3" }}>
             <img
-              src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=700&q=80"
+              src={home}
               alt="Cooking together"
               style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
             />
@@ -88,12 +90,12 @@ export default function About() {
 
           <div style={{ position: "relative", height: 420 }}>
             <img
-              src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&q=80"
+              src={home}
               alt="Delicious food"
               style={{ position: "absolute", top: 0, right: 0, width: "70%", height: 300, objectFit: "cover", borderRadius: "var(--r-lg)", boxShadow: "var(--shadow-lg)" }}
             />
             <img
-              src="https://images.unsplash.com/photo-1466637574441-749b8f19452f?w=400&q=80"
+              src={home}
               alt="Cooking prep"
               style={{ position: "absolute", bottom: 0, left: 0, width: "60%", height: 260, objectFit: "cover", borderRadius: "var(--r-lg)", boxShadow: "var(--shadow-lg)", border: "4px solid var(--bg-cream)" }}
             />
@@ -151,7 +153,7 @@ export default function About() {
       <section style={{ padding: "80px 0", borderTop: "1px solid var(--border)" }}>
         <div style={{ position: "relative", borderRadius: "var(--r-xl)", overflow: "hidden", minHeight: 380, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "var(--shadow-xl)" }}>
           <img
-            src="https://images.unsplash.com/photo-1543353071-873f17a7a088?w=1200&q=80"
+            src={home}
             alt="Community cooking"
             style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block" }}
           />

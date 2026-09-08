@@ -1,6 +1,4 @@
 const footerStyles = `
-  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400&display=swap');
-
   .chef-footer {
     --cream: #fbfbfa;
     --warm-brown: #3b2a1a;
@@ -11,7 +9,7 @@ const footerStyles = `
     background-color: var(--warm-brown);
     color: var(--cream);
     padding: 60px 40px 32px;
-    font-family: 'Lato', sans-serif;
+    font-family: var(--font-body);
     font-weight: 300;
     position: relative;
     overflow: hidden;
@@ -29,7 +27,7 @@ const footerStyles = `
     position: absolute;
     bottom: -10px;
     right: -10px;
-    font-family: 'Playfair Display', serif;
+    font-family: var(--font-display);
     font-size: 160px;
     font-style: italic;
     color: rgba(200, 136, 58, 0.07);
@@ -55,7 +53,7 @@ const footerStyles = `
   }
 
   .chef-footer__logo-name {
-    font-family: 'Playfair Display', serif;
+    font-family: var(--font-display);
     font-size: 2.4rem;
     font-weight: 700;
     letter-spacing: 0.02em;

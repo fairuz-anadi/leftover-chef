@@ -189,6 +189,20 @@ class CookedItGoneTest extends TestCase
         $this->assertSame(count($stolen), $victim->pantryItems()->count());
     }
 
+    public function test_a_cook_cannot_consume_an_unrelated_pantry_item(): void
+    {
+        $recipe = $this->recipe();
+        $user = $this->cookWith(array_fill_keys($this->requiredNames($recipe), 4) + ['Mango' => 2]);
+        $mango = $user->pantryItems()->where('ingredient_id', Ingredient::lookup('Mango')->id)->firstOrFail();
+
+        $this->actingAs($user)
+            ->postJson("/api/recipes/{$recipe->id}/cooked", ['pantry_item_ids' => [$mango->id]])
+            ->assertOk()
+            ->assertJsonPath('removed', []);
+
+        $this->assertDatabaseHas('pantry_items', ['id' => $mango->id]);
+    }
+
     // -- the payoff -----------------------------------------------------
 
     public function test_it_reports_what_was_saved_from_the_bin(): void
@@ -265,6 +279,35 @@ class CookedItGoneTest extends TestCase
 
         $this->assertNotNull($back, 'the ingredient should be back on the shelf');
         $this->assertSame($date, $back->expires_on->toDateString(), 'and with the date it had');
+    }
+
+    public function test_undo_restores_scan_provenance(): void
+    {
+        $recipe = $this->recipe();
+        $user = $this->cookWith(array_fill_keys($this->requiredNames($recipe), 4));
+        $item = $user->pantryItems()->with('ingredient')->firstOrFail();
+        $item->update([
+            'source' => 'scan',
+            'detected_as' => 'red onion',
+            'confidence' => 0.87,
+        ]);
+
+        $removed = $this->actingAs($user)
+            ->postJson("/api/recipes/{$recipe->id}/cooked", ['pantry_item_ids' => [$item->id]])
+            ->assertOk()
+            ->json('removed');
+
+        $this->actingAs($user)
+            ->postJson('/api/pantry/restore', ['items' => $removed])
+            ->assertOk();
+
+        $this->assertDatabaseHas('pantry_items', [
+            'user_id' => $user->id,
+            'ingredient_id' => $item->ingredient_id,
+            'source' => 'scan',
+            'detected_as' => 'red onion',
+            'confidence' => 0.87,
+        ]);
     }
 
     public function test_cooking_requires_signing_in(): void
