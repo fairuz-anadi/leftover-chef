@@ -22,8 +22,16 @@ $ports = @(
 Write-Host ''
 
 foreach ($entry in $ports) {
-    $owners = Get-NetTCPConnection -LocalPort $entry.Port -State Listen |
-        Select-Object -ExpandProperty OwningProcess -Unique
+    # An idle port makes Get-NetTCPConnection raise a CIM "no matching objects"
+    # error that $ErrorActionPreference does not swallow, so stopping a stack
+    # that was only half up painted the screen red for no reason. Nothing about
+    # a free port is an error here — it is the outcome we wanted.
+    try {
+        $owners = Get-NetTCPConnection -LocalPort $entry.Port -State Listen -ErrorAction Stop |
+            Select-Object -ExpandProperty OwningProcess -Unique
+    } catch {
+        $owners = @()
+    }
 
     if (-not $owners) {
         Write-Host "  $($entry.Name) (:$($entry.Port)) was not running" -ForegroundColor DarkGray
