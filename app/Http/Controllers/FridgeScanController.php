@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Services\DetectionMapper;
+use App\Models\Ingredient;
+use App\Models\PantryItem;
 use App\Http\Services\VisionClient;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -24,13 +26,77 @@ class FridgeScanController extends Controller
     {
     }
 
-    /** GET /api/pantry/scan/status — is the detector up? Used to pick the UI copy. */
+    /** GET /api/fridge/scan/status — is the detector up? Used to pick the UI copy. */
     public function status()
     {
         return response()->json(VisionClient::fromConfig()->health());
     }
 
-    /** POST /api/pantry/scan — multipart photo. Works signed out, same as ingredient search. */
+    /**
+     * Commit the chips the cook confirmed.
+     *
+     * Additive: a photo of the top shelf must not delete the rice in the
+     * cupboard. New items are dated from their typical shelf life, because
+     * this is the endpoint that adds a dozen things in one tap and nobody is
+     * going to date twelve chips by hand.
+     */
+    public function confirm(Request $request)
+    {
+        $validated = $request->validate([
+            'items' => 'required|array|min:1',
+            'items.*.name' => 'required|string|max:120',
+            'items.*.confidence' => 'nullable|numeric|min:0|max:1',
+            'items.*.detected_as' => 'nullable|string|max:120',
+        ]);
+
+        $session = $this->fridge($request);
+        $today = $session->today();
+        $added = 0;
+        $dated = 0;
+
+        foreach ($validated['items'] as $item) {
+            $ingredient = Ingredient::resolve($item['name']);
+
+            $record = PantryItem::firstOrNew([
+                'session_id' => $session->session_id,
+                'ingredient_id' => $ingredient->id,
+            ]);
+
+            $isNew = !$record->exists;
+            $added += $isNew ? 1 : 0;
+
+            $record->source = 'scan';
+            $record->detected_as = $item['detected_as'] ?? null;
+            $record->confidence = $item['confidence'] ?? null;
+
+            // Only ever fills a blank — something already on the shelf keeps
+            // the date it has, even if this scan sees it again.
+            if ($isNew && ($days = $ingredient->shelfLifeDays()) !== null) {
+                $record->expires_on = $today->copy()->addDays($days);
+                $record->expiry_estimated = true;
+                $dated++;
+            }
+
+            $record->save();
+        }
+
+        $total = count($validated['items']);
+        $headline = $added === $total
+            ? "{$added} ingredients added to your fridge."
+            : "{$total} ingredients confirmed ({$added} new).";
+
+        return response()->json([
+            'message' => $dated === 0
+                ? $headline
+                : $headline . ' ' . ($dated === 1
+                    ? 'One use-by date estimated — tap it to correct.'
+                    : "{$dated} use-by dates estimated — tap any to correct."),
+            'added' => $added,
+            'dated' => $dated,
+        ], Response::HTTP_CREATED);
+    }
+
+    /** POST /api/fridge/scan — multipart photo. */
     public function scan(Request $request)
     {
         $validated = $request->validate([

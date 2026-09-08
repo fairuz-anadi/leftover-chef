@@ -1,106 +1,52 @@
 <?php
 
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CookedController;
-use App\Http\Controllers\CookModeController;
-use App\Http\Controllers\CuisineController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\FridgeController;
 use App\Http\Controllers\FridgeScanController;
 use App\Http\Controllers\IngredientController;
-use App\Http\Controllers\MealPlanController;
-use App\Http\Controllers\PantryController;
-use App\Http\Controllers\PantrySearchController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RecipeController;
-use App\Http\Controllers\ReviewController;
-use App\Http\Controllers\ShoppingListController;
-use App\Http\Controllers\TipController;
 use Illuminate\Support\Facades\Route;
 
-Route::post('register', [AuthController::class, 'register'])->middleware('throttle:10,1');
-Route::post('login', [AuthController::class, 'login'])->middleware('throttle:10,1');
-Route::post('auth/google', [AuthController::class, 'google'])->middleware('throttle:10,1');
-Route::get('auth/google/callback', [AuthController::class, 'googleCallback']);
+/*
+|--------------------------------------------------------------------------
+| Leftover Chef API
+|--------------------------------------------------------------------------
+|
+| One screen, one loop: detect → track → warn → cook → measure.
+|
+| Nothing here is authenticated. There are no accounts — a fridge belongs to
+| the session id the browser sends in X-Fridge-Session, resolved on every
+| request by ResolveFridgeSession. That is the whole identity model, and it is
+| the right one for a single-session offline app a judge picks up for ninety
+| seconds.
+|
+*/
 
-Route::get('categories', [CategoryController::class, 'index']);
-Route::get('recipes', [RecipeController::class, 'index']);
+// ── The fridge ───────────────────────────────────────────────────────────
+// index returns the entire screen in one payload: shelf, freshness tiers,
+// health dial, waste counter, leaderboard and recipe suggestions.
+Route::get('fridge', [FridgeController::class, 'index']);
+Route::post('fridge/items', [FridgeController::class, 'store']);
+Route::patch('fridge/items/{pantryItem}', [FridgeController::class, 'update']);
+Route::delete('fridge/items/{pantryItem}', [FridgeController::class, 'destroy']);
+
+// The demo clock, and the reset between judges.
+Route::post('fridge/fast-forward', [FridgeController::class, 'fastForward']);
+Route::post('fridge/reset', [FridgeController::class, 'reset']);
+
+// ── Fridge Scan ──────────────────────────────────────────────────────────
+Route::get('fridge/scan/status', [FridgeScanController::class, 'status']);
+Route::post('fridge/scan', [FridgeScanController::class, 'scan'])->middleware('throttle:60,1');
+Route::post('fridge/scan/confirm', [FridgeScanController::class, 'confirm']);
+
+// ── Recipes ──────────────────────────────────────────────────────────────
+// No library and no browsing: only the reveal for something already suggested.
 Route::get('recipes/{recipe}', [RecipeController::class, 'show']);
 Route::get('recipe-images/{path}', [RecipeController::class, 'image'])->where('path', '.*');
-Route::get('leaderboards', [DashboardController::class, 'leaderboards']);
-Route::get('users/{user}/tips', [TipController::class, 'show']);
-Route::post('contact', [ContactController::class, 'store'])->middleware('throttle:5,1');
 
-// Ingredient-Based Search — works signed out too, using ad-hoc ingredients.
+// ── Cooking it, and the waste counter ────────────────────────────────────
+Route::post('recipes/{recipe}/cooked', [CookedController::class, 'store']);
+Route::post('fridge/restore', [CookedController::class, 'restore']);
+
+// ── Ingredient vocabulary, for manual correction ─────────────────────────
 Route::get('ingredients', [IngredientController::class, 'index']);
-Route::get('ingredients/aisles', [IngredientController::class, 'aisles']);
-Route::post('pantry/search', PantrySearchController::class);
-
-// Fridge Scan - photo in, candidate ingredients out. Open to signed-out
-// visitors so a judge can try the camera without making an account first.
-Route::get('pantry/scan/status', [FridgeScanController::class, 'status']);
-Route::post('pantry/scan', [FridgeScanController::class, 'scan'])->middleware('throttle:60,1');
-
-// Cuisine Map Explorer
-Route::get('cuisines', [CuisineController::class, 'index']);
-Route::get('cuisines/{code}', [CuisineController::class, 'show']);
-
-// Guided Cooking Mode
-Route::get('recipes/{recipe}/cook', CookModeController::class);
-
-Route::middleware('auth:sanctum')->group(function () {
-    Route::get('me', [AuthController::class, 'me']);
-    Route::post('logout', [AuthController::class, 'logout']);
-    Route::get('dashboard', [DashboardController::class, 'user']);
-
-    Route::post('recipes', [RecipeController::class, 'store']);
-    Route::put('recipes/{recipe}', [RecipeController::class, 'update']);
-    Route::post('recipes/{recipe}', [RecipeController::class, 'update']);
-    Route::delete('recipes/{recipe}', [RecipeController::class, 'destroy']);
-    // "I cooked this" - takes the ingredients back out of the fridge.
-    Route::post('recipes/{recipe}/cooked', [CookedController::class, 'store']);
-    Route::post('recipes/{recipe}/favorite', [FavoriteController::class, 'store']);
-    Route::delete('recipes/{recipe}/favorite', [FavoriteController::class, 'destroy']);
-    Route::post('recipes/{recipe}/reviews', [ReviewController::class, 'store']);
-    Route::delete('recipes/{recipe}/reviews/{review}', [ReviewController::class, 'destroy']);
-    Route::post('tips', [TipController::class, 'store']);
-
-    // Account & Profiles — dietary preferences and skill level
-    Route::get('profile', [ProfileController::class, 'show']);
-    Route::put('profile', [ProfileController::class, 'update']);
-
-    // What's in my fridge
-    Route::get('pantry', [PantryController::class, 'index']);
-    Route::get('pantry/expiring', [PantryController::class, 'expiring']);
-    Route::post('pantry', [PantryController::class, 'store']);
-    Route::post('pantry/scan/confirm', [PantryController::class, 'confirmScan']);
-    Route::post('pantry/restore', [PantryController::class, 'restore']);
-    Route::put('pantry', [PantryController::class, 'sync']);
-    Route::patch('pantry/{pantryItem}', [PantryController::class, 'update']);
-    Route::delete('pantry/{pantryItem}', [PantryController::class, 'destroy']);
-
-    // Meal planner
-    Route::get('meal-plan', [MealPlanController::class, 'index']);
-    Route::post('meal-plan', [MealPlanController::class, 'store']);
-    Route::put('meal-plan/{mealPlanEntry}', [MealPlanController::class, 'update']);
-    Route::delete('meal-plan/{mealPlanEntry}', [MealPlanController::class, 'destroy']);
-
-    // Auto shopping list
-    Route::get('shopping-list', [ShoppingListController::class, 'index']);
-    Route::post('shopping-list', [ShoppingListController::class, 'store']);
-    Route::post('shopping-list/generate', [ShoppingListController::class, 'generate']);
-    Route::put('shopping-list/{shoppingListItem}', [ShoppingListController::class, 'update']);
-    Route::delete('shopping-list/{shoppingListItem}', [ShoppingListController::class, 'destroy']);
-    Route::post('shopping-list/clear', [ShoppingListController::class, 'clear']);
-
-    Route::middleware('admin')->group(function () {
-        Route::get('admin/dashboard', [AdminController::class, 'dashboard']);
-        Route::delete('admin/recipes/{recipe}', [AdminController::class, 'deleteRecipe']);
-        Route::delete('admin/users/{user}', [AdminController::class, 'deleteUser']);
-        Route::delete('admin/reviews/{review}', [AdminController::class, 'deleteReview']);
-        Route::delete('admin/contacts/{contact}', [AdminController::class, 'deleteContact']);
-    });
-});

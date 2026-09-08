@@ -8,6 +8,14 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
+/**
+ * Recipe authorship, and nothing else.
+ *
+ * The app has no accounts: nobody signs in, and there is no route that reads
+ * or writes a user. This survives only because the seeded recipe dataset
+ * records who each dish came from, which is metadata about the data rather
+ * than a feature of the product.
+ */
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -50,47 +58,4 @@ class User extends Authenticatable
         return $this->hasMany(Recipe::class);
     }
 
-    public function reviews()
-    {
-        return $this->hasMany(Review::class);
-    }
-
-    public function favorites()
-    {
-        return $this->belongsToMany(Recipe::class, 'favorite_recipe')
-            ->withTimestamps();
-    }
-
-    public function pantryItems()
-    {
-        return $this->hasMany(PantryItem::class);
-    }
-
-    public function mealPlanEntries()
-    {
-        return $this->hasMany(MealPlanEntry::class);
-    }
-
-    public function shoppingListItems()
-    {
-        return $this->hasMany(ShoppingListItem::class);
-    }
-
-    public function sentTips()
-    {
-        return $this->hasMany(Tip::class, 'sender_id');
-    }
-
-    public function receivedTips()
-    {
-        return $this->hasMany(Tip::class, 'recipient_id');
-    }
-
-    public function scopeLeaderboard($query)
-    {
-        return $query->withCount('recipes')
-            ->orderByDesc('points')
-            ->orderByDesc('recipes_count')
-            ->orderBy('name');
-    }
 }

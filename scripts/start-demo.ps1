@@ -105,7 +105,7 @@ if (-not $SkipVision) {
 Write-Step 'Starting the API on :8000...'
 Start-InWindow -Title 'Leftover Chef - api' -WorkingDirectory $root -Command 'php artisan serve --host=127.0.0.1 --port=8000'
 
-if (Wait-ForUrl -Url "$apiUrl/api/categories" -TimeoutSeconds 45 -Label 'API') {
+if (Wait-ForUrl -Url "$apiUrl/api/fridge" -TimeoutSeconds 45 -Label 'API') {
     Write-Ok 'API ready'
 }
 
@@ -118,11 +118,11 @@ if (Wait-ForUrl -Url $clientUrl -TimeoutSeconds 60 -Label 'client') {
 }
 
 Write-Host ''
-Write-Host '  Fridge screen : ' -NoNewline; Write-Host "$clientUrl/fridge" -ForegroundColor White
-Write-Host '  Demo login    : demo@leftoverchef.test / DemoPass123!' -ForegroundColor DarkGray
+Write-Host '  Open          : ' -NoNewline; Write-Host $clientUrl -ForegroundColor White
+Write-Host '  No login - the fridge belongs to the browser session.' -ForegroundColor DarkGray
 Write-Host '  Stop it all   : .\scripts\stop-demo.ps1' -ForegroundColor DarkGray
 Write-Host ''
 
 if (-not $NoBrowser) {
-    Start-Process "$clientUrl/fridge"
+    Start-Process $clientUrl
 }

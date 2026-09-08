@@ -56,27 +56,11 @@ class Recipe extends Model
         return $this->belongsToMany(Category::class);
     }
 
-    public function reviews()
-    {
-        return $this->hasMany(Review::class);
-    }
-
-    public function favoritedByUsers()
-    {
-        return $this->belongsToMany(User::class, 'favorite_recipe')
-            ->withTimestamps();
-    }
-
     public function ingredientRecords()
     {
         return $this->belongsToMany(Ingredient::class)
             ->withPivot(['quantity', 'unit', 'raw_text', 'is_optional', 'position'])
             ->orderBy('ingredient_recipe.position');
-    }
-
-    public function mealPlanEntries()
-    {
-        return $this->hasMany(MealPlanEntry::class);
     }
 
     public function getImageUrlAttribute()

@@ -5,12 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * One thing on the shelf.
+ *
+ * Belongs to a fridge session rather than a user — there are no accounts.
+ */
 class PantryItem extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
+        'session_id',
         'ingredient_id',
         'quantity',
         'unit',
@@ -28,9 +33,9 @@ class PantryItem extends Model
         'confidence' => 'float',
     ];
 
-    public function user()
+    public function session()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(FridgeSession::class, 'session_id', 'session_id');
     }
 
     public function ingredient()

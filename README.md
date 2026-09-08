@@ -1,17 +1,16 @@
 # Leftover Chef
 
-*Photograph your fridge. Cook what's about to die.*
+### A smart fridge companion — detect, track, and cook before it spoils
 
-Point a camera at the inside of your fridge. A vision model names what it sees,
-you confirm the list, and Leftover Chef ranks every recipe it knows by two
-things at once: **how much of it you can already make**, and **how much of your
-about-to-expire food it would use up**.
+*"We built a fridge that thinks for you — point your phone, and it tells you what
+to eat before it's too late."*
 
-Everything runs on the laptop. No cloud vision API, no internet at any point
-after setup.
+Photograph the inside of your fridge. A vision model names what is in it, the
+app tracks how long each thing has left, warns you when something is about to
+go, and tells you what to cook with it. Everything runs on the laptop — no
+cloud, no accounts, no internet.
 
-Built for the **AUST CSE Carnival 8.0 — Software & AI project exhibition**,
-9 September 2026.
+Built for the **AUST CSE Carnival 8.0 — Software & AI segment**, 9 September 2026.
 
 ---
 
@@ -25,38 +24,48 @@ Built for the **AUST CSE Carnival 8.0 — Software & AI project exhibition**,
 
 ---
 
-## Why it matters
+## The problem
 
-Roughly a third of the food produced for people to eat is never eaten. Most of
-that loss happens quietly, in domestic fridges, to things that were perfectly
-good four days ago. The reason is rarely indifference — it is that at 7pm
-nobody wants to audit a vegetable drawer and then go looking for a recipe that
-matches it.
+Every day people stand in front of a fridge unsure what to cook — and
+separately, food quietly expires at the back of it because nobody is tracking
+it. These are the same problem: **no visibility into what you own and how
+urgently you need to use it.**
 
-Leftover Chef removes both steps. One photo replaces the audit; the ranking
-replaces the search. **SDG 12 — Responsible Consumption and Production.**
+Competing expiry-tracker apps make you type in every item and every date, and
+people abandon them inside a week. Here the camera does the logging.
 
 ---
 
-## What it does
+## The loop
 
-- **Fridge Scan** — photo, webcam or a saved shot; detections come back drawn
-  as labelled boxes over your own picture.
-- **Confirm before anything happens** — every detection is a removable chip
-  with its confidence. Nothing reaches your fridge until you say so.
-- **Ranked recipes** — grouped into *cook right now* and *almost there*, with
-  the missing ingredients named.
-- **Use It Up** — a shelf that says *"4 items to use up tomorrow"*, and recipes
-  scored on how much of that they rescue, with the reason on the card.
-- **Use-by dates estimated for you** — confirming a scan dates the perishables
-  from typical shelf life, so the ranking works without anyone typing a date.
-  Guesses are marked with a `~`; cupboard staples get no date at all.
-- **"I cooked this"** — finishing a recipe takes its ingredients back out of
-  your fridge, tells you what it saved from the bin, and has an undo. Staples
-  stay; you don't run out of salt because you cooked one dish.
-- Plus the platform underneath: a 32-recipe library, cuisine map, guided cook
-  mode with timers, meal planner, auto shopping list, nutrition estimates,
-  profiles with diets and allergies, reviews and an admin dashboard.
+```
+   detect  ──▶  track  ──▶  warn  ──▶  cook  ──▶  measure
+   photo        shelf       push       recipe     waste saved
+                life        alert      match      counter
+```
+
+Most student projects build one link in that chain. This one closes it.
+
+1. **Fridge photo scan** — photograph the shelf; the detector names the
+   ingredients and draws them on your own picture. You confirm before anything
+   is logged.
+2. **Auto shelf-life estimation** — each item gets a use-by date from a
+   food-science lookup table. Spinach three days, chicken two, garlic sixty. No
+   typing.
+3. **Tiered freshness** — 🟢 Fresh · 🟡 Use soon · 🔴 Use today, as a badge and
+   an animated countdown bar on every item.
+4. **Recipe suggestions** — ranked by how much of the dish you already have and
+   how much at-risk food it would use up, with Bangladeshi cooking weighted up.
+5. **Fridge health dashboard** — a ring showing how much of what you own is
+   still good.
+6. **Notification simulation** — a *fast-forward a day* button moves the whole
+   app's clock; anything that crosses into 🔴 raises the alert instantly.
+7. **Food-waste-saved counter** — a running tally of ingredients used before
+   they spoiled, against sample households on a small leaderboard.
+
+Plus **Recipe Reveal** (your fridge photo beside the finished dish), a **voice
+assistant** that answers "what can I make for dinner?" aloud, **"what am I
+missing?"**, and manual correction of anything the model gets wrong.
 
 ---
 
@@ -69,17 +78,13 @@ Requires **PHP 8.2+**, **Composer**, **Node 20+** and **Python 3.10+** on PATH.
 .\scripts\start-demo.ps1   # every time after — three processes, one command
 ```
 
-That opens <http://localhost:5173/fridge>.
+Opens <http://localhost:5173>. **There is no login** — the fridge belongs to the
+browser session, and a new visitor opens on a stocked demo fridge.
 
-**Demo login:** `demo@leftoverchef.test` / `DemoPass123!`
-**Admin login:** `admin@leftoverchef.local` / `AdminPass123!`
-
-### Doing it by hand
+### By hand
 
 ```bash
-composer install
-cp .env.example .env
-php artisan key:generate
+composer install && cp .env.example .env && php artisan key:generate
 php artisan migrate --seed
 php artisan serve                              # :8000
 
@@ -96,57 +101,47 @@ python -m venv .venv --system-site-packages
 ## Architecture
 
 ```
-   React 19 + Tailwind 4          Laravel 10 API             FastAPI + YOLO-World
-   localhost:5173      ───────>   localhost:8000   ───────>  localhost:8001
-   photo, boxes, chips            matching, ranking          detection only
-                                        │
-                                        └── SQLite
+   React 19 + Tailwind 4        Laravel 10 API          FastAPI + YOLO-World
+   localhost:5173      ─────▶   localhost:8000  ─────▶  localhost:8001
+   one screen                   tracking, ranking       detection only
+                                      │
+                                      └── SQLite
 ```
 
-The browser never talks to the detector directly — Laravel proxies, so there is
-one origin and one auth story, and the sidecar stays a stateless "image in,
-boxes out" service.
+The browser never talks to the detector — Laravel proxies, so the sidecar stays
+a stateless "image in, boxes out" service that knows nothing about ingredients.
 
-### The detector
+**Detection** is YOLO-World, open-vocabulary: it takes text prompts instead of a
+fixed class list, so `vision/vocabulary.json` asks it for *"carton of milk"* and
+*"tin of tomatoes"* — 49 fridge classes with no labelled dataset. Roughly
+**200 ms per photo on CPU**, no GPU. Detector labels reach ingredient rows
+through the alias table in `IngredientSeeder`; there is no mapping code in PHP.
 
-**YOLO-World**, open-vocabulary, zero-shot. Instead of a fixed class list it
-takes text prompts, so `vision/vocabulary.json` asks it for *"carton of milk"*,
-*"green chilli pepper"*, *"tin of tomatoes"* — 49 prompts covering the things
-that are actually in a fridge, with no fine-tuning and no labelled dataset.
-Adding an ingredient is one line of JSON.
+**Freshness** is `FreshnessService` — one definition of the three tiers, which
+every badge, bar, dial and ranking reads from.
 
-COCO-pretrained YOLOv8n is kept as an automatic fallback (`LC_BACKEND=coco`),
-but it only knows five foods out of its eighty classes, which is why it is the
-fallback.
-
-**~190 ms per photo on CPU.** No GPU required.
-
-Detector labels become ingredient rows through the **alias table** in
-`IngredientSeeder` — there is no mapping code in PHP, and there should not be.
-
-### The ranking
+**Ranking** is arithmetic, not learned, so it can be checked on the spot:
 
 ```
-priority_score = 0.7 × match_percent  +  0.3 × use_it_up_score
+priority = 0.6 × match%  +  0.4 × urgency  +  local bonus
 ```
 
-`use_it_up_score` rises as food gets closer to its date, counts the most urgent
-item in full and each further one at half the last, and only counts ingredients
-you actually hold. Arithmetic, not learned — the card shows the number *and*
-the reason, so it can be checked on the spot. With no expiry dates set, the
-second term is zero and the ranking is plain match percentage.
+**Dish pictures** are generated per recipe by `App\Support\DishArtwork` — flat
+SVG illustrations derived deterministically from the title. No stock
+photography, no image model, nothing that needs a network.
+
+**No sensors, deliberately.** The camera is the sensor, and shelf life is domain
+knowledge rather than a live measurement. Gas sensors are expensive, unreliable
+at consumer scale, and — per the rulebook, where device problems are not taken
+into account — a live-demo risk a pure software pipeline does not carry.
 
 ---
 
 ## Offline
 
-The venue provides no internet, so:
-
-- model weights live in `vision/weights` (~390 MB, fetched once by
-  `scripts/warm-cache.ps1`)
-- fonts are bundled, not pulled from a CDN
-- nutrition falls back to a built-in per-100g table when no API key is set
-- SQLite means no database server to bring up
+The venue provides no internet, so model weights live in `vision/weights`
+(~370 MB, fetched once by `scripts/warm-cache.ps1`), fonts are bundled, recipes
+are seeded locally and the database is a file.
 
 Rehearse it properly — turn WiFi **off**, then:
 
@@ -154,29 +149,23 @@ Rehearse it properly — turn WiFi **off**, then:
 .\scripts\offline-check.ps1
 ```
 
-It walks the whole judge-visible path — detector loaded from local weights, API
-answering, a real photo scanned, aliases resolving, recipes ranked — and
-reports anything that quietly wanted the network.
+It walks the whole judge-visible loop and reports anything that quietly wanted a
+network.
 
 ---
 
 ## Tests
 
 ```bash
-php artisan test           # 98 tests
+php artisan test           # 42 tests
 cd client && npm run lint
 ```
 
-`FridgeScanTest` covers detector-label mapping, chip collapsing, unknown
-labels, and that a scan never writes to the fridge on its own.
-`UseItUpRankingTest` covers urgency, the expiring shelf, diminishing returns,
-and that the published score matches the running order. `ApiErrorShapeTest`
-pins every `/api` route to JSON status codes, with and without an `Accept`
-header — a redirect where a 401 belongs is the kind of thing only a network tab
-reveals. `ExpiryEstimationTest` covers the shelf-life catalog and every rule
-about when a date may and may not be guessed, and `CookedItGoneTest` covers
-consumption — staples surviving, other people's fridges being untouchable, and
-undo restoring a row exactly as it was.
+`FridgeLoopTest` covers session isolation, the tier thresholds, the health
+dial's arithmetic, the fast-forward clock and its "only what just turned red"
+alert rule, and both halves of the waste counter. `SuggestionEngineTest` covers
+detector-label mapping, urgency-weighted ranking, the local-cuisine bonus and
+"what am I missing?".
 
 ---
 
@@ -184,7 +173,7 @@ undo restoring a row exactly as it was.
 
 | Script | What it does |
 | --- | --- |
-| `setup.ps1` | One-time: PHP + npm + Python deps, database, model weights |
+| `setup.ps1` | One-time: dependencies, database, model weights |
 | `start-demo.ps1` | Starts all three processes, waits for each, opens the browser |
 | `stop-demo.ps1` | Frees ports 5173 / 8000 / 8001 |
 | `warm-cache.ps1` | Pulls every model file while you still have WiFi |
@@ -196,18 +185,16 @@ undo restoring a row exactly as it was.
 
 Drop 3–4 fridge photos into `client/src/assets/demo-photos/` and they appear as
 thumbnails in the scan panel — no manifest to update. See the README in that
-folder for what makes a good one. Webcam under hall lighting is a coin flip;
-saved photos are the primary path.
+folder for what makes a good one. A webcam under hall lighting is a coin flip;
+saved photos are the primary path and the camera is the flourish.
 
 ---
 
 ## Further reading
 
-**[context.md](context.md)** — the engineering record: design decisions and why
-they were made, the bug the alias table depended on, and what is done and what
-is not.
+**[context.md](context.md)** — the engineering record: how the pieces fit, the
+decisions behind them, and what is real versus simulated.
 
-**[docs/PROJECT-DOSSIER.md](docs/PROJECT-DOSSIER.md)** — the exhibition
-dossier: the full feature inventory, the roadmap including the fine-tuning
-pipeline, a ready-to-submit 500-word report, the SDG and CEP mapping, the
-three-minute demo script and the questions judges ask.
+**[docs/EXHIBITION.md](docs/EXHIBITION.md)** — the exhibition pack: feature
+checklist against the proposal, the 90-second script, the 500-word report, the
+SDG and CEP mapping, and what is left to do before Tuesday.

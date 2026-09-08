@@ -11,8 +11,8 @@ use App\Support\CuisineCatalog;
  *
  * `recipes.ingredients` stays the authoring format (a plain list of lines);
  * this service projects it onto the `ingredient_recipe` pivot that powers
- * pantry matching, the shopping list and nutrition, and normalises the
- * cuisine fields at the same time.
+ * ingredient matching, and normalises the cuisine fields at the same time —
+ * the country and region are what the local-cuisine bias reads.
  */
 class RecipeIngredientSync
 {
@@ -23,17 +23,14 @@ class RecipeIngredientSync
      */
     private const ALWAYS_AVAILABLE = ['water', 'ice', 'cold-water', 'warm-water', 'boiling-water'];
 
-    public function __construct(
-        private IngredientParser $parser,
-        private NutritionService $nutrition,
-    ) {
+    public function __construct(private IngredientParser $parser)
+    {
     }
 
     public function sync(Recipe $recipe): Recipe
     {
         $this->syncCuisine($recipe);
         $this->syncPivot($recipe);
-        $this->syncNutrition($recipe);
 
         $recipe->save();
 
@@ -96,14 +93,4 @@ class RecipeIngredientSync
         $recipe->ingredientRecords()->sync($attach);
     }
 
-    private function syncNutrition(Recipe $recipe): void
-    {
-        // A recipe that shipped its own nutrition figures keeps them.
-        if ($recipe->nutrition_source === 'manual') {
-            return;
-        }
-
-        $recipe->nutrition = $this->nutrition->estimateForRecipe($recipe);
-        $recipe->nutrition_source = config('services.nutrition.provider', 'local');
-    }
 }

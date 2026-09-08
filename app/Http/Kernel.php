@@ -39,9 +39,10 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
-            // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            // Every request carries a fridge. There are no accounts.
+            \App\Http\Middleware\ResolveFridgeSession::class,
         ],
     ];
 
