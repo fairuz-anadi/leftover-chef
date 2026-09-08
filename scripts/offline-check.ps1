@@ -79,6 +79,24 @@ Test-Step 'recipe library is seeded' {
     "$($recipes.data.Count) recipes on page 1"
 }
 
+Test-Step 'frontend builds without network assets' {
+    $clientDir = Join-Path $root 'client'
+    $sourceFiles = Get-ChildItem (Join-Path $clientDir 'src') -Recurse -File |
+        Where-Object { $_.Extension -match '\.(js|jsx|css|html)$' }
+    $external = $sourceFiles | Select-String -Pattern 'fonts\.googleapis\.com|images\.unsplash\.com|source\.unsplash\.com'
+    if ($external) { throw "external asset reference in $($external[0].Path)" }
+
+    Push-Location $clientDir
+    try {
+        & npm.cmd run build --silent | Out-Null
+        if ($LASTEXITCODE -ne 0) { throw 'client build failed' }
+    } finally {
+        Pop-Location
+    }
+
+    'bundled fonts and images only'
+}
+
 Test-Step 'ingredient search ranks recipes' {
     $body = @{ ingredients = @('onion', 'garlic', 'tomato', 'egg', 'rice') } | ConvertTo-Json
     $result = Invoke-RestMethod "$apiUrl/pantry/search" -Method Post -Body $body -ContentType 'application/json' -TimeoutSec 15
@@ -104,8 +122,9 @@ if (-not $Photo) {
 
 if ($Photo -and (Test-Path $Photo)) {
     Test-Step 'photo scan end to end' {
-        $form = @{ photo = Get-Item $Photo }
-        $result = Invoke-RestMethod "$apiUrl/pantry/scan" -Method Post -Form $form -TimeoutSec 60
+        $json = & curl.exe --silent --show-error --fail --max-time 60 -F "photo=@$Photo" "$apiUrl/pantry/scan"
+        if ($LASTEXITCODE -ne 0) { throw 'photo upload failed' }
+        $result = $json | ConvertFrom-Json
         "$($result.meta.ingredient_count) ingredients in $([math]::Round($result.meta.elapsed_ms)) ms"
     }
 } else {
