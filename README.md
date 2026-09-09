@@ -74,7 +74,11 @@ missing?"**, and manual correction of anything the model gets wrong.
 
 Requires **PHP 8.2+**, **Composer**, **Node 20+** and **Python 3.10+** on PATH.
 
-```powershell
+```bash
+# On macOS / Linux:
+./scripts/start-demo.sh   # three processes, one command (stops with ./scripts/stop-demo.sh)
+
+# On Windows:
 .\scripts\setup.ps1        # once, with internet — deps, database, model weights
 .\scripts\start-demo.ps1   # every time after — three processes, one command
 ```
@@ -85,12 +89,18 @@ browser session, and a new visitor opens on a stocked demo fridge.
 ### By hand
 
 ```bash
+# 1. Start PostgreSQL with Docker
+docker compose up -d
+
+# 2. Setup backend
 composer install && cp .env.example .env && php artisan key:generate
 php artisan migrate --seed
 php artisan serve                              # :8000
 
+# 3. Setup frontend
 cd client && npm install && npm run dev        # :5173
 
+# 4. Setup vision sidecar
 cd vision
 python -m venv .venv --system-site-packages
 .venv/Scripts/python -m pip install -r requirements.txt

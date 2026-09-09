@@ -100,15 +100,89 @@ export default function ScanPanel({ onConfirmed, onPhoto, showToast }) {
     [kept]
   );
 
-  async function runScan(file) {
+/**
+ * Normalise a camera photo before uploading:
+ * 1. Automatically bakes EXIF orientation upright into pixel data.
+ * 2. Downscales massive 12-50MP phone photos to a balanced 1600px dimension.
+ * 3. Compresses to high-quality JPEG (~300KB), avoiding slow Wi-Fi transfer,
+ *    preventing server upload limit drops, and perfectly aligning bounding boxes.
+ */
+async function prepareImageForScan(file) {
+  if (!file || (!file.type.startsWith("image/") && !/\.(jpe?g|png|webp|bmp|heic|heif)$/i.test(file.name))) {
+    return file;
+  }
+
+  return new Promise((resolve) => {
+    const img = new Image();
+    const tempUrl = URL.createObjectURL(file);
+
+    img.onload = () => {
+      URL.revokeObjectURL(tempUrl);
+      const MAX_DIM = 1600;
+      let width = img.naturalWidth || img.width;
+      let height = img.naturalHeight || img.height;
+
+      if (!width || !height) {
+        resolve(file);
+        return;
+      }
+
+      if (width > MAX_DIM || height > MAX_DIM) {
+        if (width > height) {
+          height = Math.round((height * MAX_DIM) / width);
+          width = MAX_DIM;
+        } else {
+          width = Math.round((width * MAX_DIM) / height);
+          height = MAX_DIM;
+        }
+      }
+
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, width, height);
+
+      canvas.toBlob(
+        (blob) => {
+          if (!blob) {
+            resolve(file);
+            return;
+          }
+          const cleanFile = new File([blob], "camera-scan.jpg", {
+            type: "image/jpeg",
+            lastModified: Date.now(),
+          });
+          resolve(cleanFile);
+        },
+        "image/jpeg",
+        0.88
+      );
+    };
+
+    img.onerror = () => {
+      URL.revokeObjectURL(tempUrl);
+      resolve(file);
+    };
+
+    img.src = tempUrl;
+  });
+}
+
+  async function runScan(rawFile) {
+    setScanning(true);
+    setResult(null);
+    setDropped(new Set());
+
+    // Normalise image: fixes phone camera EXIF orientation, downsizes giant 12-48MP files
+    // so they upload in 100ms, stay within PHP upload limits, and match bounding boxes.
+    const file = await prepareImageForScan(rawFile);
+
     if (objectUrl.current) URL.revokeObjectURL(objectUrl.current);
     objectUrl.current = URL.createObjectURL(file);
 
     setPhotoUrl(objectUrl.current);
     onPhoto?.(objectUrl.current);
-    setResult(null);
-    setDropped(new Set());
-    setScanning(true);
 
     try {
       const response = await api.scan(file);

@@ -17,7 +17,8 @@ return [
     'vision' => [
         'url' => env('VISION_URL', 'http://127.0.0.1:8001'),
         'timeout' => (int) env('VISION_TIMEOUT', 30),
-        'confidence' => (float) env('VISION_CONFIDENCE', 0.12),
+        'confidence' => (float) env('VISION_CONFIDENCE', 0.10),
+        'image_size' => (int) env('VISION_IMAGE_SIZE', 800),
     ],
 
 ];

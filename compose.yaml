@@ -1,0 +1,33 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: leftover-chef-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_DATABASE:-leftover_chef}
+      POSTGRES_USER: ${DB_USERNAME:-leftover}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-secret}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-leftover} -d ${DB_DATABASE:-leftover_chef}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  adminer:
+    image: adminer:latest
+    container_name: leftover-chef-adminer
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    profiles:
+      - tools
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:
+    driver: local

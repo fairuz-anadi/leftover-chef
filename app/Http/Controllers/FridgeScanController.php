@@ -100,7 +100,7 @@ class FridgeScanController extends Controller
     public function scan(Request $request)
     {
         $validated = $request->validate([
-            'photo' => 'required|image|mimes:jpeg,jpg,png,webp,bmp|max:12288',
+            'photo' => 'required|image|mimes:jpeg,jpg,png,webp,bmp|max:32768',
             'confidence' => 'sometimes|numeric|min:0.01|max:0.95',
         ]);
 

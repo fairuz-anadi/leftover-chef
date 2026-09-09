@@ -147,7 +147,7 @@ class IngredientSeeder extends Seeder
         ['Peach', 'produce', 39, 0.9, 9.5, 0.3, false, ['peaches']],
         ['Kiwi', 'produce', 61, 1.1, 14.7, 0.5, false, ['kiwifruit']],
         ['Coconut', 'produce', 354, 3.3, 15.2, 33.5, false, ['fresh coconut']],
-        ['Okra', 'produce', 33, 1.9, 7.5, 0.2, false, ['ladies finger', 'bhindi', 'dherosh']],
+        ['Okra', 'produce', 33, 1.9, 7.5, 0.2, false, ['ladies finger', 'bhindi', 'dherosh', 'ladyfinger', 'lady finger', 'okra pod', 'ladies finger vegetable', 'ladyfinger vegetable']],
         ['Bottle Gourd', 'produce', 14, 0.6, 3.4, 0.0, false, ['lauki', 'calabash', 'lau']],
         ['Bitter Gourd', 'produce', 17, 1.0, 3.7, 0.2, false, ['karela', 'bitter melon', 'korola']],
         ['Pointed Gourd', 'produce', 20, 2.0, 4.0, 0.3, false, ['parwal', 'potol']],

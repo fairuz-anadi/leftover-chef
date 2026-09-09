@@ -30,8 +30,16 @@ logging.basicConfig(
 )
 log = logging.getLogger("fridgemama.api")
 
-MAX_UPLOAD_BYTES = int(os.environ.get("LC_MAX_UPLOAD_BYTES", 12 * 1024 * 1024))
-ALLOWED_TYPES = {"image/jpeg", "image/png", "image/webp", "image/bmp"}
+MAX_UPLOAD_BYTES = int(os.environ.get("LC_MAX_UPLOAD_BYTES", 32 * 1024 * 1024))
+ALLOWED_TYPES = {
+    "image/jpeg",
+    "image/jpg",
+    "image/png",
+    "image/webp",
+    "image/bmp",
+    "image/pjpeg",
+    "application/octet-stream",
+}
 
 app = FastAPI(title="FridgeMama Vision", version="1.0.0")
 
@@ -87,19 +95,13 @@ def health() -> dict:
 @app.post("/detect")
 async def detect(
     image: UploadFile = File(...),
-    confidence: float = Form(0.12),
-    image_size: int = Form(640),
+    confidence: float = Form(0.10),
+    image_size: int = Form(800),
 ) -> dict:
     if not detector.ready:
         raise HTTPException(
             status_code=503,
             detail=detector.error or "detector is not loaded",
-        )
-
-    if image.content_type not in ALLOWED_TYPES:
-        raise HTTPException(
-            status_code=415,
-            detail=f"unsupported image type: {image.content_type}",
         )
 
     payload = await image.read()

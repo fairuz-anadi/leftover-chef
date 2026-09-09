@@ -72,10 +72,11 @@ class VisionClient
                     'image',
                     file_get_contents($image->getRealPath()),
                     $image->getClientOriginalName() ?: 'fridge.jpg',
-                    ['Content-Type' => $image->getMimeType()],
+                    ['Content-Type' => $image->getMimeType() ?: 'image/jpeg'],
                 )
                 ->post($this->baseUrl . '/detect', [
                     ['name' => 'confidence', 'contents' => (string) $confidence],
+                    ['name' => 'image_size', 'contents' => (string) config('services.vision.image_size', 800)],
                 ]);
         } catch (\Throwable $exception) {
             Log::warning('vision sidecar unreachable', ['error' => $exception->getMessage()]);

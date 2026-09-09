@@ -143,6 +143,10 @@ class Detector:
         self.model = None
         self.error: str | None = None
         self.vocabulary = load_vocabulary()
+        self.clip_model = None
+        self.clip_prep = None
+        self.clip_text_features = None
+        self.clip_labels: list[str] = []
 
     # -- loading -------------------------------------------------------
 
@@ -169,6 +173,8 @@ class Detector:
             try:
                 self._load_one(backend, weights)
                 log.info("detector ready: backend=%s weights=%s", backend, weights)
+                if self.backend == "world":
+                    self._init_clip_verifier()
                 return
             except Exception as exc:
                 failures.append(f"{backend}({weights}): {exc}")
@@ -176,6 +182,71 @@ class Detector:
 
         self.error = "no detector backend could be loaded - " + "; ".join(failures)
         log.error(self.error)
+
+    def _init_clip_verifier(self) -> None:
+        try:
+            import clip
+            import torch
+
+            device = "cpu"
+            self.clip_model, self.clip_prep = clip.load(
+                "ViT-B/32",
+                device=device,
+                download_root=str(WEIGHTS_DIR / "clip"),
+            )
+            self.clip_model.eval()
+
+            ingredient_prompts = {
+                "Tomato": ["a ripe red tomato", "a fresh round tomato", "a red tomato fruit", "a tomato"],
+                "Okra": ["ladies finger vegetable", "ladyfinger vegetable", "fresh okra pod", "bhindi vegetable", "okra"],
+                "Green Chilli": ["green chilli pepper", "fresh green chili", "slender green chilli", "hot green chilli"],
+                "Bell Pepper": ["sweet bell pepper", "green capsicum", "yellow bell pepper", "red bell pepper"],
+                "Apple": ["red apple fruit", "green apple fruit"],
+                "Orange": ["orange citrus fruit", "mandarin orange"],
+                "Lemon": ["yellow lemon fruit"],
+                "Lime": ["green lime fruit"],
+                "Cucumber": ["green cucumber vegetable"],
+                "Courgette": ["zucchini squash", "green courgette"],
+                "Aubergine": ["eggplant aubergine"],
+                "Onion": ["fresh onion", "red onion bulb", "yellow onion"],
+                "Garlic": ["garlic bulb", "garlic cloves"],
+                "Potato": ["brown potato", "raw potato"],
+                "Carrot": ["orange carrot vegetable"],
+                "Egg": ["chicken egg", "carton of eggs"],
+                "Milk": ["carton of milk", "bottle of milk"],
+                "Butter": ["block of butter"],
+                "Yoghurt": ["tub of yoghurt"],
+                "Cheddar Cheese": ["block of cheese"],
+                "Chicken Breast": ["raw chicken meat"],
+                "White Fish": ["raw fish fillet"],
+                "Bread": ["loaf of bread", "sliced bread"],
+                "Rice": ["bag of rice", "rice grain packet"],
+                "Pasta": ["packet of pasta"],
+                "Noodles": ["instant noodles"],
+                "Chopped Tomatoes": ["tin of chopped tomatoes", "canned tomatoes"],
+                "Black Beans": ["tin of black beans", "can of beans"],
+                "Vegetable Oil": ["bottle of cooking oil"],
+                "Soy Sauce": ["bottle of soy sauce"],
+                "Honey": ["jar of honey"],
+                "Peas": ["green peas"],
+                "Sweetcorn": ["corn on the cob", "sweetcorn"]
+            }
+
+            self.clip_labels = []
+            all_prompts = []
+            for ing, p_list in ingredient_prompts.items():
+                for p in p_list:
+                    self.clip_labels.append(ing)
+                    all_prompts.append(f"a photo of {p}")
+
+            tokens = clip.tokenize(all_prompts).to(device)
+            with torch.no_grad():
+                feat = self.clip_model.encode_text(tokens)
+                self.clip_text_features = feat / feat.norm(dim=-1, keepdim=True)
+            log.info("CLIP verification initialized with %d categories", len(ingredient_prompts))
+        except Exception as exc:
+            log.warning("CLIP verifier could not be initialized (%s), using pure YOLO", exc)
+            self.clip_model = None
 
     def _load_one(self, backend: str, weights: str) -> None:
         from ultralytics import YOLO, YOLOWorld
@@ -210,21 +281,23 @@ class Detector:
 
     # -- inference -----------------------------------------------------
 
-    def detect(self, image, confidence: float = 0.12, image_size: int = 640):
+    def detect(self, image, confidence: float = 0.10, image_size: int = 800):
         """Run the model over a PIL image. Returns (detections, elapsed_ms)."""
         if not self.ready:
             raise RuntimeError(self.error or "detector is not loaded")
 
         started = time.perf_counter()
+        # Propose candidate boxes with low threshold so real-world items are not missed
+        yolo_thresh = min(confidence, 0.03) if self.clip_model is not None else confidence
         results = self.model.predict(
             image,
-            conf=confidence,
+            conf=yolo_thresh,
             imgsz=image_size,
             verbose=False,
         )
-        elapsed_ms = (time.perf_counter() - started) * 1000
 
-        detections: list[Detection] = []
+        W, H = image.size
+        proposals: list[tuple[list[float], float, str]] = []
 
         for result in results:
             names = result.names or {}
@@ -234,21 +307,79 @@ class Detector:
                 continue
 
             for box in boxes:
-                label = str(names.get(int(box.cls[0]), "")).strip()
-                ingredient = self._to_ingredient(label)
-
-                if ingredient is None:
+                xyxy = [round(float(v), 1) for v in box.xyxy[0].tolist()]
+                bw = xyxy[2] - xyxy[0]
+                bh = xyxy[3] - xyxy[1]
+                # Filter out giant container boxes (e.g. big bowls, table, fridge shell) and tiny noise
+                if bw * bh > 0.55 * W * H or bw < 20 or bh < 20:
                     continue
 
-                detections.append(
-                    Detection(
-                        label=label,
-                        ingredient=ingredient,
-                        confidence=round(float(box.conf[0]), 4),
-                        box=[round(float(v), 1) for v in box.xyxy[0].tolist()],
-                    )
-                )
+                label = str(names.get(int(box.cls[0]), "")).strip()
+                proposals.append((xyxy, float(box.conf[0]), label))
 
+        detections: list[Detection] = []
+
+        if self.clip_model is not None and proposals:
+            import torch
+            crops = []
+            valid_proposals = []
+            for xyxy, yconf, ylabel in proposals:
+                try:
+                    crop = image.crop((int(xyxy[0]), int(xyxy[1]), int(xyxy[2]), int(xyxy[3])))
+                    crops.append(self.clip_prep(crop))
+                    valid_proposals.append((xyxy, yconf, ylabel))
+                except Exception:
+                    continue
+
+            if crops:
+                batch = torch.stack(crops)
+                with torch.no_grad():
+                    img_feats = self.clip_model.encode_image(batch)
+                    img_feats /= img_feats.norm(dim=-1, keepdim=True)
+                    sims = (100.0 * img_feats @ self.clip_text_features.T).softmax(dim=-1)
+
+                for (xyxy, yconf, ylabel), sim in zip(valid_proposals, sims):
+                    scores: dict[str, float] = {}
+                    for ing, s in zip(self.clip_labels, sim):
+                        scores[ing] = scores.get(ing, 0.0) + s.item()
+
+                    top_ing = max(scores, key=scores.get)
+                    top_score = scores[top_ing]
+
+                    # If CLIP is confident on this crop, trust the fine-grained verifier
+                    if top_score >= 0.22:
+                        final_ingredient = top_ing
+                        final_label = top_ing.lower()
+                        final_conf = round(0.4 * yconf + 0.6 * top_score, 4)
+                    else:
+                        final_ingredient = self._to_ingredient(ylabel)
+                        final_label = ylabel
+                        final_conf = round(yconf, 4)
+
+                    if final_ingredient and final_conf >= confidence:
+                        detections.append(
+                            Detection(
+                                label=final_label,
+                                ingredient=final_ingredient,
+                                confidence=final_conf,
+                                box=xyxy,
+                            )
+                        )
+        else:
+            for xyxy, yconf, ylabel in proposals:
+                ingredient = self._to_ingredient(ylabel)
+                if ingredient and yconf >= confidence:
+                    detections.append(
+                        Detection(
+                            label=ylabel,
+                            ingredient=ingredient,
+                            confidence=round(yconf, 4),
+                            box=xyxy,
+                        )
+                    )
+
+        detections = dedupe(detections, iou_threshold=0.50)
+        elapsed_ms = (time.perf_counter() - started) * 1000
         return detections, round(elapsed_ms, 1)
 
     def _to_ingredient(self, label: str) -> str | None:
