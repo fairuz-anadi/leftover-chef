@@ -150,7 +150,7 @@
   left: -80px;
   width: 340px;
   height: 340px;
-  background: radial-gradient(circle, rgba(0, 166, 166, 0.5), transparent 68%);
+  background: radial-gradient(circle, rgba(217, 45, 32, 0.34), transparent 68%);
   animation: lc-orb 18s ease-in-out infinite alternate;
 }
 
@@ -159,7 +159,7 @@
   bottom: -40px;
   width: 300px;
   height: 300px;
-  background: radial-gradient(circle, rgba(118, 212, 59, 0.42), transparent 68%);
+  background: radial-gradient(circle, rgba(224, 161, 27, 0.34), transparent 68%);
   animation: lc-orb 22s ease-in-out infinite alternate-reverse;
 }
 
@@ -196,14 +196,14 @@
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--lime);
-  box-shadow: 0 0 0 0 rgba(118, 212, 59, 0.6);
+  background: var(--accent);
+  box-shadow: 0 0 0 0 rgba(217, 45, 32, 0.55);
   animation: lc-pulse 2.4s ease-out infinite;
 }
 
 @keyframes lc-pulse {
   to {
-    box-shadow: 0 0 0 9px rgba(118, 212, 59, 0);
+    box-shadow: 0 0 0 9px rgba(217, 45, 32, 0);
   }
 }
 
@@ -294,7 +294,7 @@
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--lime);
+  background: var(--accent);
   animation: lc-pulse 2.4s ease-out infinite;
 }
 
@@ -360,7 +360,7 @@
 }
 
 .hero-badge > svg {
-  color: var(--lime-ink);
+  color: var(--leaf);
 }
 
 .badge-bar {
@@ -407,7 +407,7 @@
 }
 
 .marquee-run i {
-  color: var(--lime-ink);
+  color: var(--gold-ink);
   font-style: normal;
 }
 
@@ -441,11 +441,11 @@
   width: 22px;
   height: 2px;
   border-radius: 2px;
-  background: var(--lime);
+  background: var(--gold);
 }
 
 .eyebrow.light {
-  color: var(--lime);
+  color: var(--gold);
 }
 
 .landing h2 {
@@ -805,7 +805,7 @@
 }
 
 .landing-cta h2 em {
-  color: var(--lime);
+  color: var(--gold);
 }
 
 .cta-glow {
@@ -815,7 +815,7 @@
   width: 460px;
   height: 460px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(0, 166, 166, 0.45), transparent 66%);
+  background: radial-gradient(circle, rgba(217, 45, 32, 0.42), transparent 66%);
   transform: translateX(-50%);
   pointer-events: none;
 }

@@ -43,6 +43,41 @@ foreach ($entry in $ports) {
         Stop-Process -Id $processId -Force
         Write-Host "  stopped $($entry.Name) (:$($entry.Port)) - $($process.ProcessName) $processId" -ForegroundColor Yellow
     }
+
+    # Kill, then check, then kill again. One pass is not enough: `npm run
+    # preview` is a shell that spawns node, a killed child can leave the parent
+    # holding the socket, and a port that is still bound when start-demo runs
+    # means Vite fails to take it (strictPort) while the *old* server keeps
+    # answering. The symptom is the worst kind — you rebuild, the page does not
+    # change, and nothing anywhere reports an error.
+    for ($attempt = 1; $attempt -le 5; $attempt++) {
+        Start-Sleep -Milliseconds 400
+
+        try {
+            $left = Get-NetTCPConnection -LocalPort $entry.Port -State Listen -ErrorAction Stop |
+                Select-Object -ExpandProperty OwningProcess -Unique
+        } catch {
+            $left = @()
+        }
+
+        if (-not $left) { break }
+
+        foreach ($processId in $left) {
+            $process = Get-Process -Id $processId
+            Stop-Process -Id $processId -Force
+            Write-Host "  also stopped $($process.ProcessName) $processId holding :$($entry.Port)" -ForegroundColor Yellow
+        }
+    }
+
+    try {
+        $stubborn = Get-NetTCPConnection -LocalPort $entry.Port -State Listen -ErrorAction Stop
+    } catch {
+        $stubborn = $null
+    }
+
+    if ($stubborn) {
+        Write-Host "  WARNING :$($entry.Port) is still held - start-demo will serve a stale build" -ForegroundColor Red
+    }
 }
 
 Write-Host ''

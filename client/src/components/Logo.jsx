@@ -1,9 +1,9 @@
 /**
  * The FridgeMama mark and wordmark.
  *
- * A teal rounded square holding a fridge, with a lime leaf tucked into its
- * corner — the whole pitch in one shape: cold storage, and something living
- * that you would rather not waste.
+ * A red rounded square holding a fridge, with a green leaf tucked into its
+ * corner — the whole pitch in one shape: the thing you own, and something
+ * living inside it that you would rather not waste.
  *
  * Drawn rather than imported as a file so it stays sharp at any size, inherits
  * the page's colours, and costs no network request at a venue that has none.
@@ -47,7 +47,7 @@ export function LogoMark({ size = 34, className = "" }) {
         width={size * 0.38}
         height={size * 0.38}
         viewBox="0 0 24 24"
-        fill="var(--lime)"
+        fill="var(--leaf)"
         className="absolute"
         style={{ right: -size * 0.09, bottom: -size * 0.09, transform: "rotate(-18deg)" }}
       >
@@ -71,7 +71,7 @@ export default function Logo({ size = 34, className = "", tagline = null, compac
           className="block font-extrabold leading-none tracking-[-0.06em] text-[var(--text)]"
           style={{ fontFamily: "var(--font-display)", fontSize: size * 0.58 }}
         >
-          Fridge<span style={{ color: "var(--lime-ink)" }}>Mama</span>
+          Fridge<span style={{ color: "var(--accent)" }}>Mama</span>
         </span>
         {tagline && !compact && (
           <span className="mt-1.5 block text-xs leading-snug text-[var(--faint)]">{tagline}</span>

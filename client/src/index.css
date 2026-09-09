@@ -10,20 +10,27 @@
      changed skin in one commit without touching a component's colours.
 
   2. The three freshness tiers are the only colours that carry meaning. Green,
-     amber and red do the work; everything else is ink, teal or paper, so those
-     three are the only things competing for attention. That is the hierarchy
-     the app exists to teach, and the paint has to agree with it.
+     amber and red do the work; everything else is ink, gold or paper.
 
-  3. Contrast beats fidelity to a mock. The tier colours here are darker than
-     the lime and coral they came from, because a #76d43b that sings in a
-     design file fails at a metre on a projector, and a metre is the distance
-     a judge is standing at.
+     The brand is red too, which is a real cost and is handled twice over:
+     the two reds are different (the brand is bright, the urgent tier a deeper
+     crimson), and more importantly they never appear in the same *form*.
+     Brand red is only ever a solid fill — the mark, a primary button, an
+     active nav row. The urgent tier is only ever a soft chip carrying a dot
+     and the words "Use today" beside it. Nobody has to read the hue, because
+     the label is already there.
+
+  3. Contrast beats fidelity to a mock. Every tier colour here is darker than
+     the swatch it came from: measured on its own chip background, the pretty
+     versions came in at 3.5:1 and 3.8:1. These clear 4.5:1, because a colour
+     that sings in a design file can still fail at a metre on a projector, and
+     a metre is the distance a judge is standing at.
 */
 @theme {
   --color-bg: #fbfaf6;
   --color-surface: #ffffff;
   --color-text: #17295f;
-  --color-accent: #00a6a6;
+  --color-accent: #d92d20;
 
   /* Manrope sets the headings, DM Sans the body, and Noto Sans Bengali sits
      behind both: Latin keeps the intended metrics, Bengali falls through to a
@@ -53,35 +60,54 @@
   --faint: #718096;
   --placeholder: #97a3b8;
 
-  /* The brand: cold, because it is a fridge. */
-  --accent: #00a6a6;
-  --accent-dark: #007c86;
-  --accent-soft: rgba(0, 166, 166, 0.1);
+  /* The brand. Red, and that costs something worth naming: red already had a
+     job here, as the tier for food that must be eaten today. Two rules keep
+     them apart now that they share a hue.
+
+     One, they are not the same red. The brand is bright and warm; the urgent
+     tier is a deeper, cooler crimson, and where they sit next to each other
+     the difference is plain.
+
+     Two, and more load-bearing: they are told apart by *form*, not colour.
+     Brand red is only ever a solid fill — the mark, a primary button, an
+     active nav item. The urgent tier is only ever a soft chip with a dot and
+     a written label beside it ("Use today", "1 day over"). Nobody has to
+     resolve the hue, because the words are already there. */
+  --accent: #d92d20;
+  --accent-dark: #a41c14;
+  --accent-soft: rgba(217, 45, 32, 0.1);
   --on-accent: #ffffff;
 
-  /* Supporting colour, for surfaces and illustration only — never for
-     freshness, which owns green/amber/red exclusively. */
-  --lime: #76d43b;
-  /* The same green, dark enough to be read as text. #76d43b on cream is about
-     1.9:1 — fine as a fill on teal, unreadable as a word. The wordmark and any
-     other lime *text* uses this one. */
-  --lime-ink: #4f9c17;
-  --coral: #ff6b4a;
+  /* The second voice. Gold rather than the old lime: a green next to a red
+     brand is both a Christmas card and the least distinguishable pair there
+     is for the commonest kind of colour blindness. */
+  --gold: #e0a11b;
+  --gold-ink: #96660a;
+
+  /* The leaf in the mark, and nothing else. Small, and green because it is a
+     leaf. */
+  --leaf: #4f9c17;
+
+  --coral: #ff8a5b;
   --yellow: #ffd23f;
 
   /* The three tiers. Nothing else in the app may use these. */
-  --fresh: #3f9612;
-  --fresh-soft: rgba(118, 212, 59, 0.16);
+  /* Both of these are darker than they look like they want to be. On their own
+     soft chip backgrounds the brighter versions measured 3.8:1 and 3.5:1;
+     these clear 4.5:1 on white and on the chip, which is the line between
+     "readable" and "readable from where the judge is standing". */
+  --fresh: #27700b;
+  --fresh-soft: rgba(47, 138, 15, 0.13);
   --on-fresh: #ffffff;
 
-  --soon: #b07800;
+  --soon: #8f6100;
   --soon-soft: rgba(255, 210, 63, 0.22);
   --soon-line: #f2dc9a;
   --on-soon: #ffffff;
 
-  --today: #e14a2b;
-  --today-soft: rgba(255, 107, 74, 0.13);
-  --today-line: #f7c3b6;
+  --today: #a4161a;
+  --today-soft: rgba(164, 22, 26, 0.1);
+  --today-line: #eebcbd;
 
   --need: #c2557c;
 

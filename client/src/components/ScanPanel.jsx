@@ -28,7 +28,7 @@ const SAMPLES = Object.entries(SAMPLE_MODULES)
 
 // Chosen to stay legible as a label background on a light page — the
 // pastels that worked on near-black wash out completely here.
-const BOX_COLOURS = ["#0d9488", "#b45309", "#2563eb", "#be185d", "#15803d", "#6d28d9"];
+const BOX_COLOURS = ["#d92d20", "#b45309", "#2563eb", "#0f766e", "#15803d", "#6d28d9"];
 
 // Can we show a live viewfinder inside the page?
 //
