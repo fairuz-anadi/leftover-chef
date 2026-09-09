@@ -16,3 +16,53 @@ export const TIERS = {
 };
 
 export const tierOf = (freshness) => TIERS[freshness?.tier] ?? null;
+
+export function calculateIngredientsHealth(items) {
+  let fresh = 0;
+  let soon = 0;
+  let today = 0;
+  let undated = 0;
+
+  for (const item of items) {
+    let tier = item.freshness?.tier;
+
+    if (tier === undefined) {
+      const days = item.shelf_life_days;
+      if (days === null || days === undefined) {
+        tier = "undated";
+      } else if (days <= 0) {
+        tier = "today";
+      } else if (days <= 3) {
+        tier = "soon";
+      } else {
+        tier = "fresh";
+      }
+    }
+
+    if (tier === "today") {
+      today++;
+    } else if (tier === "soon") {
+      soon++;
+    } else if (tier === "fresh") {
+      fresh++;
+    } else {
+      undated++;
+    }
+  }
+
+  const total = items.length;
+  const tracked = Math.max(1, fresh + soon + today);
+
+  return {
+    total,
+    fresh,
+    soon,
+    today,
+    at_risk: soon + today,
+    undated,
+    score: total === 0 ? 100 : Math.round((fresh / tracked) * 100),
+    percent_fresh: Math.round((fresh / tracked) * 100),
+    percent_soon: Math.round((soon / tracked) * 100),
+    percent_today: Math.round((today / tracked) * 100),
+  };
+}

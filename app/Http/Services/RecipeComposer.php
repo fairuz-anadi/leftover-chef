@@ -48,35 +48,44 @@ class RecipeComposer
      */
     private const SLOTS = [
         'protein' => [
-            'chicken-thigh', 'chicken-breast', 'beef-mince', 'lamb', 'prawn',
+            'chicken-thigh', 'chicken-breast', 'beef-mince', 'lamb', 'prawns', 'prawn',
             'hilsa', 'rohu', 'white-fish', 'salmon', 'tuna', 'egg', 'tofu',
-            'chickpea', 'black-bean',
+            'chickpeas', 'chickpea', 'black-beans', 'black-bean', 'duck', 'sausage', 'ham', 'bacon', 'pork', 'crab',
         ],
         'soft-veg' => [
             'aubergine', 'potato', 'sweet-potato', 'pumpkin', 'bottle-gourd',
             'tomato', 'cauliflower', 'courgette', 'bitter-gourd', 'pointed-gourd',
+            'papaya', 'mushroom',
         ],
         'quick-veg' => [
-            'spinach', 'cabbage', 'okra', 'green-bean', 'pea', 'carrot',
+            'spinach', 'cabbage', 'okra', 'green-beans', 'green-bean', 'peas', 'pea', 'carrot',
             'bell-pepper', 'cauliflower', 'courgette', 'mushroom', 'broccoli',
+            'sweetcorn', 'radish', 'beetroot', 'lettuce', 'celery',
         ],
         'allium' => ['onion', 'spring-onion', 'garlic'],
         'garlic' => ['garlic', 'ginger'],
         'heat' => ['green-chilli', 'chilli-powder', 'paprika'],
         'warm-spice' => [
             'turmeric', 'cumin', 'coriander-powder', 'garam-masala',
-            'curry-powder', 'panch-phoron',
+            'curry-powder', 'panch-phoron', 'cinnamon', 'cardamom', 'bay-leaf',
         ],
-        'fat' => ['mustard-oil', 'vegetable-oil', 'olive-oil', 'butter'],
-        'herb' => ['coriander', 'parsley', 'basil'],
+        'fat' => ['mustard-oil', 'vegetable-oil', 'olive-oil', 'butter', 'sour-cream'],
+        'herb' => ['coriander', 'parsley', 'basil', 'oregano', 'thyme'],
         'acid' => ['lemon', 'lime', 'tomato', 'vinegar'],
         'potato' => ['potato', 'sweet-potato'],
-        'tomato' => ['tomato', 'chopped-tomato', 'tomato-paste'],
+        'tomato' => ['tomato', 'chopped-tomatoes', 'chopped-tomato', 'tomato-paste', 'ketchup'],
         'egg' => ['egg'],
         'rice' => ['rice'],
-        'lentil' => ['lentil', 'chickpea'],
-        'dairy' => ['yoghurt', 'milk', 'cream', 'coconut-milk'],
-        'salt' => ['salt'],
+        'lentil' => ['lentils', 'lentil', 'chickpeas', 'chickpea', 'black-beans', 'black-bean'],
+        'dairy' => ['yoghurt', 'milk', 'cream', 'coconut-milk', 'cheddar-cheese', 'mozzarella', 'parmesan', 'sour-cream', 'cream-cheese'],
+        'fruit' => ['banana', 'apple', 'mango', 'orange', 'strawberry', 'blueberry', 'grapes', 'pineapple', 'watermelon', 'papaya', 'guava', 'pear', 'peach', 'kiwi'],
+        'bread' => ['bread', 'tortilla'],
+        'pasta' => ['pasta', 'noodles'],
+        'cucumber' => ['cucumber'],
+        'sugar' => ['sugar', 'honey', 'jam'],
+        'cheese' => ['cheddar-cheese', 'mozzarella', 'parmesan', 'cream-cheese'],
+        'flour' => ['flour', 'breadcrumbs'],
+        'salt' => ['salt', 'black-pepper'],
     ];
 
     /** Rough amounts per slot, so the written list reads like a recipe. */
@@ -93,10 +102,17 @@ class RecipeComposer
         'fat' => '2 tbsp',
         'herb' => '2 tbsp',
         'acid' => '1',
-        'egg' => '4',
+        'egg' => '3',
         'rice' => '200 g',
         'lentil' => '150 g',
         'dairy' => '100 ml',
+        'fruit' => '2',
+        'bread' => '4 slices',
+        'pasta' => '200 g',
+        'cucumber' => '1',
+        'sugar' => '2 tbsp',
+        'cheese' => '100 g',
+        'flour' => '150 g',
         'salt' => '1 tsp',
     ];
 
@@ -104,14 +120,7 @@ class RecipeComposer
      * The dishes it knows how to write.
      *
      * `needs` must all be fillable or the template is skipped. `wants` are
-     * taken when the fridge has them and silently dropped when it does not,
-     * which is what keeps a composed recipe from ever listing something you
-     * would have to go and buy — salt included, which is why it is a slot
-     * rather than a line appended to every recipe. The method still says "a
-     * pinch of salt" as prose; only the shopping-relevant list is strict.
-     *
-     * Method lines name the slots they depend on, so a line about coriander
-     * disappears along with the coriander rather than reading "finish with .".
+     * taken when the fridge has them and silently dropped when it does not.
      */
     private const TEMPLATES = [
         [
@@ -211,6 +220,59 @@ class RecipeComposer
             ],
         ],
         [
+            'key' => 'masala_omelette',
+            'title' => 'Masala {egg} Omelette',
+            'country' => 'BD',
+            'difficulty' => 'beginner',
+            'prep' => 5, 'cook' => 8, 'servings' => 2,
+            'needs' => ['egg', 'allium'],
+            'wants' => ['heat', 'tomato', 'herb', 'fat', 'salt'],
+            'description' => 'A street-style fluffy masala omelette folded with caramelized {allium} and fresh green heat.',
+            'method' => [
+                ['Crack and whisk the {egg} vigorously in a bowl with a pinch of salt until light and bubbly.', ['egg']],
+                ['Fold in the finely chopped {allium} and {heat} so the aromatics are evenly distributed.', ['allium']],
+                ['Stir in the diced {tomato} and chopped {herb} for freshness and colour.', ['tomato']],
+                ['Melt or heat {fat} in a skillet over medium heat until shimmering.', ['fat']],
+                ['Pour the mixture into the hot pan and cook for 3 minutes until the base is set and golden brown.', []],
+                ['Carefully flip and cook the reverse side for 2 minutes. Fold in half and serve warm.', []],
+            ],
+        ],
+        [
+            'key' => 'dim_aloo',
+            'title' => 'Dim Aloo Dalna',
+            'country' => 'BD',
+            'difficulty' => 'beginner',
+            'prep' => 10, 'cook' => 25, 'servings' => 3,
+            'needs' => ['egg', 'potato'],
+            'wants' => ['allium', 'warm-spice', 'tomato', 'fat', 'heat', 'salt'],
+            'description' => 'A classic Bengali curry of golden fried {egg} and fork-tender {potato} in a fragrant cumin gravy.',
+            'method' => [
+                ['Boil the {egg} and {potato} until just tender, peel, and prick with a fork.', ['egg', 'potato']],
+                ['Heat {fat} in a pan, toss the eggs with a pinch of turmeric and salt, and fry until blistered.', ['fat']],
+                ['In the same oil, brown the potato chunks lightly and remove.', ['potato']],
+                ['Sauté the {allium} until rich and golden.', ['allium']],
+                ['Add the {warm-spice} and {tomato} with a splash of water, simmering until the oil separates.', ['warm-spice']],
+                ['Pour in 1.5 cups of warm water, return the {egg} and {potato}, add {heat}, and simmer for 10 minutes until thick.', ['heat']],
+            ],
+        ],
+        [
+            'key' => 'egg_tomato_scramble',
+            'title' => '{tomato} & Egg Scramble',
+            'country' => 'BD',
+            'difficulty' => 'beginner',
+            'prep' => 5, 'cook' => 10, 'servings' => 2,
+            'needs' => ['egg', 'tomato'],
+            'wants' => ['allium', 'heat', 'herb', 'fat', 'salt'],
+            'description' => 'Soft scrambled {egg} cooked into sweet, saucy {tomato} with melted onions.',
+            'method' => [
+                ['Beat the {egg} lightly with a pinch of salt.', ['egg']],
+                ['Warm the {fat} in a skillet and soften the {allium} for 3 minutes.', ['fat', 'allium']],
+                ['Tumble in the chopped {tomato} and {heat}, cooking for 4 minutes until juices bubble and thicken.', ['tomato']],
+                ['Pour the eggs around the tomatoes and gently fold over low heat until soft curds form.', ['egg']],
+                ['Top with fresh {herb} and serve warm with roti or rice.', ['herb']],
+            ],
+        ],
+        [
             'key' => 'khichuri',
             'title' => 'Khichuri with {quick-veg}',
             'country' => 'BD',
@@ -230,6 +292,217 @@ class RecipeComposer
                 ['Add the {heat} and salt to taste. It should be soft and loose, not separate grains.', ['heat']],
             ],
         ],
+        [
+            'key' => 'spiced_protein_fry',
+            'title' => 'Spiced {protein} Fry',
+            'country' => 'BD',
+            'difficulty' => 'beginner',
+            'prep' => 8, 'cook' => 18, 'servings' => 3,
+            'needs' => ['protein', 'fat'],
+            'wants' => ['warm-spice', 'allium', 'garlic', 'heat', 'acid', 'salt'],
+            'description' => 'Pan-seared {protein} crusted in ground spices and caramelized aromatics.',
+            'method' => [
+                ['Season the {protein} thoroughly with {warm-spice}, a squeeze of {acid}, and salt.', ['protein']],
+                ['Get {fat} properly hot in a heavy skillet.', ['fat']],
+                ['Sear the {protein} for 5–7 minutes on each side until deeply browned and sealed.', ['protein']],
+                ['Toss in the sliced {allium}, {garlic}, and {heat}, sautéing until fragrant and crisp.', ['allium']],
+                ['Squeeze fresh {acid} over the sizzle and remove from heat.', ['acid']],
+            ],
+        ],
+        [
+            'key' => 'stir_fry_veg',
+            'title' => '{quick-veg} Stir-Fry',
+            'country' => 'BD',
+            'difficulty' => 'beginner',
+            'prep' => 6, 'cook' => 10, 'servings' => 3,
+            'needs' => ['quick-veg', 'fat'],
+            'wants' => ['garlic', 'allium', 'heat', 'salt', 'herb'],
+            'description' => 'Crisp-tender {quick-veg} flash-fried with garlic and chillies. Quick and colourful.',
+            'method' => [
+                ['Heat {fat} in a wide pan or wok until smoking hot.', ['fat']],
+                ['Toss in the {garlic} and {allium}, swirling for 30 seconds.', ['garlic', 'allium']],
+                ['Tip in the {quick-veg} and {heat}, keeping the pan moving on high heat.', ['quick-veg']],
+                ['Season with salt and cook for 5 minutes until tender-crisp.', ['salt']],
+                ['Scatter with {herb} and serve immediately.', ['herb']],
+            ],
+        ],
+        [
+            'key' => 'pasta_dish',
+            'title' => 'Garlic & {quick-veg} Pasta',
+            'country' => 'IT',
+            'difficulty' => 'beginner',
+            'prep' => 5, 'cook' => 15, 'servings' => 2,
+            'needs' => ['pasta', 'fat'],
+            'wants' => ['garlic', 'quick-veg', 'tomato', 'heat', 'cheese', 'herb', 'salt'],
+            'description' => 'A fast pan of {pasta} tossed in sizzling garlic {fat} with tender {quick-veg}.',
+            'method' => [
+                ['Boil the {pasta} in salted water until al dente, reserving 1/2 cup of cooking water.', ['pasta']],
+                ['Gently warm {fat} and soften sliced {garlic} and {heat} without browning.', ['fat', 'garlic']],
+                ['Toss in the {quick-veg} and diced {tomato}, cooking for 3 minutes.', ['quick-veg']],
+                ['Fold the pasta into the pan with a splash of pasta water, shaking until glossy.', ['pasta']],
+                ['Finish with {cheese} and fresh {herb}.', ['cheese']],
+            ],
+        ],
+        [
+            'key' => 'fried_rice',
+            'title' => 'Egg & {quick-veg} Fried Rice',
+            'country' => 'BD',
+            'difficulty' => 'beginner',
+            'prep' => 8, 'cook' => 12, 'servings' => 3,
+            'needs' => ['rice', 'egg'],
+            'wants' => ['quick-veg', 'allium', 'garlic', 'fat', 'heat', 'salt'],
+            'description' => 'Fluffy fried {rice} tossed with scrambled {egg}, caramelized onions, and garden vegetables.',
+            'method' => [
+                ['Scramble the {egg} in a hot spoonful of {fat}, then slide out of the pan.', ['egg', 'fat']],
+                ['Heat more {fat} and fry the {allium} and {garlic} until fragrant.', ['allium']],
+                ['Add the {quick-veg} and {heat}, stir-frying on high heat for 3 minutes.', ['quick-veg']],
+                ['Tumble in the {rice}, tossing continuously to separate every grain.', ['rice']],
+                ['Return the eggs, season with salt, and toss until steaming hot.', ['egg']],
+            ],
+        ],
+        [
+            'key' => 'cucumber_salad',
+            'title' => 'Fresh {cucumber} & {soft-veg} Salad',
+            'country' => 'BD',
+            'difficulty' => 'beginner',
+            'prep' => 8, 'cook' => 0, 'servings' => 2,
+            'needs' => ['cucumber'],
+            'wants' => ['soft-veg', 'allium', 'heat', 'acid', 'herb', 'fat', 'salt'],
+            'description' => 'Cooling sliced {cucumber} and diced {soft-veg} tossed with zesty citrus and raw herbs.',
+            'method' => [
+                ['Thinly slice the {cucumber} and dice the {soft-veg}.', ['cucumber']],
+                ['Finely chop the {allium}, {heat}, and {herb}.', ['allium']],
+                ['Whisk {acid}, a light splash of {fat}, and a pinch of salt into a dressing.', ['acid']],
+                ['Toss the vegetables in the dressing and serve crisp and fresh.', []],
+            ],
+        ],
+        [
+            'key' => 'smoothie',
+            'title' => 'Fresh {fruit} & Milk Smoothie',
+            'country' => 'BD',
+            'difficulty' => 'beginner',
+            'prep' => 5, 'cook' => 0, 'servings' => 2,
+            'needs' => ['fruit', 'dairy'],
+            'wants' => ['sugar'],
+            'description' => 'Thick and frothy chilled smoothie blended with ripe {fruit} and creamy {dairy}.',
+            'method' => [
+                ['Peel and chop the {fruit} into pieces.', ['fruit']],
+                ['Add the fruit into a blender with chilled {dairy} and a spoonful of {sugar}.', ['dairy']],
+                ['Blend on high for 60 seconds until silky smooth.', []],
+                ['Pour into tall glasses and serve immediately.', []],
+            ],
+        ],
+        [
+            'key' => 'french_toast',
+            'title' => 'Golden {bread} French Toast',
+            'country' => 'BD',
+            'difficulty' => 'beginner',
+            'prep' => 5, 'cook' => 10, 'servings' => 2,
+            'needs' => ['bread', 'egg'],
+            'wants' => ['dairy', 'sugar', 'fruit', 'fat'],
+            'description' => 'Slices of {bread} bathed in whisked {egg} and pan-toasted golden in {fat}.',
+            'method' => [
+                ['Whisk {egg}, a splash of {dairy}, and {sugar} together in a wide dish.', ['egg']],
+                ['Dip each slice of {bread}, coating both sides evenly.', ['bread']],
+                ['Warm {fat} in a skillet over medium heat.', ['fat']],
+                ['Toast the bread for 3 minutes per side until golden brown and puffed.', []],
+                ['Top with sliced fresh {fruit} and serve warm.', ['fruit']],
+            ],
+        ],
+        [
+            'key' => 'lentil_soup',
+            'title' => 'Comforting {lentil} Soup with {quick-veg}',
+            'country' => 'BD',
+            'difficulty' => 'beginner',
+            'prep' => 8, 'cook' => 22, 'servings' => 4,
+            'needs' => ['lentil'],
+            'wants' => ['quick-veg', 'allium', 'garlic', 'warm-spice', 'fat', 'heat', 'salt'],
+            'description' => 'A soothing, nutritious bowl of simmered {lentil} cooked with {quick-veg} and garlic baghaar.',
+            'method' => [
+                ['Simmer the rinsed {lentil} in 3 cups of water with a pinch of {warm-spice} and salt.', ['lentil']],
+                ['Add diced {quick-veg} and cook for 10 minutes until tender.', ['quick-veg']],
+                ['In a small pan, heat {fat} and fry the {allium}, {garlic}, and {heat} until golden.', ['fat', 'allium']],
+                ['Pour the sizzling tempering into the soup and stir through before serving.', []],
+            ],
+        ],
+        [
+            'key' => 'boiled_egg',
+            'title' => 'Perfect Seasoned {egg}',
+            'country' => 'BD',
+            'difficulty' => 'beginner',
+            'prep' => 3, 'cook' => 9, 'servings' => 2,
+            'needs' => ['egg'],
+            'wants' => ['fat', 'heat', 'allium', 'herb', 'salt'],
+            'description' => 'Tender-boiled {egg} sliced and seasoned with aromatics and sea salt.',
+            'method' => [
+                ['Bring water to a rolling boil and gently lower in the {egg}.', ['egg']],
+                ['Boil for 8 minutes, then transfer into cold water for 2 minutes and peel.', []],
+                ['Halve the eggs and arrange on a plate.', []],
+                ['Season with salt, finely sliced {heat}, and a drizzle of {fat}.', ['salt']],
+            ],
+        ],
+        [
+            'key' => 'potato_fry',
+            'title' => 'Crispy Pan-Fried {potato}',
+            'country' => 'BD',
+            'difficulty' => 'beginner',
+            'prep' => 5, 'cook' => 15, 'servings' => 3,
+            'needs' => ['potato'],
+            'wants' => ['fat', 'warm-spice', 'allium', 'heat', 'salt'],
+            'description' => 'Golden cubed {potato} pan-fried until crusty on the outside and tender inside.',
+            'method' => [
+                ['Peel and cube the {potato} into bite-sized pieces.', ['potato']],
+                ['Heat {fat} in a wide skillet and add the potatoes.', ['fat']],
+                ['Season with {warm-spice} and salt, cooking for 12 minutes over medium heat until crispy.', ['warm-spice']],
+                ['Toss through the {allium} and {heat} for the last 3 minutes and serve hot.', ['allium']],
+            ],
+        ],
+        [
+            'key' => 'tomato_bhorta',
+            'title' => 'Charred {tomato} Bhorta',
+            'country' => 'BD',
+            'difficulty' => 'beginner',
+            'prep' => 5, 'cook' => 12, 'servings' => 2,
+            'needs' => ['tomato'],
+            'wants' => ['allium', 'heat', 'fat', 'herb', 'salt'],
+            'description' => 'Fire-charred {tomato} mashed with pungent mustard oil and green chillies.',
+            'method' => [
+                ['Roast the {tomato} in a dry pan until the skin blisters and chars.', ['tomato']],
+                ['Peel and mash the tomatoes in a bowl while still warm.', []],
+                ['Fold through finely sliced {allium}, chopped {heat}, and raw {fat}.', ['allium', 'heat']],
+                ['Season with salt, fold in {herb}, and serve with rice.', ['salt']],
+            ],
+        ],
+        [
+            'key' => 'fruit_bowl',
+            'title' => 'Fresh {fruit} Bowl',
+            'country' => 'BD',
+            'difficulty' => 'beginner',
+            'prep' => 5, 'cook' => 0, 'servings' => 2,
+            'needs' => ['fruit'],
+            'wants' => ['acid', 'sugar', 'salt', 'herb'],
+            'description' => 'A refreshing plate of crisp, chilled {fruit} with a bright citrus touch.',
+            'method' => [
+                ['Wash, peel, and slice the {fruit} neatly.', ['fruit']],
+                ['Arrange in a bowl and dress with a squeeze of fresh {acid}.', ['acid']],
+                ['Sprinkle lightly with {sugar} and a pinch of salt to amplify the natural sweetness.', ['sugar']],
+            ],
+        ],
+        [
+            'key' => 'toasted_bread',
+            'title' => 'Crispy Toasted {bread}',
+            'country' => 'BD',
+            'difficulty' => 'beginner',
+            'prep' => 2, 'cook' => 6, 'servings' => 2,
+            'needs' => ['bread'],
+            'wants' => ['fat', 'garlic', 'cheese', 'salt', 'herb'],
+            'description' => 'Golden skillet-toasted {bread} crisped with {fat} and fragrant seasonings.',
+            'method' => [
+                ['Heat {fat} in a flat skillet.', ['fat']],
+                ['Toast the {bread} slices on medium heat for 3 minutes per side until golden and crusty.', ['bread']],
+                ['Rub with sliced {garlic} and melt {cheese} on top before serving.', ['garlic']],
+            ],
+        ],
     ];
 
     public function __construct(private readonly FreshnessService $freshness = new FreshnessService())
@@ -241,7 +514,7 @@ class RecipeComposer
      *
      * @return Collection<int, Recipe>
      */
-    public function compose(FridgeSession $session, int $limit = 2): Collection
+    public function compose(FridgeSession $session, int $limit = 5): Collection
     {
         $shelf = $this->shelf($session);
 
@@ -253,6 +526,54 @@ class RecipeComposer
             ->map(fn (array $template) => $this->fill($template, $shelf))
             ->filter()
             // Most at-risk food used wins; a fuller dish breaks the tie.
+            ->sortByDesc(fn (array $c) => [$c['rescues'], count($c['filled'])])
+            ->take($limit)
+            ->values();
+
+        return $candidates->map(fn (array $c) => $this->persist($c));
+    }
+
+    /**
+     * Compose dishes directly from an array of ingredient names, slugs, or detection items.
+     * Used by the photo scanner to immediately propose dishes for what was seen in the photo.
+     *
+     * @param array<int, mixed> $items
+     * @param int $limit
+     * @return Collection<int, Recipe>
+     */
+    public function composeForIngredients(array $items, int $limit = 4): Collection
+    {
+        if (empty($items)) {
+            return collect();
+        }
+
+        $shelf = collect($items)
+            ->map(function ($item) {
+                if (is_array($item)) {
+                    $name = $item['name'] ?? ($item['ingredient'] ?? null);
+                } elseif (is_string($item)) {
+                    $name = $item;
+                } else {
+                    $name = null;
+                }
+                return $name ? Ingredient::resolve($name) : null;
+            })
+            ->filter()
+            ->unique('id')
+            ->mapWithKeys(fn (Ingredient $ing) => [
+                $ing->slug => [
+                    'ingredient' => $ing,
+                    'urgency' => 1.0,
+                ],
+            ]);
+
+        if ($shelf->isEmpty()) {
+            return collect();
+        }
+
+        $candidates = collect(self::TEMPLATES)
+            ->map(fn (array $template) => $this->fill($template, $shelf))
+            ->filter()
             ->sortByDesc(fn (array $c) => [$c['rescues'], count($c['filled'])])
             ->take($limit)
             ->values();

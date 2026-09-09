@@ -54,6 +54,8 @@ export default function App({ onHome = null, onChangeKitchen = null }) {
   const [adding, setAdding] = useState("");
   const [view, setView] = useState("kitchen");
   const [navOpen, setNavOpen] = useState(false);
+  const [photoHealth, setPhotoHealth] = useState(null);
+  const [photoIngredients, setPhotoIngredients] = useState([]);
   // Bumped by "Reset demo" so the scan panel remounts and forgets the last
   // judge's photo along with everything else.
   const [scanKey, setScanKey] = useState(0);
@@ -131,6 +133,8 @@ export default function App({ onHome = null, onChangeKitchen = null }) {
     setAlert(null);
     setOpenRecipe(null);
     setFridgePhoto(null);
+    setPhotoHealth(null);
+    setPhotoIngredients([]);
     setAdding("");
     setView("kitchen");
     setScanKey((n) => n + 1);
@@ -184,7 +188,17 @@ export default function App({ onHome = null, onChangeKitchen = null }) {
   // Built once and placed in whichever views need them, so "every option stays
   // visible" is enforced by there being one of each rather than by discipline.
   const scanPanel = (
-    <ScanPanel key={scanKey} onConfirmed={load} onPhoto={setFridgePhoto} showToast={showToast} />
+    <ScanPanel
+      key={scanKey}
+      onConfirmed={load}
+      onPhoto={setFridgePhoto}
+      onOpenRecipe={(id) => setOpenRecipe(id)}
+      onPhotoHealthChange={(h, items) => {
+        setPhotoHealth(h);
+        setPhotoIngredients(items || []);
+      }}
+      showToast={showToast}
+    />
   );
 
   const shelfBlock = (
@@ -241,9 +255,19 @@ export default function App({ onHome = null, onChangeKitchen = null }) {
     </Card>
   );
 
+  const activeHealth = photoHealth || health;
+  const isFromPhoto = !!photoHealth;
+
   const healthBlock = (
-    <Card label="Fridge health">
-      <HealthDial health={health} />
+    <Card
+      label="Ingredients health"
+      meta={isFromPhoto ? "From uploaded photo" : undefined}
+    >
+      <HealthDial
+        health={activeHealth}
+        isFromPhoto={isFromPhoto}
+        photoIngredients={photoIngredients}
+      />
     </Card>
   );
 
@@ -448,7 +472,7 @@ export default function App({ onHome = null, onChangeKitchen = null }) {
                 {shelfBlock}
                 {suggestionsBlock("xl:grid-cols-3")}
               </div>
-              <aside className="grid gap-5 lg:sticky lg:top-4 lg:self-start">
+              <aside className="grid gap-5 lg:sticky lg:top-20 lg:self-start">
                 {healthBlock}
                 {wasteBlock}
                 {voiceBlock}

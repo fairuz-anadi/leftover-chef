@@ -218,7 +218,7 @@ class FridgeController extends Controller
         // composed recipes go through exactly the same engine as the seeded
         // ones and have to earn their place on the same arithmetic. They are
         // ordinary rows by the time the scorer sees them.
-        $composed = $this->composer->compose($session)->pluck('id')->all();
+        $composed = $this->composer->compose($session, 6)->pluck('id')->all();
 
         return [
             'session' => [

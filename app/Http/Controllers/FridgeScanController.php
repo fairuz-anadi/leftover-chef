@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Services\FreshnessService;
 use App\Http\Services\DetectionMapper;
+use App\Http\Services\RecipeComposer;
 use App\Models\Ingredient;
 use App\Models\PantryItem;
+use App\Models\Recipe;
 use App\Http\Services\VisionClient;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -22,8 +25,11 @@ use RuntimeException;
  */
 class FridgeScanController extends Controller
 {
-    public function __construct(private DetectionMapper $mapper)
-    {
+    public function __construct(
+        private DetectionMapper $mapper,
+        private FreshnessService $freshness = new FreshnessService(),
+        private RecipeComposer $composer = new RecipeComposer(),
+    ) {
     }
 
     /** GET /api/fridge/scan/status — is the detector up? Used to pick the UI copy. */
@@ -116,14 +122,29 @@ class FridgeScanController extends Controller
         }
 
         $mapped = $this->mapper->map($result['detections']);
+        $ingredientsHealth = $this->freshness->healthFromItems($mapped['items']);
+        $suggestedRecipes = $this->composer->composeForIngredients($mapped['items'], 4);
 
         return response()->json([
             'data' => $mapped['items'],
             'unmatched' => $mapped['unmatched'],
             'image' => $result['image'],
+            'ingredients_health' => $ingredientsHealth,
+            'suggested_recipes' => $suggestedRecipes->map(fn (Recipe $r) => [
+                'id' => $r->id,
+                'title' => $r->title,
+                'description' => $r->description,
+                'cuisine_country' => $r->cuisine_country ?? 'Bangladesh',
+                'difficulty' => $r->difficulty,
+                'total_minutes' => (int) $r->prep_minutes + (int) $r->cook_minutes,
+                'image_path' => $r->image_path,
+                'ingredients' => $r->ingredients,
+                'generated' => true,
+            ])->values()->all(),
             'meta' => array_merge($result['meta'], [
                 'detection_count' => count($result['detections']),
                 'ingredient_count' => count($mapped['items']),
+                'recipe_count' => $suggestedRecipes->count(),
             ]),
         ]);
     }

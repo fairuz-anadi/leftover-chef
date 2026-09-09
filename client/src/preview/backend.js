@@ -605,7 +605,32 @@ export async function previewRequest(path, { method = "GET", body } = {}) {
   }
 
   if (route === "/fridge/scan" && method === "POST") {
-    return { ...capturedScan, meta: { ...capturedScan.meta, preview: true } };
+    let fresh = 0;
+    let soon = 0;
+    let today = 0;
+    let undated = 0;
+    for (const item of capturedScan.data) {
+      const days = item.shelf_life_days;
+      if (days === null) undated++;
+      else if (days <= 0) today++;
+      else if (days <= 3) soon++;
+      else fresh++;
+    }
+    const tracked = Math.max(1, fresh + soon + today);
+    const ingredients_health = {
+      total: capturedScan.data.length,
+      fresh,
+      soon,
+      today,
+      at_risk: soon + today,
+      undated,
+      percent_fresh: Math.round((fresh / tracked) * 100),
+      percent_soon: Math.round((soon / tracked) * 100),
+      percent_today: Math.round((today / tracked) * 100),
+      score: Math.round((fresh / tracked) * 100),
+      source: "photo",
+    };
+    return { ...capturedScan, ingredients_health, meta: { ...capturedScan.meta, preview: true } };
   }
 
   if (route === "/fridge/scan/confirm" && method === "POST") {

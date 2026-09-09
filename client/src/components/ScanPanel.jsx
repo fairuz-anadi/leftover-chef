@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { api, isNativeApp } from "../api";
+import { Sparkles } from "lucide-react";
+import { api, isNativeApp, recipeImage } from "../api";
+import { calculateIngredientsHealth } from "../freshness";
 
 /**
  * Fridge photo scan — the front door of the whole app.
@@ -53,7 +55,7 @@ const LIVE_CAMERA =
   typeof navigator !== "undefined" &&
   !!navigator.mediaDevices?.getUserMedia;
 
-export default function ScanPanel({ onConfirmed, onPhoto, showToast }) {
+export default function ScanPanel({ onConfirmed, onPhoto, onPhotoHealthChange, onOpenRecipe, showToast }) {
   const [status, setStatus] = useState(null);
   const [photoUrl, setPhotoUrl] = useState(null);
   const [result, setResult] = useState(null);
@@ -99,6 +101,16 @@ export default function ScanPanel({ onConfirmed, onPhoto, showToast }) {
     () => kept.filter((item) => item.suggested_expires_on).length,
     [kept]
   );
+
+  const photoHealth = useMemo(() => calculateIngredientsHealth(kept), [kept]);
+
+  useEffect(() => {
+    if (result && photoUrl) {
+      onPhotoHealthChange?.(photoHealth, kept, photoUrl);
+    } else {
+      onPhotoHealthChange?.(null, [], null);
+    }
+  }, [result, photoUrl, photoHealth, kept, onPhotoHealthChange]);
 
 /**
  * Normalise a camera photo before uploading:
@@ -413,6 +425,45 @@ async function prepareImageForScan(file) {
 
           {result && (
             <div>
+              {/* Photo Ingredients Health */}
+              {kept.length > 0 && (
+                <div className="mb-4 rounded-xl border border-[var(--line)] bg-[var(--surface)] p-3.5 shadow-xs">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--faint)]">
+                        Photo Ingredients Health
+                      </span>
+                      <div className="flex items-baseline gap-1.5">
+                        <span className="font-mono text-xl font-bold text-[var(--text)]">
+                          {photoHealth.score}%
+                        </span>
+                        <span className="text-xs font-semibold text-[var(--fresh)]">Fresh</span>
+                      </div>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-1.5 text-xs">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-[var(--fresh-soft)] px-2 py-0.5 font-medium text-[var(--fresh)]">
+                        ● {photoHealth.fresh} Fresh
+                      </span>
+                      {photoHealth.soon > 0 && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-[var(--soon-soft)] px-2 py-0.5 font-medium text-[var(--soon)]">
+                          ● {photoHealth.soon} Soon
+                        </span>
+                      )}
+                      {photoHealth.today > 0 && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-[var(--today-soft)] px-2 py-0.5 font-medium text-[var(--today)]">
+                          ● {photoHealth.today} Today
+                        </span>
+                      )}
+                      {photoHealth.undated > 0 && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-[var(--raised)] px-2 py-0.5 font-medium text-[var(--dim)]">
+                          ○ {photoHealth.undated} Staples
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <p className="m-0 mb-2 text-[10px] uppercase tracking-widest text-[var(--faint)]">
                 {kept.length > 0
                   ? `Found ${kept.length} — tap to drop anything wrong`
@@ -467,6 +518,48 @@ async function prepareImageForScan(file) {
                 <p className="mt-3 mb-0 text-xs text-[var(--dim)]">
                   {datedCount} will get an estimated use-by date from typical shelf life.
                 </p>
+              )}
+
+              {/* ── New recipes created for this photo ── */}
+              {result.suggested_recipes?.length > 0 && (
+                <div className="mt-4 border-t border-[var(--line)] pt-3">
+                  <div className="mb-2 flex items-center justify-between">
+                    <span className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-[var(--accent)]">
+                      <Sparkles size={13} /> Recipes created for this photo
+                    </span>
+                    <span className="text-[10px] text-[var(--faint)]">
+                      Tap to preview
+                    </span>
+                  </div>
+
+                  <div className="grid gap-2 sm:grid-cols-2">
+                    {result.suggested_recipes.map((rec) => (
+                      <button
+                        key={rec.id}
+                        type="button"
+                        onClick={() => onOpenRecipe?.(rec.id)}
+                        className="group flex items-center gap-2.5 rounded-xl border border-[var(--line)] bg-[var(--surface)] p-2 text-left transition hover:border-[var(--accent)] hover:shadow-sm"
+                      >
+                        <img
+                          src={recipeImage(rec.image_path)}
+                          alt=""
+                          className="h-11 w-11 shrink-0 rounded-lg object-cover"
+                        />
+                        <div className="min-w-0 flex-1">
+                          <p className="m-0 truncate text-xs font-bold text-[var(--text)] group-hover:text-[var(--accent)]">
+                            {rec.title}
+                          </p>
+                          <p className="m-0 mt-0.5 truncate text-[10px] text-[var(--faint)]">
+                            {rec.total_minutes ? `${rec.total_minutes} min · ` : ""}{rec.difficulty}
+                          </p>
+                          <span className="mt-0.5 inline-flex items-center gap-0.5 text-[9px] font-semibold text-[var(--fresh)]">
+                            ✦ Written for your photo
+                          </span>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
               )}
 
               <div className="mt-5 flex flex-wrap gap-2">

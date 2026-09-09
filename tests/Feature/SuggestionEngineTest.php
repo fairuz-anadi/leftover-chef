@@ -350,6 +350,50 @@ class SuggestionEngineTest extends TestCase
         }
     }
 
+    public function test_it_composes_new_recipes_for_photo_detected_ingredients(): void
+    {
+        $composer = app(\App\Http\Services\RecipeComposer::class);
+
+        // Photo with egg and tomato
+        $eggTomato = $composer->composeForIngredients([
+            ['name' => 'Egg'],
+            ['name' => 'Tomato'],
+        ]);
+        $this->assertNotEmpty($eggTomato);
+        $this->assertTrue(
+            $eggTomato->contains(fn ($r) => str_contains($r->title, 'Egg') || str_contains($r->title, 'Tomato'))
+        );
+
+        // Photo with potato and egg
+        $eggPotato = $composer->composeForIngredients(['Egg', 'Potato']);
+        $this->assertNotEmpty($eggPotato);
+        $this->assertTrue(
+            $eggPotato->contains(fn ($r) => str_contains($r->title, 'Dim Aloo') || str_contains($r->title, 'Bhorta'))
+        );
+
+        // Photo with fruit and milk
+        $fruitMilk = $composer->composeForIngredients(['Banana', 'Milk']);
+        $this->assertNotEmpty($fruitMilk);
+        $this->assertTrue(
+            $fruitMilk->contains(fn ($r) => str_contains($r->title, 'Smoothie'))
+        );
+    }
+
+    public function test_fridge_suggests_new_recipes_alongside_library_recipes(): void
+    {
+        $this->stockOnly(['Egg', 'Tomato', 'Onion', 'Potato', 'Green Chilli', 'Vegetable Oil']);
+
+        $suggestions = $this->fridge()->getJson('/api/fridge')->assertOk()->json('suggestions');
+        $this->assertNotEmpty($suggestions);
+
+        // Both newly composed recipes (generated = true) and seeded recipes (generated = false) are suggested
+        $generated = collect($suggestions)->filter(fn ($s) => $s['recipe']['generated'] ?? false);
+        $library = collect($suggestions)->filter(fn ($s) => !($s['recipe']['generated'] ?? false));
+
+        $this->assertNotEmpty($generated, 'Should suggest newly composed recipes for uploaded items');
+        $this->assertNotEmpty($library, 'Should suggest library recipes alongside newly composed ones');
+    }
+
     /**
      * Empty the demo contents and put back only what is named, dated from the
      * shelf-life table exactly as a confirmed scan would.

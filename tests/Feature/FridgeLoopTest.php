@@ -404,4 +404,22 @@ class FridgeLoopTest extends TestCase
         $this->assertSame([], $again->json('items'));
     }
 
+    public function test_scan_computes_ingredients_health_for_detected_items(): void
+    {
+        $freshness = app(\App\Http\Services\FreshnessService::class);
+        $health = $freshness->healthFromItems([
+            ['name' => 'Potato', 'shelf_life_days' => 26],
+            ['name' => 'Chicken', 'shelf_life_days' => 2],
+            ['name' => 'Spinach', 'shelf_life_days' => 0],
+            ['name' => 'Rice', 'shelf_life_days' => null],
+        ]);
+
+        $this->assertSame(4, $health['total']);
+        $this->assertSame(1, $health['fresh']);
+        $this->assertSame(1, $health['soon']);
+        $this->assertSame(1, $health['today']);
+        $this->assertSame(1, $health['undated']);
+        $this->assertSame(33, $health['score']);
+        $this->assertSame('photo', $health['source']);
+    }
 }

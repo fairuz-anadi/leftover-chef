@@ -104,6 +104,67 @@ class FreshnessService
         ];
     }
 
+    /**
+     * Compute ingredients health for an arbitrary list of mapped items (e.g. from an uploaded photo scan).
+     *
+     * @param  array<int, array<string, mixed>>  $items
+     * @return array<string, mixed>
+     */
+    public function healthFromItems(array $items): array
+    {
+        $total = count($items);
+        $fresh = 0;
+        $soon = 0;
+        $today = 0;
+        $undated = 0;
+        $detailed = [];
+
+        foreach ($items as $item) {
+            $daysLeft = $item['shelf_life_days'] ?? null;
+            if ($daysLeft === null) {
+                $undated++;
+                $tier = 'undated';
+                $label = 'Cupboard staple';
+            } else {
+                $days = (int) $daysLeft;
+                $tier = $this->tier($days);
+                $label = $this->label($days);
+                if ($tier === self::TODAY) {
+                    $today++;
+                } elseif ($tier === self::SOON) {
+                    $soon++;
+                } else {
+                    $fresh++;
+                }
+            }
+
+            $detailed[] = [
+                'name' => $item['name'],
+                'name_bn' => $item['name_bn'] ?? null,
+                'tier' => $tier,
+                'days_left' => $daysLeft,
+                'label' => $label,
+            ];
+        }
+
+        $tracked = max(1, $today + $soon + $fresh);
+
+        return [
+            'total' => $total,
+            'fresh' => $fresh,
+            'soon' => $soon,
+            'today' => $today,
+            'at_risk' => $soon + $today,
+            'undated' => $undated,
+            'percent_fresh' => (int) round($fresh / $tracked * 100),
+            'percent_soon' => (int) round($soon / $tracked * 100),
+            'percent_today' => (int) round($today / $tracked * 100),
+            'score' => $total === 0 ? 100 : (int) round($fresh / $tracked * 100),
+            'items' => $detailed,
+            'source' => 'photo',
+        ];
+    }
+
     /** Urgency 0..1 for the recipe ranking. */
     public function urgency(int $daysLeft): float
     {
