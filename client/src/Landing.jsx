@@ -14,6 +14,7 @@ import {
 import Logo, { LogoMark } from "./components/Logo";
 import InstallButton from "./components/InstallButton";
 import samplePhoto from "./assets/demo-photos/1-kitchen-counter.jpg";
+import { IS_PREVIEW } from "./api";
 
 /**
  * The landing page — what is on the laptop when nobody is standing at the
@@ -218,7 +219,9 @@ export default function Landing({ onOpen }) {
           <p className="hero-footnote">
             <b>Made for real kitchens.</b>
             <br />
-            On-device · offline-first · no account, no sign-in
+            {IS_PREVIEW
+              ? "You are on the online preview — the app is fully clickable, the detector is a recording."
+              : "On-device · offline-first · no account, no sign-in"}
           </p>
         </div>
 

@@ -451,3 +451,23 @@
     transition: none !important;
   }
 }
+
+/*
+  The preview banner. Only ever rendered on the deployed build, where the app
+  is answered by a fixture in the browser rather than by the laptop — and a
+  visitor deserves to be told that before they judge the detector on it.
+*/
+.preview-banner {
+  margin-bottom: 20px;
+  padding: 13px 18px;
+  border-radius: 16px;
+  border: 1px solid var(--soon-line);
+  background: var(--soon-soft);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--dim);
+}
+
+.preview-banner b {
+  color: var(--text);
+}

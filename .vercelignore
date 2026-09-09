@@ -1,0 +1,33 @@
+# Vercel only ever builds the client. Everything else in this repo is either
+# the local back end — which does not run on a static host and is not meant to —
+# or several hundred megabytes that would be uploaded for nothing.
+
+# The Laravel app and its runtime.
+/app
+/bootstrap
+/config
+/database
+/routes
+/storage
+/tests
+/vendor
+/public
+artisan
+composer.json
+composer.lock
+phpunit.xml
+
+# The vision sidecar. The weights alone are ~370 MB, and there is no runtime
+# on Vercel that could load them anyway.
+/vision
+
+# The Android project: Gradle output, the wrapper, and the APK.
+/client/android
+*.apk
+
+# Toolchains and caches.
+/node_modules
+/client/node_modules
+/.composer
+**/__pycache__
+/scripts

@@ -1,0 +1,5513 @@
+{
+    "ingredients": [
+        {
+            "id": 1,
+            "name": "Onion",
+            "name_bn": "পেঁয়াজ",
+            "slug": "onion",
+            "aisle": "produce",
+            "shelf_life_days": 30,
+            "is_staple": true
+        },
+        {
+            "id": 2,
+            "name": "Garlic",
+            "name_bn": "রসুন",
+            "slug": "garlic",
+            "aisle": "produce",
+            "shelf_life_days": 60,
+            "is_staple": true
+        },
+        {
+            "id": 3,
+            "name": "Tomato",
+            "name_bn": "টমেটো",
+            "slug": "tomato",
+            "aisle": "produce",
+            "shelf_life_days": 6,
+            "is_staple": true
+        },
+        {
+            "id": 4,
+            "name": "Potato",
+            "name_bn": "আলু",
+            "slug": "potato",
+            "aisle": "produce",
+            "shelf_life_days": 30,
+            "is_staple": true
+        },
+        {
+            "id": 5,
+            "name": "Carrot",
+            "name_bn": "গাজর",
+            "slug": "carrot",
+            "aisle": "produce",
+            "shelf_life_days": 21,
+            "is_staple": true
+        },
+        {
+            "id": 6,
+            "name": "Bell Pepper",
+            "name_bn": "ক্যাপসিকাম",
+            "slug": "bell-pepper",
+            "aisle": "produce",
+            "shelf_life_days": 8,
+            "is_staple": false
+        },
+        {
+            "id": 7,
+            "name": "Spinach",
+            "name_bn": "পালং শাক",
+            "slug": "spinach",
+            "aisle": "produce",
+            "shelf_life_days": 3,
+            "is_staple": false
+        },
+        {
+            "id": 8,
+            "name": "Mushroom",
+            "name_bn": "মাশরুম",
+            "slug": "mushroom",
+            "aisle": "produce",
+            "shelf_life_days": 5,
+            "is_staple": false
+        },
+        {
+            "id": 9,
+            "name": "Ginger",
+            "name_bn": "আদা",
+            "slug": "ginger",
+            "aisle": "produce",
+            "shelf_life_days": 21,
+            "is_staple": true
+        },
+        {
+            "id": 10,
+            "name": "Green Chilli",
+            "name_bn": "কাঁচা মরিচ",
+            "slug": "green-chilli",
+            "aisle": "produce",
+            "shelf_life_days": 8,
+            "is_staple": false
+        },
+        {
+            "id": 11,
+            "name": "Lemon",
+            "name_bn": "লেবু",
+            "slug": "lemon",
+            "aisle": "produce",
+            "shelf_life_days": 21,
+            "is_staple": true
+        },
+        {
+            "id": 12,
+            "name": "Lime",
+            "name_bn": "কাগজি লেবু",
+            "slug": "lime",
+            "aisle": "produce",
+            "shelf_life_days": 21,
+            "is_staple": false
+        },
+        {
+            "id": 13,
+            "name": "Coriander",
+            "name_bn": "ধনেপাতা",
+            "slug": "coriander",
+            "aisle": "produce",
+            "shelf_life_days": 4,
+            "is_staple": false
+        },
+        {
+            "id": 14,
+            "name": "Basil",
+            "name_bn": "বেসিল পাতা",
+            "slug": "basil",
+            "aisle": "produce",
+            "shelf_life_days": 3,
+            "is_staple": false
+        },
+        {
+            "id": 15,
+            "name": "Parsley",
+            "name_bn": "পার্সলে",
+            "slug": "parsley",
+            "aisle": "produce",
+            "shelf_life_days": 4,
+            "is_staple": false
+        },
+        {
+            "id": 16,
+            "name": "Spring Onion",
+            "name_bn": "পেঁয়াজ পাতা",
+            "slug": "spring-onion",
+            "aisle": "produce",
+            "shelf_life_days": 6,
+            "is_staple": false
+        },
+        {
+            "id": 17,
+            "name": "Cucumber",
+            "name_bn": "শসা",
+            "slug": "cucumber",
+            "aisle": "produce",
+            "shelf_life_days": 6,
+            "is_staple": false
+        },
+        {
+            "id": 18,
+            "name": "Avocado",
+            "name_bn": "অ্যাভোকাডো",
+            "slug": "avocado",
+            "aisle": "produce",
+            "shelf_life_days": 4,
+            "is_staple": false
+        },
+        {
+            "id": 19,
+            "name": "Broccoli",
+            "name_bn": "ব্রকলি",
+            "slug": "broccoli",
+            "aisle": "produce",
+            "shelf_life_days": 6,
+            "is_staple": false
+        },
+        {
+            "id": 20,
+            "name": "Cauliflower",
+            "name_bn": "ফুলকপি",
+            "slug": "cauliflower",
+            "aisle": "produce",
+            "shelf_life_days": 6,
+            "is_staple": false
+        },
+        {
+            "id": 21,
+            "name": "Cabbage",
+            "name_bn": "বাঁধাকপি",
+            "slug": "cabbage",
+            "aisle": "produce",
+            "shelf_life_days": 10,
+            "is_staple": false
+        },
+        {
+            "id": 22,
+            "name": "Aubergine",
+            "name_bn": "বেগুন",
+            "slug": "aubergine",
+            "aisle": "produce",
+            "shelf_life_days": 7,
+            "is_staple": false
+        },
+        {
+            "id": 23,
+            "name": "Courgette",
+            "name_bn": "জুকিনি",
+            "slug": "courgette",
+            "aisle": "produce",
+            "shelf_life_days": 7,
+            "is_staple": false
+        },
+        {
+            "id": 24,
+            "name": "Sweet Potato",
+            "name_bn": "মিষ্টি আলু",
+            "slug": "sweet-potato",
+            "aisle": "produce",
+            "shelf_life_days": 25,
+            "is_staple": false
+        },
+        {
+            "id": 25,
+            "name": "Apple",
+            "name_bn": "আপেল",
+            "slug": "apple",
+            "aisle": "produce",
+            "shelf_life_days": 21,
+            "is_staple": false
+        },
+        {
+            "id": 26,
+            "name": "Banana",
+            "name_bn": "কলা",
+            "slug": "banana",
+            "aisle": "produce",
+            "shelf_life_days": 5,
+            "is_staple": false
+        },
+        {
+            "id": 27,
+            "name": "Mango",
+            "name_bn": "আম",
+            "slug": "mango",
+            "aisle": "produce",
+            "shelf_life_days": 5,
+            "is_staple": false
+        },
+        {
+            "id": 28,
+            "name": "Orange",
+            "name_bn": "কমলা",
+            "slug": "orange",
+            "aisle": "produce",
+            "shelf_life_days": 14,
+            "is_staple": false
+        },
+        {
+            "id": 29,
+            "name": "Peas",
+            "name_bn": "মটরশুঁটি",
+            "slug": "pea",
+            "aisle": "produce",
+            "shelf_life_days": 5,
+            "is_staple": false
+        },
+        {
+            "id": 30,
+            "name": "Sweetcorn",
+            "name_bn": "ভুট্টা",
+            "slug": "sweetcorn",
+            "aisle": "produce",
+            "shelf_life_days": 5,
+            "is_staple": false
+        },
+        {
+            "id": 31,
+            "name": "Chicken Breast",
+            "name_bn": "মুরগির বুকের মাংস",
+            "slug": "chicken-breast",
+            "aisle": "meat",
+            "shelf_life_days": 2,
+            "is_staple": true
+        },
+        {
+            "id": 32,
+            "name": "Chicken Thigh",
+            "name_bn": "মুরগির রানের মাংস",
+            "slug": "chicken-thigh",
+            "aisle": "meat",
+            "shelf_life_days": 2,
+            "is_staple": false
+        },
+        {
+            "id": 33,
+            "name": "Beef Mince",
+            "name_bn": "গরুর কিমা",
+            "slug": "beef-mince",
+            "aisle": "meat",
+            "shelf_life_days": 2,
+            "is_staple": false
+        },
+        {
+            "id": 34,
+            "name": "Lamb",
+            "name_bn": "খাসির মাংস",
+            "slug": "lamb",
+            "aisle": "meat",
+            "shelf_life_days": 3,
+            "is_staple": false
+        },
+        {
+            "id": 35,
+            "name": "Pork",
+            "name_bn": "শূকরের মাংস",
+            "slug": "pork",
+            "aisle": "meat",
+            "shelf_life_days": 3,
+            "is_staple": false
+        },
+        {
+            "id": 36,
+            "name": "Bacon",
+            "name_bn": "বেকন",
+            "slug": "bacon",
+            "aisle": "meat",
+            "shelf_life_days": 7,
+            "is_staple": false
+        },
+        {
+            "id": 37,
+            "name": "Prawns",
+            "name_bn": "চিংড়ি",
+            "slug": "prawn",
+            "aisle": "seafood",
+            "shelf_life_days": 2,
+            "is_staple": false
+        },
+        {
+            "id": 38,
+            "name": "Salmon",
+            "name_bn": "স্যামন মাছ",
+            "slug": "salmon",
+            "aisle": "seafood",
+            "shelf_life_days": 2,
+            "is_staple": false
+        },
+        {
+            "id": 39,
+            "name": "White Fish",
+            "name_bn": "সাদা মাছ",
+            "slug": "white-fish",
+            "aisle": "seafood",
+            "shelf_life_days": 2,
+            "is_staple": false
+        },
+        {
+            "id": 40,
+            "name": "Tuna",
+            "name_bn": "টুনা মাছ",
+            "slug": "tuna",
+            "aisle": "seafood",
+            "shelf_life_days": null,
+            "is_staple": false
+        },
+        {
+            "id": 41,
+            "name": "Hilsa",
+            "name_bn": "ইলিশ মাছ",
+            "slug": "hilsa",
+            "aisle": "seafood",
+            "shelf_life_days": 2,
+            "is_staple": false
+        },
+        {
+            "id": 42,
+            "name": "Rohu",
+            "name_bn": "রুই মাছ",
+            "slug": "rohu",
+            "aisle": "seafood",
+            "shelf_life_days": 2,
+            "is_staple": false
+        },
+        {
+            "id": 43,
+            "name": "Egg",
+            "name_bn": "ডিম",
+            "slug": "egg",
+            "aisle": "dairy",
+            "shelf_life_days": 21,
+            "is_staple": true
+        },
+        {
+            "id": 44,
+            "name": "Milk",
+            "name_bn": "দুধ",
+            "slug": "milk",
+            "aisle": "dairy",
+            "shelf_life_days": 7,
+            "is_staple": true
+        },
+        {
+            "id": 45,
+            "name": "Butter",
+            "name_bn": "মাখন",
+            "slug": "butter",
+            "aisle": "dairy",
+            "shelf_life_days": 30,
+            "is_staple": true
+        },
+        {
+            "id": 46,
+            "name": "Yoghurt",
+            "name_bn": "দই",
+            "slug": "yoghurt",
+            "aisle": "dairy",
+            "shelf_life_days": 14,
+            "is_staple": false
+        },
+        {
+            "id": 47,
+            "name": "Cheddar Cheese",
+            "name_bn": "চেডার পনির",
+            "slug": "cheddar-cheese",
+            "aisle": "dairy",
+            "shelf_life_days": 21,
+            "is_staple": false
+        },
+        {
+            "id": 48,
+            "name": "Parmesan",
+            "name_bn": "পারমেসান পনির",
+            "slug": "parmesan",
+            "aisle": "dairy",
+            "shelf_life_days": 60,
+            "is_staple": false
+        },
+        {
+            "id": 49,
+            "name": "Mozzarella",
+            "name_bn": "মোজারেলা পনির",
+            "slug": "mozzarella",
+            "aisle": "dairy",
+            "shelf_life_days": 10,
+            "is_staple": false
+        },
+        {
+            "id": 50,
+            "name": "Cream",
+            "name_bn": "ক্রিম",
+            "slug": "cream",
+            "aisle": "dairy",
+            "shelf_life_days": 7,
+            "is_staple": false
+        },
+        {
+            "id": 51,
+            "name": "Coconut Milk",
+            "name_bn": "নারকেলের দুধ",
+            "slug": "coconut-milk",
+            "aisle": "pantry",
+            "shelf_life_days": null,
+            "is_staple": false
+        },
+        {
+            "id": 52,
+            "name": "Rice",
+            "name_bn": "চাল",
+            "slug": "rice",
+            "aisle": "pantry",
+            "shelf_life_days": null,
+            "is_staple": true
+        },
+        {
+            "id": 53,
+            "name": "Pasta",
+            "name_bn": "পাস্তা",
+            "slug": "pastum",
+            "aisle": "pantry",
+            "shelf_life_days": null,
+            "is_staple": true
+        },
+        {
+            "id": 54,
+            "name": "Flour",
+            "name_bn": "ময়দা",
+            "slug": "flour",
+            "aisle": "pantry",
+            "shelf_life_days": null,
+            "is_staple": true
+        },
+        {
+            "id": 55,
+            "name": "Bread",
+            "name_bn": "পাউরুটি",
+            "slug": "bread",
+            "aisle": "bakery",
+            "shelf_life_days": 5,
+            "is_staple": true
+        },
+        {
+            "id": 56,
+            "name": "Sugar",
+            "name_bn": "চিনি",
+            "slug": "sugar",
+            "aisle": "pantry",
+            "shelf_life_days": null,
+            "is_staple": true
+        },
+        {
+            "id": 57,
+            "name": "Salt",
+            "name_bn": "লবণ",
+            "slug": "salt",
+            "aisle": "pantry",
+            "shelf_life_days": null,
+            "is_staple": true
+        },
+        {
+            "id": 58,
+            "name": "Water",
+            "name_bn": "পানি",
+            "slug": "water",
+            "aisle": "pantry",
+            "shelf_life_days": null,
+            "is_staple": true
+        },
+        {
+            "id": 59,
+            "name": "Black Pepper",
+            "name_bn": "গোলমরিচ",
+            "slug": "black-pepper",
+            "aisle": "pantry",
+            "shelf_life_days": null,
+            "is_staple": true
+        },
+        {
+            "id": 60,
+            "name": "Olive Oil",
+            "name_bn": "অলিভ অয়েল",
+            "slug": "olive-oil",
+            "aisle": "pantry",
+            "shelf_life_days": null,
+            "is_staple": true
+        },
+        {
+            "id": 61,
+            "name": "Vegetable Oil",
+            "name_bn": "সয়াবিন তেল",
+            "slug": "vegetable-oil",
+            "aisle": "pantry",
+            "shelf_life_days": null,
+            "is_staple": true
+        },
+        {
+            "id": 62,
+            "name": "Mustard Oil",
+            "name_bn": "সরিষার তেল",
+            "slug": "mustard-oil",
+            "aisle": "pantry",
+            "shelf_life_days": null,
+            "is_staple": true
+        },
+        {
+            "id": 63,
+            "name": "Mustard Paste",
+            "name_bn": "সরিষা বাটা",
+            "slug": "mustard-paste",
+            "aisle": "pantry",
+            "shelf_life_days": 14,
+            "is_staple": false
+        },
+        {
+            "id": 64,
+            "name": "Soy Sauce",
+            "name_bn": "সয়া সস",
+            "slug": "soy-sauce",
+            "aisle": "pantry",
+            "shelf_life_days": null,
+            "is_staple": false
+        },
+        {
+            "id": 65,
+            "name": "Vinegar",
+            "name_bn": "ভিনেগার",
+            "slug": "vinegar",
+            "aisle": "pantry",
+            "shelf_life_days": null,
+            "is_staple": false
+        },
+        {
+            "id": 66,
+            "name": "Honey",
+            "name_bn": "মধু",
+            "slug": "honey",
+            "aisle": "pantry",
+            "shelf_life_days": null,
+            "is_staple": false
+        },
+        {
+            "id": 67,
+            "name": "Tomato Paste",
+            "name_bn": "টমেটো পেস্ট",
+            "slug": "tomato-paste",
+            "aisle": "pantry",
+            "shelf_life_days": null,
+            "is_staple": false
+        },
+        {
+            "id": 68,
+            "name": "Chopped Tomatoes",
+            "name_bn": "কাটা টমেটো",
+            "slug": "chopped-tomato",
+            "aisle": "pantry",
+            "shelf_life_days": null,
+            "is_staple": true
+        },
+        {
+            "id": 69,
+            "name": "Chickpeas",
+            "name_bn": "ছোলা",
+            "slug": "chickpea",
+            "aisle": "pantry",
+            "shelf_life_days": null,
+            "is_staple": false
+        },
+        {
+            "id": 70,
+            "name": "Lentils",
+            "name_bn": "মসুর ডাল",
+            "slug": "lentil",
+            "aisle": "pantry",
+            "shelf_life_days": null,
+            "is_staple": false
+        },
+        {
+            "id": 71,
+            "name": "Black Beans",
+            "name_bn": "কালো শিম",
+            "slug": "black-bean",
+            "aisle": "pantry",
+            "shelf_life_days": null,
+            "is_staple": false
+        },
+        {
+            "id": 72,
+            "name": "Stock",
+            "name_bn": "ঝোল",
+            "slug": "stock",
+            "aisle": "pantry",
+            "shelf_life_days": null,
+            "is_staple": true
+        },
+        {
+            "id": 73,
+            "name": "Tofu",
+            "name_bn": "টোফু",
+            "slug": "tofu",
+            "aisle": "pantry",
+            "shelf_life_days": 7,
+            "is_staple": false
+        },
+        {
+            "id": 74,
+            "name": "Peanut Butter",
+            "name_bn": "পিনাট বাটার",
+            "slug": "peanut-butter",
+            "aisle": "pantry",
+            "shelf_life_days": null,
+            "is_staple": false
+        },
+        {
+            "id": 75,
+            "name": "Almonds",
+            "name_bn": "কাঠবাদাম",
+            "slug": "almond",
+            "aisle": "pantry",
+            "shelf_life_days": null,
+            "is_staple": false
+        },
+        {
+            "id": 76,
+            "name": "Cashews",
+            "name_bn": "কাজুবাদাম",
+            "slug": "cashew",
+            "aisle": "pantry",
+            "shelf_life_days": null,
+            "is_staple": false
+        },
+        {
+            "id": 77,
+            "name": "Oats",
+            "name_bn": "ওটস",
+            "slug": "oat",
+            "aisle": "pantry",
+            "shelf_life_days": null,
+            "is_staple": false
+        },
+        {
+            "id": 78,
+            "name": "Noodles",
+            "name_bn": "নুডলস",
+            "slug": "noodle",
+            "aisle": "pantry",
+            "shelf_life_days": null,
+            "is_staple": false
+        },
+        {
+            "id": 79,
+            "name": "Tortilla",
+            "name_bn": "টর্টিলা",
+            "slug": "tortilla",
+            "aisle": "bakery",
+            "shelf_life_days": 10,
+            "is_staple": false
+        },
+        {
+            "id": 80,
+            "name": "Breadcrumbs",
+            "name_bn": "ব্রেডক্রাম্ব",
+            "slug": "breadcrumb",
+            "aisle": "pantry",
+            "shelf_life_days": null,
+            "is_staple": false
+        },
+        {
+            "id": 81,
+            "name": "Baking Powder",
+            "name_bn": "বেকিং পাউডার",
+            "slug": "baking-powder",
+            "aisle": "pantry",
+            "shelf_life_days": null,
+            "is_staple": false
+        },
+        {
+            "id": 82,
+            "name": "Yeast",
+            "name_bn": "ইস্ট",
+            "slug": "yeast",
+            "aisle": "pantry",
+            "shelf_life_days": null,
+            "is_staple": false
+        },
+        {
+            "id": 83,
+            "name": "Cumin",
+            "name_bn": "জিরা",
+            "slug": "cumin",
+            "aisle": "spices",
+            "shelf_life_days": null,
+            "is_staple": true
+        },
+        {
+            "id": 84,
+            "name": "Coriander Powder",
+            "name_bn": "ধনে গুঁড়া",
+            "slug": "coriander-powder",
+            "aisle": "spices",
+            "shelf_life_days": null,
+            "is_staple": false
+        },
+        {
+            "id": 85,
+            "name": "Turmeric",
+            "name_bn": "হলুদ",
+            "slug": "turmeric",
+            "aisle": "spices",
+            "shelf_life_days": null,
+            "is_staple": true
+        },
+        {
+            "id": 86,
+            "name": "Chilli Powder",
+            "name_bn": "মরিচ গুঁড়া",
+            "slug": "chilli-powder",
+            "aisle": "spices",
+            "shelf_life_days": null,
+            "is_staple": true
+        },
+        {
+            "id": 87,
+            "name": "Paprika",
+            "name_bn": "পাপ্রিকা",
+            "slug": "paprika",
+            "aisle": "spices",
+            "shelf_life_days": null,
+            "is_staple": false
+        },
+        {
+            "id": 88,
+            "name": "Garam Masala",
+            "name_bn": "গরম মসলা",
+            "slug": "garam-masala",
+            "aisle": "spices",
+            "shelf_life_days": null,
+            "is_staple": false
+        },
+        {
+            "id": 89,
+            "name": "Panch Phoron",
+            "name_bn": "পাঁচফোড়ন",
+            "slug": "panch-phoron",
+            "aisle": "spices",
+            "shelf_life_days": null,
+            "is_staple": false
+        },
+        {
+            "id": 90,
+            "name": "Cinnamon",
+            "name_bn": "দারুচিনি",
+            "slug": "cinnamon",
+            "aisle": "spices",
+            "shelf_life_days": null,
+            "is_staple": false
+        },
+        {
+            "id": 91,
+            "name": "Oregano",
+            "name_bn": "অরিগ্যানো",
+            "slug": "oregano",
+            "aisle": "spices",
+            "shelf_life_days": null,
+            "is_staple": false
+        },
+        {
+            "id": 92,
+            "name": "Thyme",
+            "name_bn": "থাইম",
+            "slug": "thyme",
+            "aisle": "spices",
+            "shelf_life_days": null,
+            "is_staple": false
+        },
+        {
+            "id": 93,
+            "name": "Bay Leaf",
+            "name_bn": "তেজপাতা",
+            "slug": "bay-leaf",
+            "aisle": "spices",
+            "shelf_life_days": null,
+            "is_staple": false
+        },
+        {
+            "id": 94,
+            "name": "Cardamom",
+            "name_bn": "এলাচ",
+            "slug": "cardamom",
+            "aisle": "spices",
+            "shelf_life_days": null,
+            "is_staple": false
+        },
+        {
+            "id": 95,
+            "name": "Curry Powder",
+            "name_bn": "কারি পাউডার",
+            "slug": "curry-powder",
+            "aisle": "spices",
+            "shelf_life_days": null,
+            "is_staple": false
+        },
+        {
+            "id": 96,
+            "name": "Chocolate",
+            "name_bn": "চকলেট",
+            "slug": "chocolate",
+            "aisle": "pantry",
+            "shelf_life_days": null,
+            "is_staple": false
+        },
+        {
+            "id": 97,
+            "name": "Vanilla",
+            "name_bn": "ভ্যানিলা",
+            "slug": "vanilla",
+            "aisle": "pantry",
+            "shelf_life_days": null,
+            "is_staple": false
+        },
+        {
+            "id": 98,
+            "name": "Strawberry",
+            "name_bn": "স্ট্রবেরি",
+            "slug": "strawberry",
+            "aisle": "produce",
+            "shelf_life_days": 3,
+            "is_staple": false
+        },
+        {
+            "id": 99,
+            "name": "Blueberry",
+            "name_bn": "ব্লুবেরি",
+            "slug": "blueberry",
+            "aisle": "produce",
+            "shelf_life_days": 7,
+            "is_staple": false
+        },
+        {
+            "id": 100,
+            "name": "Grapes",
+            "name_bn": "আঙুর",
+            "slug": "grape",
+            "aisle": "produce",
+            "shelf_life_days": 7,
+            "is_staple": false
+        },
+        {
+            "id": 101,
+            "name": "Watermelon",
+            "name_bn": "তরমুজ",
+            "slug": "watermelon",
+            "aisle": "produce",
+            "shelf_life_days": 7,
+            "is_staple": false
+        },
+        {
+            "id": 102,
+            "name": "Pineapple",
+            "name_bn": "আনারস",
+            "slug": "pineapple",
+            "aisle": "produce",
+            "shelf_life_days": 5,
+            "is_staple": false
+        },
+        {
+            "id": 103,
+            "name": "Papaya",
+            "name_bn": "পেঁপে",
+            "slug": "papaya",
+            "aisle": "produce",
+            "shelf_life_days": 5,
+            "is_staple": false
+        },
+        {
+            "id": 104,
+            "name": "Guava",
+            "name_bn": "পেয়ারা",
+            "slug": "guava",
+            "aisle": "produce",
+            "shelf_life_days": 5,
+            "is_staple": false
+        },
+        {
+            "id": 105,
+            "name": "Pear",
+            "name_bn": "নাশপাতি",
+            "slug": "pear",
+            "aisle": "produce",
+            "shelf_life_days": 10,
+            "is_staple": false
+        },
+        {
+            "id": 106,
+            "name": "Peach",
+            "name_bn": "পীচ",
+            "slug": "peach",
+            "aisle": "produce",
+            "shelf_life_days": 5,
+            "is_staple": false
+        },
+        {
+            "id": 107,
+            "name": "Kiwi",
+            "name_bn": "কিউই",
+            "slug": "kiwi",
+            "aisle": "produce",
+            "shelf_life_days": 10,
+            "is_staple": false
+        },
+        {
+            "id": 108,
+            "name": "Coconut",
+            "name_bn": "নারকেল",
+            "slug": "coconut",
+            "aisle": "produce",
+            "shelf_life_days": 14,
+            "is_staple": false
+        },
+        {
+            "id": 109,
+            "name": "Okra",
+            "name_bn": "ঢেঁড়স",
+            "slug": "okra",
+            "aisle": "produce",
+            "shelf_life_days": 5,
+            "is_staple": false
+        },
+        {
+            "id": 110,
+            "name": "Bottle Gourd",
+            "name_bn": "লাউ",
+            "slug": "bottle-gourd",
+            "aisle": "produce",
+            "shelf_life_days": 10,
+            "is_staple": false
+        },
+        {
+            "id": 111,
+            "name": "Bitter Gourd",
+            "name_bn": "করলা",
+            "slug": "bitter-gourd",
+            "aisle": "produce",
+            "shelf_life_days": 7,
+            "is_staple": false
+        },
+        {
+            "id": 112,
+            "name": "Pointed Gourd",
+            "name_bn": "পটল",
+            "slug": "pointed-gourd",
+            "aisle": "produce",
+            "shelf_life_days": 6,
+            "is_staple": false
+        },
+        {
+            "id": 113,
+            "name": "Pumpkin",
+            "name_bn": "মিষ্টি কুমড়া",
+            "slug": "pumpkin",
+            "aisle": "produce",
+            "shelf_life_days": 21,
+            "is_staple": false
+        },
+        {
+            "id": 114,
+            "name": "Radish",
+            "name_bn": "মূলা",
+            "slug": "radish",
+            "aisle": "produce",
+            "shelf_life_days": 10,
+            "is_staple": false
+        },
+        {
+            "id": 115,
+            "name": "Beetroot",
+            "name_bn": "বিট",
+            "slug": "beetroot",
+            "aisle": "produce",
+            "shelf_life_days": 14,
+            "is_staple": false
+        },
+        {
+            "id": 116,
+            "name": "Celery",
+            "name_bn": "সেলারি",
+            "slug": "celery",
+            "aisle": "produce",
+            "shelf_life_days": 10,
+            "is_staple": false
+        },
+        {
+            "id": 117,
+            "name": "Green Beans",
+            "name_bn": "শিম",
+            "slug": "green-bean",
+            "aisle": "produce",
+            "shelf_life_days": 6,
+            "is_staple": false
+        },
+        {
+            "id": 118,
+            "name": "Lettuce",
+            "name_bn": "লেটুস",
+            "slug": "lettuce",
+            "aisle": "produce",
+            "shelf_life_days": 6,
+            "is_staple": false
+        },
+        {
+            "id": 119,
+            "name": "Sausage",
+            "name_bn": "সসেজ",
+            "slug": "sausage",
+            "aisle": "meat",
+            "shelf_life_days": 7,
+            "is_staple": false
+        },
+        {
+            "id": 120,
+            "name": "Ham",
+            "name_bn": "হ্যাম",
+            "slug": "ham",
+            "aisle": "meat",
+            "shelf_life_days": 7,
+            "is_staple": false
+        },
+        {
+            "id": 121,
+            "name": "Duck",
+            "name_bn": "হাঁসের মাংস",
+            "slug": "duck",
+            "aisle": "meat",
+            "shelf_life_days": 3,
+            "is_staple": false
+        },
+        {
+            "id": 122,
+            "name": "Crab",
+            "name_bn": "কাঁকড়া",
+            "slug": "crab",
+            "aisle": "seafood",
+            "shelf_life_days": 2,
+            "is_staple": false
+        },
+        {
+            "id": 123,
+            "name": "Sour Cream",
+            "name_bn": "টক ক্রিম",
+            "slug": "sour-cream",
+            "aisle": "dairy",
+            "shelf_life_days": 10,
+            "is_staple": false
+        },
+        {
+            "id": 124,
+            "name": "Cream Cheese",
+            "name_bn": "ক্রিম চিজ",
+            "slug": "cream-cheese",
+            "aisle": "dairy",
+            "shelf_life_days": 14,
+            "is_staple": false
+        },
+        {
+            "id": 125,
+            "name": "Jam",
+            "name_bn": "জ্যাম",
+            "slug": "jam",
+            "aisle": "pantry",
+            "shelf_life_days": null,
+            "is_staple": false
+        },
+        {
+            "id": 126,
+            "name": "Ketchup",
+            "name_bn": "কেচাপ",
+            "slug": "ketchup",
+            "aisle": "pantry",
+            "shelf_life_days": null,
+            "is_staple": false
+        },
+        {
+            "id": 127,
+            "name": "Mayonnaise",
+            "name_bn": "মেয়োনিজ",
+            "slug": "mayonnaise",
+            "aisle": "pantry",
+            "shelf_life_days": 30,
+            "is_staple": false
+        },
+        {
+            "id": 128,
+            "name": "Orange Juice",
+            "name_bn": "কমলার রস",
+            "slug": "orange-juice",
+            "aisle": "pantry",
+            "shelf_life_days": 5,
+            "is_staple": false
+        },
+        {
+            "id": 129,
+            "name": "Walnut",
+            "name_bn": "আখরোট",
+            "slug": "walnut",
+            "aisle": "pantry",
+            "shelf_life_days": null,
+            "is_staple": false
+        },
+        {
+            "id": 130,
+            "name": "Pistachio",
+            "name_bn": "পেস্তা",
+            "slug": "pistachio",
+            "aisle": "pantry",
+            "shelf_life_days": null,
+            "is_staple": false
+        },
+        {
+            "id": 131,
+            "name": "Raisin",
+            "name_bn": "কিশমিশ",
+            "slug": "raisin",
+            "aisle": "pantry",
+            "shelf_life_days": null,
+            "is_staple": false
+        },
+        {
+            "id": 132,
+            "name": "Date",
+            "name_bn": "খেজুর",
+            "slug": "date",
+            "aisle": "pantry",
+            "shelf_life_days": null,
+            "is_staple": false
+        }
+    ],
+    "recipes": [
+        {
+            "id": 1,
+            "title": "Spaghetti Aglio e Olio",
+            "description": "The five-ingredient Roman classic — pasta, garlic, chilli and good olive oil. On the table faster than a delivery order.",
+            "cuisine_country": "Italy",
+            "cuisine_region": "Europe",
+            "difficulty": "beginner",
+            "total_minutes": 20,
+            "servings": 2,
+            "image_path": "recipes/generated/spaghetti-aglio-e-olio.svg",
+            "required": [
+                53,
+                2,
+                60,
+                10,
+                15
+            ],
+            "ingredients": [
+                {
+                    "id": 53,
+                    "name": "Pasta",
+                    "name_bn": "পাস্তা",
+                    "optional": false
+                },
+                {
+                    "id": 2,
+                    "name": "Garlic",
+                    "name_bn": "রসুন",
+                    "optional": false
+                },
+                {
+                    "id": 60,
+                    "name": "Olive Oil",
+                    "name_bn": "অলিভ অয়েল",
+                    "optional": false
+                },
+                {
+                    "id": 10,
+                    "name": "Green Chilli",
+                    "name_bn": "কাঁচা মরিচ",
+                    "optional": false
+                },
+                {
+                    "id": 15,
+                    "name": "Parsley",
+                    "name_bn": "পার্সলে",
+                    "optional": false
+                }
+            ],
+            "steps": [
+                "Bring a large pot of salted water to the boil and cook the spaghetti for 9 minutes until al dente.",
+                "Meanwhile warm the olive oil in a wide pan over low heat and add the sliced garlic and chilli.",
+                "Fry gently for 3 minutes until the garlic is pale gold — do not let it brown.",
+                "Drain the pasta, reserving a cup of the cooking water, and add it to the pan.",
+                "Toss for 1 minute with a splash of pasta water until glossy, then finish with parsley."
+            ],
+            "written": [
+                "200 g spaghetti",
+                "4 cloves garlic, thinly sliced",
+                "4 tbsp olive oil",
+                "1 green chilli, chopped",
+                "2 tbsp parsley, chopped",
+                "1 tsp salt"
+            ]
+        },
+        {
+            "id": 2,
+            "title": "Classic Margherita Pizza",
+            "description": "Slow-risen dough, crushed tomatoes, mozzarella and basil. Nothing else — that is the whole point.",
+            "cuisine_country": "Italy",
+            "cuisine_region": "Europe",
+            "difficulty": "intermediate",
+            "total_minutes": 102,
+            "servings": 2,
+            "image_path": "recipes/generated/classic-margherita-pizza.svg",
+            "required": [
+                54,
+                82,
+                60,
+                3,
+                49,
+                14
+            ],
+            "ingredients": [
+                {
+                    "id": 54,
+                    "name": "Flour",
+                    "name_bn": "ময়দা",
+                    "optional": false
+                },
+                {
+                    "id": 82,
+                    "name": "Yeast",
+                    "name_bn": "ইস্ট",
+                    "optional": false
+                },
+                {
+                    "id": 60,
+                    "name": "Olive Oil",
+                    "name_bn": "অলিভ অয়েল",
+                    "optional": false
+                },
+                {
+                    "id": 3,
+                    "name": "Tomato",
+                    "name_bn": "টমেটো",
+                    "optional": false
+                },
+                {
+                    "id": 49,
+                    "name": "Mozzarella",
+                    "name_bn": "মোজারেলা পনির",
+                    "optional": false
+                },
+                {
+                    "id": 14,
+                    "name": "Basil",
+                    "name_bn": "বেসিল পাতা",
+                    "optional": false
+                }
+            ],
+            "steps": [
+                "Mix the flour, yeast, salt and water into a shaggy dough, then knead for 8 minutes until smooth.",
+                "Cover and leave to rise for 60 minutes until doubled in size.",
+                "Heat the oven to its highest setting with a baking tray inside for 20 minutes.",
+                "Stretch the dough, spread with crushed tomatoes and tear the mozzarella over the top.",
+                "Bake for 10 minutes until the crust is blistered, then finish with basil and olive oil."
+            ],
+            "written": [
+                "300 g flour",
+                "7 g yeast",
+                "200 ml water",
+                "1 tsp salt",
+                "2 tbsp olive oil",
+                "200 g chopped tomatoes",
+                "150 g mozzarella",
+                "10 g basil"
+            ]
+        },
+        {
+            "id": 3,
+            "title": "Bengali Chicken Curry",
+            "description": "A weeknight kosha-style curry: onions cooked down properly, whole spices, and chicken that falls off the bone.",
+            "cuisine_country": "Bangladesh",
+            "cuisine_region": "South Asia",
+            "difficulty": "intermediate",
+            "total_minutes": 60,
+            "servings": 4,
+            "image_path": "recipes/generated/bengali-chicken-curry.svg",
+            "required": [
+                32,
+                1,
+                2,
+                9,
+                3,
+                85,
+                86,
+                83,
+                88,
+                61,
+                93
+            ],
+            "ingredients": [
+                {
+                    "id": 32,
+                    "name": "Chicken Thigh",
+                    "name_bn": "মুরগির রানের মাংস",
+                    "optional": false
+                },
+                {
+                    "id": 1,
+                    "name": "Onion",
+                    "name_bn": "পেঁয়াজ",
+                    "optional": false
+                },
+                {
+                    "id": 2,
+                    "name": "Garlic",
+                    "name_bn": "রসুন",
+                    "optional": false
+                },
+                {
+                    "id": 9,
+                    "name": "Ginger",
+                    "name_bn": "আদা",
+                    "optional": false
+                },
+                {
+                    "id": 3,
+                    "name": "Tomato",
+                    "name_bn": "টমেটো",
+                    "optional": false
+                },
+                {
+                    "id": 85,
+                    "name": "Turmeric",
+                    "name_bn": "হলুদ",
+                    "optional": false
+                },
+                {
+                    "id": 86,
+                    "name": "Chilli Powder",
+                    "name_bn": "মরিচ গুঁড়া",
+                    "optional": false
+                },
+                {
+                    "id": 83,
+                    "name": "Cumin",
+                    "name_bn": "জিরা",
+                    "optional": false
+                },
+                {
+                    "id": 88,
+                    "name": "Garam Masala",
+                    "name_bn": "গরম মসলা",
+                    "optional": false
+                },
+                {
+                    "id": 61,
+                    "name": "Vegetable Oil",
+                    "name_bn": "সয়াবিন তেল",
+                    "optional": false
+                },
+                {
+                    "id": 93,
+                    "name": "Bay Leaf",
+                    "name_bn": "তেজপাতা",
+                    "optional": false
+                }
+            ],
+            "steps": [
+                "Heat the oil in a heavy pan and fry the bay leaves for 30 seconds until fragrant.",
+                "Add the sliced onions and cook over medium heat for 15 minutes until deep golden.",
+                "Stir in the garlic and ginger and fry for 2 minutes.",
+                "Add the turmeric, chilli powder and cumin with a splash of water and cook the spices for 3 minutes.",
+                "Add the chicken and tomatoes, season with salt, cover and simmer for 25 minutes.",
+                "Uncover, raise the heat and reduce the sauce for 5 minutes, then finish with garam masala."
+            ],
+            "written": [
+                "800 g chicken thigh",
+                "3 onions, thinly sliced",
+                "5 cloves garlic",
+                "1 tbsp ginger",
+                "2 tomatoes, chopped",
+                "1 tsp turmeric",
+                "2 tsp chilli powder",
+                "1 tsp cumin",
+                "1 tsp garam masala",
+                "4 tbsp vegetable oil",
+                "2 bay leaves",
+                "1 tsp salt"
+            ]
+        },
+        {
+            "id": 4,
+            "title": "Red Lentil Dal",
+            "description": "Store-cupboard comfort food. Lentils, turmeric, and a sizzling spice tempering poured over at the end.",
+            "cuisine_country": "Bangladesh",
+            "cuisine_region": "South Asia",
+            "difficulty": "beginner",
+            "total_minutes": 30,
+            "servings": 4,
+            "image_path": "recipes/generated/red-lentil-dal.svg",
+            "required": [
+                70,
+                1,
+                2,
+                85,
+                83,
+                10,
+                61
+            ],
+            "ingredients": [
+                {
+                    "id": 70,
+                    "name": "Lentils",
+                    "name_bn": "মসুর ডাল",
+                    "optional": false
+                },
+                {
+                    "id": 1,
+                    "name": "Onion",
+                    "name_bn": "পেঁয়াজ",
+                    "optional": false
+                },
+                {
+                    "id": 2,
+                    "name": "Garlic",
+                    "name_bn": "রসুন",
+                    "optional": false
+                },
+                {
+                    "id": 85,
+                    "name": "Turmeric",
+                    "name_bn": "হলুদ",
+                    "optional": false
+                },
+                {
+                    "id": 83,
+                    "name": "Cumin",
+                    "name_bn": "জিরা",
+                    "optional": false
+                },
+                {
+                    "id": 10,
+                    "name": "Green Chilli",
+                    "name_bn": "কাঁচা মরিচ",
+                    "optional": false
+                },
+                {
+                    "id": 61,
+                    "name": "Vegetable Oil",
+                    "name_bn": "সয়াবিন তেল",
+                    "optional": false
+                }
+            ],
+            "steps": [
+                "Rinse the lentils until the water runs clear.",
+                "Simmer the lentils with turmeric and water for 20 minutes until completely soft.",
+                "Heat the oil in a small pan, add the cumin and let it crackle for 30 seconds.",
+                "Add the onion, garlic and chillies and fry for 4 minutes until golden.",
+                "Pour the tempering into the lentils, season with salt and stir through."
+            ],
+            "written": [
+                "250 g lentils",
+                "1 onion, chopped",
+                "3 cloves garlic",
+                "1 tsp turmeric",
+                "1 tsp cumin",
+                "2 green chillies",
+                "3 tbsp vegetable oil",
+                "1 tsp salt",
+                "750 ml water"
+            ]
+        },
+        {
+            "id": 5,
+            "title": "Chicken Katsu Curry",
+            "description": "Crisp panko-crumbed chicken over rice, with a mellow, faintly sweet Japanese curry sauce.",
+            "cuisine_country": "Japan",
+            "cuisine_region": "East Asia",
+            "difficulty": "intermediate",
+            "total_minutes": 50,
+            "servings": 2,
+            "image_path": "recipes/generated/chicken-katsu-curry.svg",
+            "required": [
+                31,
+                80,
+                43,
+                54,
+                52,
+                1,
+                5,
+                95,
+                72,
+                64,
+                61
+            ],
+            "ingredients": [
+                {
+                    "id": 31,
+                    "name": "Chicken Breast",
+                    "name_bn": "মুরগির বুকের মাংস",
+                    "optional": false
+                },
+                {
+                    "id": 80,
+                    "name": "Breadcrumbs",
+                    "name_bn": "ব্রেডক্রাম্ব",
+                    "optional": false
+                },
+                {
+                    "id": 43,
+                    "name": "Egg",
+                    "name_bn": "ডিম",
+                    "optional": false
+                },
+                {
+                    "id": 54,
+                    "name": "Flour",
+                    "name_bn": "ময়দা",
+                    "optional": false
+                },
+                {
+                    "id": 52,
+                    "name": "Rice",
+                    "name_bn": "চাল",
+                    "optional": false
+                },
+                {
+                    "id": 1,
+                    "name": "Onion",
+                    "name_bn": "পেঁয়াজ",
+                    "optional": false
+                },
+                {
+                    "id": 5,
+                    "name": "Carrot",
+                    "name_bn": "গাজর",
+                    "optional": false
+                },
+                {
+                    "id": 95,
+                    "name": "Curry Powder",
+                    "name_bn": "কারি পাউডার",
+                    "optional": false
+                },
+                {
+                    "id": 72,
+                    "name": "Stock",
+                    "name_bn": "ঝোল",
+                    "optional": false
+                },
+                {
+                    "id": 64,
+                    "name": "Soy Sauce",
+                    "name_bn": "সয়া সস",
+                    "optional": false
+                },
+                {
+                    "id": 61,
+                    "name": "Vegetable Oil",
+                    "name_bn": "সয়াবিন তেল",
+                    "optional": false
+                }
+            ],
+            "steps": [
+                "Rinse the rice and cook it for 12 minutes, then leave it covered to steam.",
+                "Fry the onion and carrot in oil for 6 minutes until softening.",
+                "Stir in the curry powder, cook for 1 minute, then add the stock and soy sauce.",
+                "Simmer the sauce for 15 minutes until it coats a spoon.",
+                "Coat the chicken in flour, then egg, then breadcrumbs, and fry for 4 minutes per side.",
+                "Rest the chicken for 2 minutes, slice, and serve over rice with the sauce."
+            ],
+            "written": [
+                "2 chicken breasts",
+                "100 g breadcrumbs",
+                "1 egg",
+                "50 g flour",
+                "200 g rice",
+                "1 onion, sliced",
+                "1 carrot, diced",
+                "2 tbsp curry powder",
+                "400 ml stock",
+                "2 tbsp soy sauce",
+                "3 tbsp vegetable oil"
+            ]
+        },
+        {
+            "id": 6,
+            "title": "Miso Salmon with Greens",
+            "description": "A glazed salmon fillet under the grill while the greens steam. Fifteen minutes, one tray.",
+            "cuisine_country": "Japan",
+            "cuisine_region": "East Asia",
+            "difficulty": "beginner",
+            "total_minutes": 25,
+            "servings": 2,
+            "image_path": "recipes/generated/miso-salmon-with-greens.svg",
+            "required": [
+                38,
+                64,
+                66,
+                9,
+                19,
+                16,
+                61
+            ],
+            "ingredients": [
+                {
+                    "id": 38,
+                    "name": "Salmon",
+                    "name_bn": "স্যামন মাছ",
+                    "optional": false
+                },
+                {
+                    "id": 64,
+                    "name": "Soy Sauce",
+                    "name_bn": "সয়া সস",
+                    "optional": false
+                },
+                {
+                    "id": 66,
+                    "name": "Honey",
+                    "name_bn": "মধু",
+                    "optional": false
+                },
+                {
+                    "id": 9,
+                    "name": "Ginger",
+                    "name_bn": "আদা",
+                    "optional": false
+                },
+                {
+                    "id": 19,
+                    "name": "Broccoli",
+                    "name_bn": "ব্রকলি",
+                    "optional": false
+                },
+                {
+                    "id": 16,
+                    "name": "Spring Onion",
+                    "name_bn": "পেঁয়াজ পাতা",
+                    "optional": false
+                },
+                {
+                    "id": 61,
+                    "name": "Vegetable Oil",
+                    "name_bn": "সয়াবিন তেল",
+                    "optional": false
+                }
+            ],
+            "steps": [
+                "Mix the soy sauce, honey and grated ginger into a glaze.",
+                "Brush the salmon and leave it to sit for 5 minutes.",
+                "Grill the salmon for 10 minutes until it flakes easily.",
+                "Steam the broccoli for 4 minutes until bright green.",
+                "Scatter with sliced spring onions and serve."
+            ],
+            "written": [
+                "2 salmon fillets",
+                "2 tbsp soy sauce",
+                "1 tbsp honey",
+                "1 tbsp ginger",
+                "200 g broccoli",
+                "2 spring onions",
+                "1 tbsp vegetable oil"
+            ]
+        },
+        {
+            "id": 7,
+            "title": "Black Bean Tacos",
+            "description": "Smoky black beans, quick pickled onion and avocado, folded into warm tortillas.",
+            "cuisine_country": "Mexico",
+            "cuisine_region": "Latin America",
+            "difficulty": "beginner",
+            "total_minutes": 25,
+            "servings": 3,
+            "image_path": "recipes/generated/black-bean-tacos.svg",
+            "required": [
+                71,
+                79,
+                1,
+                2,
+                83,
+                87,
+                18,
+                12,
+                13,
+                60
+            ],
+            "ingredients": [
+                {
+                    "id": 71,
+                    "name": "Black Beans",
+                    "name_bn": "কালো শিম",
+                    "optional": false
+                },
+                {
+                    "id": 79,
+                    "name": "Tortilla",
+                    "name_bn": "টর্টিলা",
+                    "optional": false
+                },
+                {
+                    "id": 1,
+                    "name": "Onion",
+                    "name_bn": "পেঁয়াজ",
+                    "optional": false
+                },
+                {
+                    "id": 2,
+                    "name": "Garlic",
+                    "name_bn": "রসুন",
+                    "optional": false
+                },
+                {
+                    "id": 83,
+                    "name": "Cumin",
+                    "name_bn": "জিরা",
+                    "optional": false
+                },
+                {
+                    "id": 87,
+                    "name": "Paprika",
+                    "name_bn": "পাপ্রিকা",
+                    "optional": false
+                },
+                {
+                    "id": 18,
+                    "name": "Avocado",
+                    "name_bn": "অ্যাভোকাডো",
+                    "optional": false
+                },
+                {
+                    "id": 12,
+                    "name": "Lime",
+                    "name_bn": "কাগজি লেবু",
+                    "optional": false
+                },
+                {
+                    "id": 13,
+                    "name": "Coriander",
+                    "name_bn": "ধনেপাতা",
+                    "optional": false
+                },
+                {
+                    "id": 60,
+                    "name": "Olive Oil",
+                    "name_bn": "অলিভ অয়েল",
+                    "optional": false
+                }
+            ],
+            "steps": [
+                "Fry the onion and garlic in oil for 5 minutes until soft.",
+                "Add the cumin and paprika and cook for 1 minute.",
+                "Tip in the beans with a splash of water and simmer for 8 minutes, crushing some against the pan.",
+                "Warm the tortillas for 30 seconds each in a dry pan.",
+                "Fill with beans, sliced avocado, coriander and a squeeze of lime."
+            ],
+            "written": [
+                "400 g black beans",
+                "6 tortillas",
+                "1 onion, sliced",
+                "2 cloves garlic",
+                "1 tsp cumin",
+                "1 tsp paprika",
+                "1 avocado",
+                "1 lime",
+                "2 tbsp coriander",
+                "2 tbsp olive oil"
+            ]
+        },
+        {
+            "id": 8,
+            "title": "Chicken Tinga Bowls",
+            "description": "Shredded chicken braised in smoky chipotle tomato sauce, piled over rice with avocado.",
+            "cuisine_country": "Mexico",
+            "cuisine_region": "Latin America",
+            "difficulty": "intermediate",
+            "total_minutes": 50,
+            "servings": 4,
+            "image_path": "recipes/generated/chicken-tinga-bowls.svg",
+            "required": [
+                31,
+                3,
+                1,
+                2,
+                87,
+                83,
+                72,
+                52,
+                18,
+                61
+            ],
+            "ingredients": [
+                {
+                    "id": 31,
+                    "name": "Chicken Breast",
+                    "name_bn": "মুরগির বুকের মাংস",
+                    "optional": false
+                },
+                {
+                    "id": 3,
+                    "name": "Tomato",
+                    "name_bn": "টমেটো",
+                    "optional": false
+                },
+                {
+                    "id": 1,
+                    "name": "Onion",
+                    "name_bn": "পেঁয়াজ",
+                    "optional": false
+                },
+                {
+                    "id": 2,
+                    "name": "Garlic",
+                    "name_bn": "রসুন",
+                    "optional": false
+                },
+                {
+                    "id": 87,
+                    "name": "Paprika",
+                    "name_bn": "পাপ্রিকা",
+                    "optional": false
+                },
+                {
+                    "id": 83,
+                    "name": "Cumin",
+                    "name_bn": "জিরা",
+                    "optional": false
+                },
+                {
+                    "id": 72,
+                    "name": "Stock",
+                    "name_bn": "ঝোল",
+                    "optional": false
+                },
+                {
+                    "id": 52,
+                    "name": "Rice",
+                    "name_bn": "চাল",
+                    "optional": false
+                },
+                {
+                    "id": 18,
+                    "name": "Avocado",
+                    "name_bn": "অ্যাভোকাডো",
+                    "optional": false
+                },
+                {
+                    "id": 61,
+                    "name": "Vegetable Oil",
+                    "name_bn": "সয়াবিন তেল",
+                    "optional": false
+                }
+            ],
+            "steps": [
+                "Poach the chicken in the stock for 18 minutes, then shred it with two forks.",
+                "Fry the onions and garlic in oil for 8 minutes until soft and sweet.",
+                "Add the paprika and cumin, cook for 1 minute, then pour in the tomatoes.",
+                "Simmer the sauce for 10 minutes until thickened.",
+                "Return the shredded chicken to the pan and warm through for 5 minutes.",
+                "Serve over rice with sliced avocado."
+            ],
+            "written": [
+                "600 g chicken breast",
+                "400 g chopped tomatoes",
+                "2 onions",
+                "4 cloves garlic",
+                "2 tsp paprika",
+                "1 tsp cumin",
+                "300 ml stock",
+                "250 g rice",
+                "1 avocado",
+                "2 tbsp vegetable oil"
+            ]
+        },
+        {
+            "id": 9,
+            "title": "Thai Green Curry",
+            "description": "Coconut milk, green chilli and basil, with whatever vegetables are in the drawer.",
+            "cuisine_country": "Thailand",
+            "cuisine_region": "Southeast Asia",
+            "difficulty": "intermediate",
+            "total_minutes": 40,
+            "servings": 4,
+            "image_path": "recipes/generated/thai-green-curry.svg",
+            "required": [
+                51,
+                32,
+                10,
+                2,
+                9,
+                22,
+                29,
+                64,
+                14,
+                61
+            ],
+            "ingredients": [
+                {
+                    "id": 51,
+                    "name": "Coconut Milk",
+                    "name_bn": "নারকেলের দুধ",
+                    "optional": false
+                },
+                {
+                    "id": 32,
+                    "name": "Chicken Thigh",
+                    "name_bn": "মুরগির রানের মাংস",
+                    "optional": false
+                },
+                {
+                    "id": 10,
+                    "name": "Green Chilli",
+                    "name_bn": "কাঁচা মরিচ",
+                    "optional": false
+                },
+                {
+                    "id": 2,
+                    "name": "Garlic",
+                    "name_bn": "রসুন",
+                    "optional": false
+                },
+                {
+                    "id": 9,
+                    "name": "Ginger",
+                    "name_bn": "আদা",
+                    "optional": false
+                },
+                {
+                    "id": 22,
+                    "name": "Aubergine",
+                    "name_bn": "বেগুন",
+                    "optional": false
+                },
+                {
+                    "id": 29,
+                    "name": "Peas",
+                    "name_bn": "মটরশুঁটি",
+                    "optional": false
+                },
+                {
+                    "id": 64,
+                    "name": "Soy Sauce",
+                    "name_bn": "সয়া সস",
+                    "optional": false
+                },
+                {
+                    "id": 14,
+                    "name": "Basil",
+                    "name_bn": "বেসিল পাতা",
+                    "optional": false
+                },
+                {
+                    "id": 61,
+                    "name": "Vegetable Oil",
+                    "name_bn": "সয়াবিন তেল",
+                    "optional": false
+                }
+            ],
+            "steps": [
+                "Blitz the chillies, garlic and ginger into a rough paste.",
+                "Fry the paste in oil for 3 minutes until fragrant.",
+                "Add the chicken and brown for 5 minutes.",
+                "Pour in the coconut milk and simmer for 12 minutes.",
+                "Add the aubergine and peas and cook for 6 minutes until tender.",
+                "Season with soy sauce and stir through the basil off the heat."
+            ],
+            "written": [
+                "400 ml coconut milk",
+                "400 g chicken thigh",
+                "2 green chillies",
+                "3 cloves garlic",
+                "1 tbsp ginger",
+                "1 aubergine, diced",
+                "100 g peas",
+                "2 tbsp soy sauce",
+                "10 g basil",
+                "2 tbsp vegetable oil"
+            ]
+        },
+        {
+            "id": 10,
+            "title": "Greek Salad with Warm Pita",
+            "description": "Cucumber, tomato and oregano, dressed in nothing but good olive oil and lemon.",
+            "cuisine_country": "Greece",
+            "cuisine_region": "Europe",
+            "difficulty": "beginner",
+            "total_minutes": 20,
+            "servings": 2,
+            "image_path": "recipes/generated/greek-salad-with-warm-pita.svg",
+            "required": [
+                3,
+                17,
+                1,
+                47,
+                60,
+                11,
+                91,
+                55
+            ],
+            "ingredients": [
+                {
+                    "id": 3,
+                    "name": "Tomato",
+                    "name_bn": "টমেটো",
+                    "optional": false
+                },
+                {
+                    "id": 17,
+                    "name": "Cucumber",
+                    "name_bn": "শসা",
+                    "optional": false
+                },
+                {
+                    "id": 1,
+                    "name": "Onion",
+                    "name_bn": "পেঁয়াজ",
+                    "optional": false
+                },
+                {
+                    "id": 47,
+                    "name": "Cheddar Cheese",
+                    "name_bn": "চেডার পনির",
+                    "optional": false
+                },
+                {
+                    "id": 60,
+                    "name": "Olive Oil",
+                    "name_bn": "অলিভ অয়েল",
+                    "optional": false
+                },
+                {
+                    "id": 11,
+                    "name": "Lemon",
+                    "name_bn": "লেবু",
+                    "optional": false
+                },
+                {
+                    "id": 91,
+                    "name": "Oregano",
+                    "name_bn": "অরিগ্যানো",
+                    "optional": false
+                },
+                {
+                    "id": 55,
+                    "name": "Bread",
+                    "name_bn": "পাউরুটি",
+                    "optional": false
+                }
+            ],
+            "steps": [
+                "Chop the tomatoes, cucumber and onion into large, confident chunks.",
+                "Whisk the olive oil with the juice of the lemon and the oregano.",
+                "Toss everything together and let it sit for 10 minutes so the juices mingle.",
+                "Warm the bread for 3 minutes and serve alongside."
+            ],
+            "written": [
+                "3 tomatoes",
+                "1 cucumber",
+                "1 onion",
+                "100 g cheddar cheese",
+                "3 tbsp olive oil",
+                "1 lemon",
+                "1 tsp oregano",
+                "2 bread rolls"
+            ]
+        },
+        {
+            "id": 11,
+            "title": "Shakshuka",
+            "description": "Eggs poached in a spiced pepper and tomato sauce, straight from pan to table.",
+            "cuisine_country": "Israel",
+            "cuisine_region": "Middle East",
+            "difficulty": "beginner",
+            "total_minutes": 30,
+            "servings": 2,
+            "image_path": "recipes/generated/shakshuka.svg",
+            "required": [
+                43,
+                3,
+                6,
+                1,
+                2,
+                83,
+                87,
+                60,
+                15
+            ],
+            "ingredients": [
+                {
+                    "id": 43,
+                    "name": "Egg",
+                    "name_bn": "ডিম",
+                    "optional": false
+                },
+                {
+                    "id": 3,
+                    "name": "Tomato",
+                    "name_bn": "টমেটো",
+                    "optional": false
+                },
+                {
+                    "id": 6,
+                    "name": "Bell Pepper",
+                    "name_bn": "ক্যাপসিকাম",
+                    "optional": false
+                },
+                {
+                    "id": 1,
+                    "name": "Onion",
+                    "name_bn": "পেঁয়াজ",
+                    "optional": false
+                },
+                {
+                    "id": 2,
+                    "name": "Garlic",
+                    "name_bn": "রসুন",
+                    "optional": false
+                },
+                {
+                    "id": 83,
+                    "name": "Cumin",
+                    "name_bn": "জিরা",
+                    "optional": false
+                },
+                {
+                    "id": 87,
+                    "name": "Paprika",
+                    "name_bn": "পাপ্রিকা",
+                    "optional": false
+                },
+                {
+                    "id": 60,
+                    "name": "Olive Oil",
+                    "name_bn": "অলিভ অয়েল",
+                    "optional": false
+                },
+                {
+                    "id": 15,
+                    "name": "Parsley",
+                    "name_bn": "পার্সলে",
+                    "optional": false
+                }
+            ],
+            "steps": [
+                "Fry the onion and peppers in olive oil for 8 minutes until soft.",
+                "Add the garlic, cumin and paprika and cook for 1 minute.",
+                "Pour in the tomatoes and simmer for 8 minutes until thick.",
+                "Make four wells, crack in the eggs, cover and cook for 6 minutes until the whites set.",
+                "Scatter with parsley and serve from the pan."
+            ],
+            "written": [
+                "4 eggs",
+                "400 g chopped tomatoes",
+                "2 bell peppers",
+                "1 onion",
+                "3 cloves garlic",
+                "1 tsp cumin",
+                "1 tsp paprika",
+                "2 tbsp olive oil",
+                "2 tbsp parsley"
+            ]
+        },
+        {
+            "id": 12,
+            "title": "Moroccan Chickpea Tagine",
+            "description": "Sweet potato, chickpeas and cinnamon, slow-cooked until everything collapses into the sauce.",
+            "cuisine_country": "Morocco",
+            "cuisine_region": "Africa",
+            "difficulty": "beginner",
+            "total_minutes": 50,
+            "servings": 4,
+            "image_path": "recipes/generated/moroccan-chickpea-tagine.svg",
+            "required": [
+                69,
+                24,
+                1,
+                2,
+                3,
+                90,
+                83,
+                72,
+                60,
+                13
+            ],
+            "ingredients": [
+                {
+                    "id": 69,
+                    "name": "Chickpeas",
+                    "name_bn": "ছোলা",
+                    "optional": false
+                },
+                {
+                    "id": 24,
+                    "name": "Sweet Potato",
+                    "name_bn": "মিষ্টি আলু",
+                    "optional": false
+                },
+                {
+                    "id": 1,
+                    "name": "Onion",
+                    "name_bn": "পেঁয়াজ",
+                    "optional": false
+                },
+                {
+                    "id": 2,
+                    "name": "Garlic",
+                    "name_bn": "রসুন",
+                    "optional": false
+                },
+                {
+                    "id": 3,
+                    "name": "Tomato",
+                    "name_bn": "টমেটো",
+                    "optional": false
+                },
+                {
+                    "id": 90,
+                    "name": "Cinnamon",
+                    "name_bn": "দারুচিনি",
+                    "optional": false
+                },
+                {
+                    "id": 83,
+                    "name": "Cumin",
+                    "name_bn": "জিরা",
+                    "optional": false
+                },
+                {
+                    "id": 72,
+                    "name": "Stock",
+                    "name_bn": "ঝোল",
+                    "optional": false
+                },
+                {
+                    "id": 60,
+                    "name": "Olive Oil",
+                    "name_bn": "অলিভ অয়েল",
+                    "optional": false
+                },
+                {
+                    "id": 13,
+                    "name": "Coriander",
+                    "name_bn": "ধনেপাতা",
+                    "optional": false
+                }
+            ],
+            "steps": [
+                "Fry the onion in olive oil for 6 minutes until translucent.",
+                "Add the garlic, cumin and cinnamon and cook for 1 minute.",
+                "Add the sweet potato, chickpeas, tomatoes and stock.",
+                "Cover and simmer for 25 minutes until the sweet potato is tender.",
+                "Uncover and reduce for 5 minutes, then finish with coriander."
+            ],
+            "written": [
+                "400 g chickpeas",
+                "2 sweet potatoes",
+                "1 onion",
+                "3 cloves garlic",
+                "400 g chopped tomatoes",
+                "1 tsp cinnamon",
+                "2 tsp cumin",
+                "400 ml stock",
+                "2 tbsp olive oil",
+                "2 tbsp coriander"
+            ]
+        },
+        {
+            "id": 13,
+            "title": "Full English Breakfast Hash",
+            "description": "Everything from the fry-up in one pan, with crisp potatoes underneath.",
+            "cuisine_country": "United Kingdom",
+            "cuisine_region": "Europe",
+            "difficulty": "beginner",
+            "total_minutes": 35,
+            "servings": 2,
+            "image_path": "recipes/generated/full-english-breakfast-hash.svg",
+            "required": [
+                4,
+                36,
+                43,
+                8,
+                3,
+                61,
+                59
+            ],
+            "ingredients": [
+                {
+                    "id": 4,
+                    "name": "Potato",
+                    "name_bn": "আলু",
+                    "optional": false
+                },
+                {
+                    "id": 36,
+                    "name": "Bacon",
+                    "name_bn": "বেকন",
+                    "optional": false
+                },
+                {
+                    "id": 43,
+                    "name": "Egg",
+                    "name_bn": "ডিম",
+                    "optional": false
+                },
+                {
+                    "id": 8,
+                    "name": "Mushroom",
+                    "name_bn": "মাশরুম",
+                    "optional": false
+                },
+                {
+                    "id": 3,
+                    "name": "Tomato",
+                    "name_bn": "টমেটো",
+                    "optional": false
+                },
+                {
+                    "id": 61,
+                    "name": "Vegetable Oil",
+                    "name_bn": "সয়াবিন তেল",
+                    "optional": false
+                },
+                {
+                    "id": 59,
+                    "name": "Black Pepper",
+                    "name_bn": "গোলমরিচ",
+                    "optional": false
+                }
+            ],
+            "steps": [
+                "Parboil the diced potatoes for 8 minutes, then drain and dry them well.",
+                "Fry the bacon for 4 minutes until crisp, then set it aside.",
+                "Fry the potatoes in the bacon fat for 10 minutes without stirring too often.",
+                "Add the mushrooms and tomatoes and cook for 5 minutes.",
+                "Crack in the eggs, cover, and cook for 3 minutes until just set."
+            ],
+            "written": [
+                "400 g potatoes",
+                "4 rashers bacon",
+                "2 eggs",
+                "200 g mushrooms",
+                "2 tomatoes",
+                "2 tbsp vegetable oil",
+                "1 tsp black pepper"
+            ]
+        },
+        {
+            "id": 14,
+            "title": "Beef Bulgogi Rice Bowl",
+            "description": "Sweet-salty marinated beef seared hard and fast, over rice with pickled cucumber.",
+            "cuisine_country": "South Korea",
+            "cuisine_region": "East Asia",
+            "difficulty": "intermediate",
+            "total_minutes": 42,
+            "servings": 3,
+            "image_path": "recipes/generated/beef-bulgogi-rice-bowl.svg",
+            "required": [
+                33,
+                64,
+                56,
+                9,
+                2,
+                16,
+                52,
+                17,
+                61
+            ],
+            "ingredients": [
+                {
+                    "id": 33,
+                    "name": "Beef Mince",
+                    "name_bn": "গরুর কিমা",
+                    "optional": false
+                },
+                {
+                    "id": 64,
+                    "name": "Soy Sauce",
+                    "name_bn": "সয়া সস",
+                    "optional": false
+                },
+                {
+                    "id": 56,
+                    "name": "Sugar",
+                    "name_bn": "চিনি",
+                    "optional": false
+                },
+                {
+                    "id": 9,
+                    "name": "Ginger",
+                    "name_bn": "আদা",
+                    "optional": false
+                },
+                {
+                    "id": 2,
+                    "name": "Garlic",
+                    "name_bn": "রসুন",
+                    "optional": false
+                },
+                {
+                    "id": 16,
+                    "name": "Spring Onion",
+                    "name_bn": "পেঁয়াজ পাতা",
+                    "optional": false
+                },
+                {
+                    "id": 52,
+                    "name": "Rice",
+                    "name_bn": "চাল",
+                    "optional": false
+                },
+                {
+                    "id": 17,
+                    "name": "Cucumber",
+                    "name_bn": "শসা",
+                    "optional": false
+                },
+                {
+                    "id": 61,
+                    "name": "Vegetable Oil",
+                    "name_bn": "সয়াবিন তেল",
+                    "optional": false
+                }
+            ],
+            "steps": [
+                "Mix the soy sauce, sugar, grated ginger and garlic into a marinade.",
+                "Toss the beef through it and leave for 20 minutes.",
+                "Cook the rice for 12 minutes and leave it covered.",
+                "Sear the beef in a very hot pan for 5 minutes without crowding it.",
+                "Serve over rice with sliced cucumber and spring onion."
+            ],
+            "written": [
+                "500 g beef mince",
+                "4 tbsp soy sauce",
+                "2 tbsp sugar",
+                "1 tbsp ginger",
+                "4 cloves garlic",
+                "2 spring onions",
+                "250 g rice",
+                "1 cucumber",
+                "2 tbsp vegetable oil"
+            ]
+        },
+        {
+            "id": 15,
+            "title": "Vietnamese Chicken Pho",
+            "description": "A long, patient broth with charred ginger and onion — the part you cannot rush.",
+            "cuisine_country": "Vietnam",
+            "cuisine_region": "Southeast Asia",
+            "difficulty": "advanced",
+            "total_minutes": 110,
+            "servings": 4,
+            "image_path": "recipes/generated/vietnamese-chicken-pho.svg",
+            "required": [
+                32,
+                1,
+                9,
+                94,
+                90,
+                64,
+                78,
+                16,
+                13,
+                12
+            ],
+            "ingredients": [
+                {
+                    "id": 32,
+                    "name": "Chicken Thigh",
+                    "name_bn": "মুরগির রানের মাংস",
+                    "optional": false
+                },
+                {
+                    "id": 1,
+                    "name": "Onion",
+                    "name_bn": "পেঁয়াজ",
+                    "optional": false
+                },
+                {
+                    "id": 9,
+                    "name": "Ginger",
+                    "name_bn": "আদা",
+                    "optional": false
+                },
+                {
+                    "id": 94,
+                    "name": "Cardamom",
+                    "name_bn": "এলাচ",
+                    "optional": false
+                },
+                {
+                    "id": 90,
+                    "name": "Cinnamon",
+                    "name_bn": "দারুচিনি",
+                    "optional": false
+                },
+                {
+                    "id": 64,
+                    "name": "Soy Sauce",
+                    "name_bn": "সয়া সস",
+                    "optional": false
+                },
+                {
+                    "id": 78,
+                    "name": "Noodles",
+                    "name_bn": "নুডলস",
+                    "optional": false
+                },
+                {
+                    "id": 16,
+                    "name": "Spring Onion",
+                    "name_bn": "পেঁয়াজ পাতা",
+                    "optional": false
+                },
+                {
+                    "id": 13,
+                    "name": "Coriander",
+                    "name_bn": "ধনেপাতা",
+                    "optional": false
+                },
+                {
+                    "id": 12,
+                    "name": "Lime",
+                    "name_bn": "কাগজি লেবু",
+                    "optional": false
+                }
+            ],
+            "steps": [
+                "Char the halved onions and ginger under a hot grill for 8 minutes until blackened at the edges.",
+                "Add them to a pot with the chicken, cardamom, cinnamon and 3 litres of water.",
+                "Simmer gently for 75 minutes, skimming the surface every so often.",
+                "Lift out the chicken, shred the meat, and season the broth with soy sauce.",
+                "Soak the noodles for 5 minutes in hot water, then divide between bowls.",
+                "Ladle over the broth and top with chicken, herbs and a wedge of lime."
+            ],
+            "written": [
+                "1 kg chicken thigh",
+                "2 onions",
+                "50 g ginger",
+                "3 cardamom pods",
+                "1 cinnamon stick",
+                "2 tbsp soy sauce",
+                "300 g noodles",
+                "2 spring onions",
+                "20 g coriander",
+                "2 limes"
+            ]
+        },
+        {
+            "id": 16,
+            "title": "Paneer-Style Tofu Tikka",
+            "description": "Firm tofu marinated in spiced yoghurt-style dressing and roasted until the edges catch.",
+            "cuisine_country": "India",
+            "cuisine_region": "South Asia",
+            "difficulty": "beginner",
+            "total_minutes": 50,
+            "servings": 3,
+            "image_path": "recipes/generated/paneer-style-tofu-tikka.svg",
+            "required": [
+                73,
+                46,
+                88,
+                85,
+                86,
+                9,
+                2,
+                6,
+                1,
+                61,
+                11
+            ],
+            "ingredients": [
+                {
+                    "id": 73,
+                    "name": "Tofu",
+                    "name_bn": "টোফু",
+                    "optional": false
+                },
+                {
+                    "id": 46,
+                    "name": "Yoghurt",
+                    "name_bn": "দই",
+                    "optional": false
+                },
+                {
+                    "id": 88,
+                    "name": "Garam Masala",
+                    "name_bn": "গরম মসলা",
+                    "optional": false
+                },
+                {
+                    "id": 85,
+                    "name": "Turmeric",
+                    "name_bn": "হলুদ",
+                    "optional": false
+                },
+                {
+                    "id": 86,
+                    "name": "Chilli Powder",
+                    "name_bn": "মরিচ গুঁড়া",
+                    "optional": false
+                },
+                {
+                    "id": 9,
+                    "name": "Ginger",
+                    "name_bn": "আদা",
+                    "optional": false
+                },
+                {
+                    "id": 2,
+                    "name": "Garlic",
+                    "name_bn": "রসুন",
+                    "optional": false
+                },
+                {
+                    "id": 6,
+                    "name": "Bell Pepper",
+                    "name_bn": "ক্যাপসিকাম",
+                    "optional": false
+                },
+                {
+                    "id": 1,
+                    "name": "Onion",
+                    "name_bn": "পেঁয়াজ",
+                    "optional": false
+                },
+                {
+                    "id": 61,
+                    "name": "Vegetable Oil",
+                    "name_bn": "সয়াবিন তেল",
+                    "optional": false
+                },
+                {
+                    "id": 11,
+                    "name": "Lemon",
+                    "name_bn": "লেবু",
+                    "optional": false
+                }
+            ],
+            "steps": [
+                "Whisk the yoghurt with the spices, ginger, garlic and lemon juice.",
+                "Cube the tofu and peppers, coat them in the marinade and rest for 25 minutes.",
+                "Heat the oven to 220C for 10 minutes.",
+                "Spread everything on a tray and roast for 18 minutes, turning once.",
+                "Finish under the grill for 2 minutes to catch the edges."
+            ],
+            "written": [
+                "400 g tofu",
+                "200 g yoghurt",
+                "2 tsp garam masala",
+                "1 tsp turmeric",
+                "1 tsp chilli powder",
+                "1 tbsp ginger",
+                "3 cloves garlic",
+                "2 bell peppers",
+                "1 onion",
+                "2 tbsp vegetable oil",
+                "1 lemon"
+            ]
+        },
+        {
+            "id": 17,
+            "title": "Peruvian Lomo Saltado",
+            "description": "Peru by way of a Chinese wok: beef, onions and tomatoes stir-fried with soy, served with chips and rice.",
+            "cuisine_country": "Peru",
+            "cuisine_region": "Latin America",
+            "difficulty": "intermediate",
+            "total_minutes": 40,
+            "servings": 3,
+            "image_path": "recipes/generated/peruvian-lomo-saltado.svg",
+            "required": [
+                33,
+                1,
+                3,
+                4,
+                64,
+                65,
+                2,
+                52,
+                61,
+                13
+            ],
+            "ingredients": [
+                {
+                    "id": 33,
+                    "name": "Beef Mince",
+                    "name_bn": "গরুর কিমা",
+                    "optional": false
+                },
+                {
+                    "id": 1,
+                    "name": "Onion",
+                    "name_bn": "পেঁয়াজ",
+                    "optional": false
+                },
+                {
+                    "id": 3,
+                    "name": "Tomato",
+                    "name_bn": "টমেটো",
+                    "optional": false
+                },
+                {
+                    "id": 4,
+                    "name": "Potato",
+                    "name_bn": "আলু",
+                    "optional": false
+                },
+                {
+                    "id": 64,
+                    "name": "Soy Sauce",
+                    "name_bn": "সয়া সস",
+                    "optional": false
+                },
+                {
+                    "id": 65,
+                    "name": "Vinegar",
+                    "name_bn": "ভিনেগার",
+                    "optional": false
+                },
+                {
+                    "id": 2,
+                    "name": "Garlic",
+                    "name_bn": "রসুন",
+                    "optional": false
+                },
+                {
+                    "id": 52,
+                    "name": "Rice",
+                    "name_bn": "চাল",
+                    "optional": false
+                },
+                {
+                    "id": 61,
+                    "name": "Vegetable Oil",
+                    "name_bn": "সয়াবিন তেল",
+                    "optional": false
+                },
+                {
+                    "id": 13,
+                    "name": "Coriander",
+                    "name_bn": "ধনেপাতা",
+                    "optional": false
+                }
+            ],
+            "steps": [
+                "Cook the rice for 12 minutes and keep it covered.",
+                "Fry the potato chips in oil for 8 minutes until golden, then drain them.",
+                "Get a wok very hot and sear the beef for 3 minutes.",
+                "Add the onions and garlic and stir-fry for 3 minutes.",
+                "Add the tomatoes, soy sauce and vinegar and toss for 2 minutes.",
+                "Fold the chips through, scatter with coriander and serve with rice."
+            ],
+            "written": [
+                "500 g beef mince",
+                "2 onions",
+                "3 tomatoes",
+                "400 g potatoes",
+                "3 tbsp soy sauce",
+                "2 tbsp vinegar",
+                "3 cloves garlic",
+                "250 g rice",
+                "3 tbsp vegetable oil",
+                "2 tbsp coriander"
+            ]
+        },
+        {
+            "id": 18,
+            "title": "Chocolate Olive Oil Cake",
+            "description": "Dark, damp and dairy-free — olive oil does the work butter usually does.",
+            "cuisine_country": "Spain",
+            "cuisine_region": "Europe",
+            "difficulty": "beginner",
+            "total_minutes": 55,
+            "servings": 8,
+            "image_path": "recipes/generated/chocolate-olive-oil-cake.svg",
+            "required": [
+                54,
+                56,
+                60,
+                96,
+                43,
+                81,
+                97
+            ],
+            "ingredients": [
+                {
+                    "id": 54,
+                    "name": "Flour",
+                    "name_bn": "ময়দা",
+                    "optional": false
+                },
+                {
+                    "id": 56,
+                    "name": "Sugar",
+                    "name_bn": "চিনি",
+                    "optional": false
+                },
+                {
+                    "id": 60,
+                    "name": "Olive Oil",
+                    "name_bn": "অলিভ অয়েল",
+                    "optional": false
+                },
+                {
+                    "id": 96,
+                    "name": "Chocolate",
+                    "name_bn": "চকলেট",
+                    "optional": false
+                },
+                {
+                    "id": 43,
+                    "name": "Egg",
+                    "name_bn": "ডিম",
+                    "optional": false
+                },
+                {
+                    "id": 81,
+                    "name": "Baking Powder",
+                    "name_bn": "বেকিং পাউডার",
+                    "optional": false
+                },
+                {
+                    "id": 97,
+                    "name": "Vanilla",
+                    "name_bn": "ভ্যানিলা",
+                    "optional": false
+                }
+            ],
+            "steps": [
+                "Heat the oven to 170C and line a tin.",
+                "Melt the chocolate with the olive oil and leave to cool for 5 minutes.",
+                "Whisk the eggs with the sugar and vanilla for 4 minutes until pale and thick.",
+                "Fold in the chocolate mixture, then the flour, baking powder and salt.",
+                "Bake for 35 minutes until a skewer comes out with a few damp crumbs.",
+                "Cool in the tin for 20 minutes before turning out."
+            ],
+            "written": [
+                "200 g flour",
+                "200 g sugar",
+                "150 ml olive oil",
+                "100 g chocolate",
+                "3 eggs",
+                "1 tsp baking powder",
+                "1 tsp vanilla",
+                "1 pinch salt"
+            ]
+        },
+        {
+            "id": 19,
+            "title": "Bhuna Khichuri",
+            "description": "Rice and lentils fried with whole spices before the water goes in, so it comes out separate and nutty rather than soupy. The thing you cook when it rains.",
+            "cuisine_country": "Bangladesh",
+            "cuisine_region": "South Asia",
+            "difficulty": "beginner",
+            "total_minutes": 45,
+            "servings": 4,
+            "image_path": "recipes/generated/bhuna-khichuri.svg",
+            "required": [
+                52,
+                70,
+                1,
+                9,
+                2,
+                85,
+                83,
+                93,
+                94,
+                90,
+                61
+            ],
+            "ingredients": [
+                {
+                    "id": 52,
+                    "name": "Rice",
+                    "name_bn": "চাল",
+                    "optional": false
+                },
+                {
+                    "id": 70,
+                    "name": "Lentils",
+                    "name_bn": "মসুর ডাল",
+                    "optional": false
+                },
+                {
+                    "id": 1,
+                    "name": "Onion",
+                    "name_bn": "পেঁয়াজ",
+                    "optional": false
+                },
+                {
+                    "id": 9,
+                    "name": "Ginger",
+                    "name_bn": "আদা",
+                    "optional": false
+                },
+                {
+                    "id": 2,
+                    "name": "Garlic",
+                    "name_bn": "রসুন",
+                    "optional": false
+                },
+                {
+                    "id": 85,
+                    "name": "Turmeric",
+                    "name_bn": "হলুদ",
+                    "optional": false
+                },
+                {
+                    "id": 83,
+                    "name": "Cumin",
+                    "name_bn": "জিরা",
+                    "optional": false
+                },
+                {
+                    "id": 93,
+                    "name": "Bay Leaf",
+                    "name_bn": "তেজপাতা",
+                    "optional": false
+                },
+                {
+                    "id": 94,
+                    "name": "Cardamom",
+                    "name_bn": "এলাচ",
+                    "optional": false
+                },
+                {
+                    "id": 90,
+                    "name": "Cinnamon",
+                    "name_bn": "দারুচিনি",
+                    "optional": false
+                },
+                {
+                    "id": 61,
+                    "name": "Vegetable Oil",
+                    "name_bn": "সয়াবিন তেল",
+                    "optional": false
+                }
+            ],
+            "steps": [
+                "Rinse the rice and lentils together until the water runs clear, then drain well.",
+                "Heat the oil and fry the bay leaves, cardamom and cinnamon for 1 minute until fragrant.",
+                "Add the onions and cook for 8 minutes until golden, then stir in the ginger and garlic.",
+                "Add the turmeric, cumin and salt, then the drained rice and lentils, and fry for 4 minutes.",
+                "Pour in 5 cups of hot water, bring to the boil, then cover and cook on low for 20 minutes.",
+                "Rest off the heat for 5 minutes before lifting the lid, then fold through gently."
+            ],
+            "written": [
+                "2 cups rice",
+                "1 cup lentils",
+                "2 onions, sliced",
+                "1 tbsp ginger",
+                "4 cloves garlic",
+                "1 tsp turmeric",
+                "1 tsp cumin",
+                "2 bay leaves",
+                "4 cardamom pods",
+                "1 stick cinnamon",
+                "4 tbsp vegetable oil",
+                "1.5 tsp salt"
+            ]
+        },
+        {
+            "id": 20,
+            "title": "Aloo Bhorta",
+            "description": "Mashed potato with raw mustard oil, green chilli and onion. Four ingredients, and the one dish every Bangladeshi kitchen can produce from an empty fridge.",
+            "cuisine_country": "Bangladesh",
+            "cuisine_region": "South Asia",
+            "difficulty": "beginner",
+            "total_minutes": 25,
+            "servings": 4,
+            "image_path": "recipes/generated/aloo-bhorta.svg",
+            "required": [
+                4,
+                1,
+                10,
+                62,
+                13
+            ],
+            "ingredients": [
+                {
+                    "id": 4,
+                    "name": "Potato",
+                    "name_bn": "আলু",
+                    "optional": false
+                },
+                {
+                    "id": 1,
+                    "name": "Onion",
+                    "name_bn": "পেঁয়াজ",
+                    "optional": false
+                },
+                {
+                    "id": 10,
+                    "name": "Green Chilli",
+                    "name_bn": "কাঁচা মরিচ",
+                    "optional": false
+                },
+                {
+                    "id": 62,
+                    "name": "Mustard Oil",
+                    "name_bn": "সরিষার তেল",
+                    "optional": false
+                },
+                {
+                    "id": 13,
+                    "name": "Coriander",
+                    "name_bn": "ধনেপাতা",
+                    "optional": false
+                }
+            ],
+            "steps": [
+                "Boil the potatoes whole for 20 minutes until a knife slides through, then peel while warm.",
+                "Mash the potato roughly — it should keep some texture, not become a puree.",
+                "Add the onion, green chilli and salt and work them through with your fingers.",
+                "Pour over the raw mustard oil and mix until it smells sharp, then fold in the coriander."
+            ],
+            "written": [
+                "500 g potato",
+                "1 onion, finely chopped",
+                "3 green chillies, chopped",
+                "2 tbsp mustard oil",
+                "1 tsp salt",
+                "2 tbsp coriander, chopped"
+            ]
+        },
+        {
+            "id": 21,
+            "title": "Begun Bhaja",
+            "description": "Thick rounds of aubergine turmeric-rubbed and shallow fried until the edges go dark. Eaten with rice and dal, or straight off the plate before it reaches the table.",
+            "cuisine_country": "Bangladesh",
+            "cuisine_region": "South Asia",
+            "difficulty": "beginner",
+            "total_minutes": 17,
+            "servings": 2,
+            "image_path": "recipes/generated/begun-bhaja.svg",
+            "required": [
+                22,
+                85,
+                86,
+                62
+            ],
+            "ingredients": [
+                {
+                    "id": 22,
+                    "name": "Aubergine",
+                    "name_bn": "বেগুন",
+                    "optional": false
+                },
+                {
+                    "id": 85,
+                    "name": "Turmeric",
+                    "name_bn": "হলুদ",
+                    "optional": false
+                },
+                {
+                    "id": 86,
+                    "name": "Chilli Powder",
+                    "name_bn": "মরিচ গুঁড়া",
+                    "optional": false
+                },
+                {
+                    "id": 62,
+                    "name": "Mustard Oil",
+                    "name_bn": "সরিষার তেল",
+                    "optional": false
+                }
+            ],
+            "steps": [
+                "Rub the aubergine rounds on both sides with the turmeric, chilli powder and salt.",
+                "Rest them for 10 minutes so the salt draws out some water.",
+                "Heat the mustard oil until it just smokes, then lower the heat.",
+                "Fry the rounds for 3 minutes a side until deep brown at the edges and soft through.",
+                "Drain on paper and eat hot."
+            ],
+            "written": [
+                "1 aubergine, cut into thick rounds",
+                "1 tsp turmeric",
+                "1 tsp chilli powder",
+                "1 tsp salt",
+                "4 tbsp mustard oil"
+            ]
+        },
+        {
+            "id": 22,
+            "title": "Dim Bhuna",
+            "description": "Boiled eggs fried until blistered, then folded into a thick onion masala. Fifteen minutes of actual work and it eats like something that took an hour.",
+            "cuisine_country": "Bangladesh",
+            "cuisine_region": "South Asia",
+            "difficulty": "beginner",
+            "total_minutes": 35,
+            "servings": 4,
+            "image_path": "recipes/generated/dim-bhuna.svg",
+            "required": [
+                43,
+                1,
+                3,
+                2,
+                9,
+                85,
+                86,
+                83,
+                61
+            ],
+            "ingredients": [
+                {
+                    "id": 43,
+                    "name": "Egg",
+                    "name_bn": "ডিম",
+                    "optional": false
+                },
+                {
+                    "id": 1,
+                    "name": "Onion",
+                    "name_bn": "পেঁয়াজ",
+                    "optional": false
+                },
+                {
+                    "id": 3,
+                    "name": "Tomato",
+                    "name_bn": "টমেটো",
+                    "optional": false
+                },
+                {
+                    "id": 2,
+                    "name": "Garlic",
+                    "name_bn": "রসুন",
+                    "optional": false
+                },
+                {
+                    "id": 9,
+                    "name": "Ginger",
+                    "name_bn": "আদা",
+                    "optional": false
+                },
+                {
+                    "id": 85,
+                    "name": "Turmeric",
+                    "name_bn": "হলুদ",
+                    "optional": false
+                },
+                {
+                    "id": 86,
+                    "name": "Chilli Powder",
+                    "name_bn": "মরিচ গুঁড়া",
+                    "optional": false
+                },
+                {
+                    "id": 83,
+                    "name": "Cumin",
+                    "name_bn": "জিরা",
+                    "optional": false
+                },
+                {
+                    "id": 61,
+                    "name": "Vegetable Oil",
+                    "name_bn": "সয়াবিন তেল",
+                    "optional": false
+                }
+            ],
+            "steps": [
+                "Boil the eggs for 9 minutes, cool them under the tap and peel.",
+                "Prick each egg a few times, rub with a little turmeric and salt, and fry in hot oil until blistered. Set aside.",
+                "In the same oil cook the onions for 12 minutes until they collapse and turn brown.",
+                "Add the garlic and ginger, then the turmeric, chilli powder and cumin with a splash of water.",
+                "Stir in the tomatoes and cook for 6 minutes until the oil separates from the masala.",
+                "Return the eggs, coat them, add a little water and simmer for 5 minutes."
+            ],
+            "written": [
+                "6 eggs",
+                "3 onions, thinly sliced",
+                "2 tomatoes, chopped",
+                "4 cloves garlic",
+                "1 tbsp ginger",
+                "1 tsp turmeric",
+                "1.5 tsp chilli powder",
+                "1 tsp cumin",
+                "4 tbsp vegetable oil",
+                "1 tsp salt"
+            ]
+        },
+        {
+            "id": 23,
+            "title": "Murgir Jhol",
+            "description": "The everyday chicken curry: thin golden broth, potatoes cooked in it until they start to fall apart, nothing fancy. What gets made when nobody has decided what to make.",
+            "cuisine_country": "Bangladesh",
+            "cuisine_region": "South Asia",
+            "difficulty": "beginner",
+            "total_minutes": 50,
+            "servings": 4,
+            "image_path": "recipes/generated/murgir-jhol.svg",
+            "required": [
+                32,
+                4,
+                1,
+                2,
+                9,
+                85,
+                86,
+                83,
+                93,
+                61
+            ],
+            "ingredients": [
+                {
+                    "id": 32,
+                    "name": "Chicken Thigh",
+                    "name_bn": "মুরগির রানের মাংস",
+                    "optional": false
+                },
+                {
+                    "id": 4,
+                    "name": "Potato",
+                    "name_bn": "আলু",
+                    "optional": false
+                },
+                {
+                    "id": 1,
+                    "name": "Onion",
+                    "name_bn": "পেঁয়াজ",
+                    "optional": false
+                },
+                {
+                    "id": 2,
+                    "name": "Garlic",
+                    "name_bn": "রসুন",
+                    "optional": false
+                },
+                {
+                    "id": 9,
+                    "name": "Ginger",
+                    "name_bn": "আদা",
+                    "optional": false
+                },
+                {
+                    "id": 85,
+                    "name": "Turmeric",
+                    "name_bn": "হলুদ",
+                    "optional": false
+                },
+                {
+                    "id": 86,
+                    "name": "Chilli Powder",
+                    "name_bn": "মরিচ গুঁড়া",
+                    "optional": false
+                },
+                {
+                    "id": 83,
+                    "name": "Cumin",
+                    "name_bn": "জিরা",
+                    "optional": false
+                },
+                {
+                    "id": 93,
+                    "name": "Bay Leaf",
+                    "name_bn": "তেজপাতা",
+                    "optional": false
+                },
+                {
+                    "id": 61,
+                    "name": "Vegetable Oil",
+                    "name_bn": "সয়াবিন তেল",
+                    "optional": false
+                }
+            ],
+            "steps": [
+                "Heat the oil and fry the bay leaves, then the onions for 8 minutes until soft and golden.",
+                "Add the garlic and ginger and fry for 2 minutes.",
+                "Add the turmeric, chilli powder, cumin and salt with a splash of water and cook the spices for 3 minutes.",
+                "Add the chicken and turn it in the masala until coated and sealed, about 5 minutes.",
+                "Add the potatoes and 3 cups of hot water, bring to the boil, then simmer uncovered for 25 minutes.",
+                "The broth should be thin and the potatoes soft at the edges — do not reduce it to a paste."
+            ],
+            "written": [
+                "700 g chicken thigh",
+                "3 potatoes, halved",
+                "2 onions, sliced",
+                "4 cloves garlic",
+                "1 tbsp ginger",
+                "1 tsp turmeric",
+                "1 tsp chilli powder",
+                "1 tsp cumin",
+                "2 bay leaves",
+                "3 tbsp vegetable oil",
+                "1 tsp salt"
+            ]
+        },
+        {
+            "id": 24,
+            "title": "Shorshe Ilish",
+            "description": "Hilsa steamed in mustard paste and green chilli. The national dish, and deliberately under-spiced — everything else here is there to stay out of the fish's way.",
+            "cuisine_country": "Bangladesh",
+            "cuisine_region": "South Asia",
+            "difficulty": "intermediate",
+            "total_minutes": 35,
+            "servings": 4,
+            "image_path": "recipes/generated/shorshe-ilish.svg",
+            "required": [
+                41,
+                63,
+                10,
+                85,
+                62
+            ],
+            "ingredients": [
+                {
+                    "id": 41,
+                    "name": "Hilsa",
+                    "name_bn": "ইলিশ মাছ",
+                    "optional": false
+                },
+                {
+                    "id": 63,
+                    "name": "Mustard Paste",
+                    "name_bn": "সরিষা বাটা",
+                    "optional": false
+                },
+                {
+                    "id": 10,
+                    "name": "Green Chilli",
+                    "name_bn": "কাঁচা মরিচ",
+                    "optional": false
+                },
+                {
+                    "id": 85,
+                    "name": "Turmeric",
+                    "name_bn": "হলুদ",
+                    "optional": false
+                },
+                {
+                    "id": 62,
+                    "name": "Mustard Oil",
+                    "name_bn": "সরিষার তেল",
+                    "optional": false
+                }
+            ],
+            "steps": [
+                "Rub the hilsa pieces with half the turmeric and salt and leave for 10 minutes.",
+                "Loosen the mustard paste with half a cup of water, the rest of the turmeric and a pinch of salt.",
+                "Lay the fish in a wide pan, pour the mustard mixture over and tuck in the green chillies.",
+                "Pour the raw mustard oil over the top — it is not fried, it goes in cold.",
+                "Cover and cook on a low heat for 12 minutes, turning the pieces once, very gently.",
+                "Rest for 5 minutes before serving with plain rice. Do not stir it."
+            ],
+            "written": [
+                "6 pieces hilsa",
+                "4 tbsp mustard paste",
+                "6 green chillies, slit",
+                "1 tsp turmeric",
+                "5 tbsp mustard oil",
+                "1 tsp salt"
+            ]
+        },
+        {
+            "id": 25,
+            "title": "Chingri Malai Curry",
+            "description": "Prawns in coconut milk, barely spiced and slightly sweet. A wedding dish that is much easier than it looks, as long as you take the prawns out in time.",
+            "cuisine_country": "Bangladesh",
+            "cuisine_region": "South Asia",
+            "difficulty": "intermediate",
+            "total_minutes": 40,
+            "servings": 4,
+            "image_path": "recipes/generated/chingri-malai-curry.svg",
+            "required": [
+                37,
+                51,
+                1,
+                9,
+                85,
+                86,
+                88,
+                94,
+                90,
+                61,
+                56
+            ],
+            "ingredients": [
+                {
+                    "id": 37,
+                    "name": "Prawns",
+                    "name_bn": "চিংড়ি",
+                    "optional": false
+                },
+                {
+                    "id": 51,
+                    "name": "Coconut Milk",
+                    "name_bn": "নারকেলের দুধ",
+                    "optional": false
+                },
+                {
+                    "id": 1,
+                    "name": "Onion",
+                    "name_bn": "পেঁয়াজ",
+                    "optional": false
+                },
+                {
+                    "id": 9,
+                    "name": "Ginger",
+                    "name_bn": "আদা",
+                    "optional": false
+                },
+                {
+                    "id": 85,
+                    "name": "Turmeric",
+                    "name_bn": "হলুদ",
+                    "optional": false
+                },
+                {
+                    "id": 86,
+                    "name": "Chilli Powder",
+                    "name_bn": "মরিচ গুঁড়া",
+                    "optional": false
+                },
+                {
+                    "id": 88,
+                    "name": "Garam Masala",
+                    "name_bn": "গরম মসলা",
+                    "optional": false
+                },
+                {
+                    "id": 94,
+                    "name": "Cardamom",
+                    "name_bn": "এলাচ",
+                    "optional": false
+                },
+                {
+                    "id": 90,
+                    "name": "Cinnamon",
+                    "name_bn": "দারুচিনি",
+                    "optional": false
+                },
+                {
+                    "id": 61,
+                    "name": "Vegetable Oil",
+                    "name_bn": "সয়াবিন তেল",
+                    "optional": false
+                },
+                {
+                    "id": 56,
+                    "name": "Sugar",
+                    "name_bn": "চিনি",
+                    "optional": false
+                }
+            ],
+            "steps": [
+                "Toss the prawns with the turmeric and salt, then fry them for 90 seconds a side and lift them out.",
+                "In the same oil fry the cardamom and cinnamon, then the onion paste for 10 minutes until it loses its raw smell.",
+                "Add the ginger, chilli powder and sugar and cook for 3 minutes.",
+                "Pour in the coconut milk and bring it to a bare simmer — do not let it boil hard or it will split.",
+                "Return the prawns for the last 4 minutes only, then finish with garam masala off the heat."
+            ],
+            "written": [
+                "500 g prawns",
+                "400 ml coconut milk",
+                "2 onions, blended to a paste",
+                "1 tbsp ginger",
+                "1 tsp turmeric",
+                "1 tsp chilli powder",
+                "1 tsp garam masala",
+                "4 cardamom pods",
+                "1 stick cinnamon",
+                "4 tbsp vegetable oil",
+                "1 tsp salt",
+                "1 tsp sugar"
+            ]
+        },
+        {
+            "id": 26,
+            "title": "Mishti Doi",
+            "description": "Sweet set yoghurt, caramelised so it comes out the colour of wet sand. Made in a clay pot if you have one; a bowl and a warm cupboard also work.",
+            "cuisine_country": "Bangladesh",
+            "cuisine_region": "South Asia",
+            "difficulty": "beginner",
+            "total_minutes": 40,
+            "servings": 4,
+            "image_path": "recipes/generated/mishti-doi.svg",
+            "required": [
+                44,
+                56,
+                46
+            ],
+            "ingredients": [
+                {
+                    "id": 44,
+                    "name": "Milk",
+                    "name_bn": "দুধ",
+                    "optional": false
+                },
+                {
+                    "id": 56,
+                    "name": "Sugar",
+                    "name_bn": "চিনি",
+                    "optional": false
+                },
+                {
+                    "id": 46,
+                    "name": "Yoghurt",
+                    "name_bn": "দই",
+                    "optional": false
+                }
+            ],
+            "steps": [
+                "Melt a third of the sugar in a dry pan until it turns deep amber, watching it closely.",
+                "Pour in the milk — it will hiss — add the rest of the sugar and reduce for 25 minutes until thickened.",
+                "Cool the milk until it is just warm to a finger, no hotter, or the culture dies.",
+                "Whisk in the yoghurt, pour into bowls and cover.",
+                "Leave somewhere warm for 6 hours to set, then chill for at least 4 hours before eating."
+            ],
+            "written": [
+                "1 litre milk",
+                "150 g sugar",
+                "4 tbsp yoghurt"
+            ]
+        },
+        {
+            "id": 27,
+            "title": "Jollof Rice",
+            "description": "Rice cooked in a deep, smoky pepper base until every grain is stained red. The party dish, and the argument starter.",
+            "cuisine_country": "Nigeria",
+            "cuisine_region": "Africa",
+            "difficulty": "intermediate",
+            "total_minutes": 65,
+            "servings": 6,
+            "image_path": "recipes/generated/jollof-rice.svg",
+            "required": [
+                52,
+                3,
+                6,
+                1,
+                2,
+                9,
+                87,
+                95,
+                92,
+                93,
+                72,
+                61
+            ],
+            "ingredients": [
+                {
+                    "id": 52,
+                    "name": "Rice",
+                    "name_bn": "চাল",
+                    "optional": false
+                },
+                {
+                    "id": 3,
+                    "name": "Tomato",
+                    "name_bn": "টমেটো",
+                    "optional": false
+                },
+                {
+                    "id": 6,
+                    "name": "Bell Pepper",
+                    "name_bn": "ক্যাপসিকাম",
+                    "optional": false
+                },
+                {
+                    "id": 1,
+                    "name": "Onion",
+                    "name_bn": "পেঁয়াজ",
+                    "optional": false
+                },
+                {
+                    "id": 2,
+                    "name": "Garlic",
+                    "name_bn": "রসুন",
+                    "optional": false
+                },
+                {
+                    "id": 9,
+                    "name": "Ginger",
+                    "name_bn": "আদা",
+                    "optional": false
+                },
+                {
+                    "id": 87,
+                    "name": "Paprika",
+                    "name_bn": "পাপ্রিকা",
+                    "optional": false
+                },
+                {
+                    "id": 95,
+                    "name": "Curry Powder",
+                    "name_bn": "কারি পাউডার",
+                    "optional": false
+                },
+                {
+                    "id": 92,
+                    "name": "Thyme",
+                    "name_bn": "থাইম",
+                    "optional": false
+                },
+                {
+                    "id": 93,
+                    "name": "Bay Leaf",
+                    "name_bn": "তেজপাতা",
+                    "optional": false
+                },
+                {
+                    "id": 72,
+                    "name": "Stock",
+                    "name_bn": "ঝোল",
+                    "optional": false
+                },
+                {
+                    "id": 61,
+                    "name": "Vegetable Oil",
+                    "name_bn": "সয়াবিন তেল",
+                    "optional": false
+                }
+            ],
+            "steps": [
+                "Blend the peppers, one onion, the garlic and ginger into a smooth base.",
+                "Fry the remaining sliced onion in oil for 6 minutes until soft.",
+                "Pour in the blended base and cook it down for 15 minutes until it darkens and thickens.",
+                "Stir in the tomatoes, paprika, curry powder, thyme and bay leaves and cook for 5 minutes.",
+                "Add the rinsed rice and stock, cover tightly and steam for 25 minutes without stirring.",
+                "Rest off the heat for 10 minutes, then fluff with a fork."
+            ],
+            "written": [
+                "500 g rice",
+                "400 g chopped tomatoes",
+                "3 bell peppers",
+                "2 onions",
+                "4 cloves garlic",
+                "1 tbsp ginger",
+                "2 tsp paprika",
+                "1 tsp curry powder",
+                "1 tsp thyme",
+                "2 bay leaves",
+                "600 ml stock",
+                "5 tbsp vegetable oil"
+            ]
+        },
+        {
+            "id": 28,
+            "title": "Ethiopian Misir Wot",
+            "description": "Red lentils stewed low and slow with onion and berbere-style spice until they turn silky.",
+            "cuisine_country": "Ethiopia",
+            "cuisine_region": "Africa",
+            "difficulty": "beginner",
+            "total_minutes": 50,
+            "servings": 4,
+            "image_path": "recipes/generated/ethiopian-misir-wot.svg",
+            "required": [
+                70,
+                1,
+                2,
+                9,
+                87,
+                86,
+                83,
+                94,
+                61
+            ],
+            "ingredients": [
+                {
+                    "id": 70,
+                    "name": "Lentils",
+                    "name_bn": "মসুর ডাল",
+                    "optional": false
+                },
+                {
+                    "id": 1,
+                    "name": "Onion",
+                    "name_bn": "পেঁয়াজ",
+                    "optional": false
+                },
+                {
+                    "id": 2,
+                    "name": "Garlic",
+                    "name_bn": "রসুন",
+                    "optional": false
+                },
+                {
+                    "id": 9,
+                    "name": "Ginger",
+                    "name_bn": "আদা",
+                    "optional": false
+                },
+                {
+                    "id": 87,
+                    "name": "Paprika",
+                    "name_bn": "পাপ্রিকা",
+                    "optional": false
+                },
+                {
+                    "id": 86,
+                    "name": "Chilli Powder",
+                    "name_bn": "মরিচ গুঁড়া",
+                    "optional": false
+                },
+                {
+                    "id": 83,
+                    "name": "Cumin",
+                    "name_bn": "জিরা",
+                    "optional": false
+                },
+                {
+                    "id": 94,
+                    "name": "Cardamom",
+                    "name_bn": "এলাচ",
+                    "optional": false
+                },
+                {
+                    "id": 61,
+                    "name": "Vegetable Oil",
+                    "name_bn": "সয়াবিন তেল",
+                    "optional": false
+                }
+            ],
+            "steps": [
+                "Cook the finely chopped onions dry in the pan for 8 minutes to drive off their water.",
+                "Add the oil, garlic and ginger and fry for 3 minutes.",
+                "Stir in the paprika, chilli, cumin and cardamom and cook the spices for 2 minutes.",
+                "Add the rinsed lentils and water and simmer for 25 minutes, stirring now and then.",
+                "Season and let it sit for 5 minutes so it thickens before serving."
+            ],
+            "written": [
+                "300 g lentils",
+                "3 onions",
+                "4 cloves garlic",
+                "1 tbsp ginger",
+                "2 tbsp paprika",
+                "2 tsp chilli powder",
+                "1 tsp cumin",
+                "1 tsp cardamom",
+                "4 tbsp vegetable oil",
+                "800 ml water"
+            ]
+        },
+        {
+            "id": 29,
+            "title": "Moroccan Harira",
+            "description": "The soup that breaks the fast: lentils, chickpeas and tomato, thickened at the last minute and sharpened with lemon.",
+            "cuisine_country": "Morocco",
+            "cuisine_region": "Africa",
+            "difficulty": "intermediate",
+            "total_minutes": 65,
+            "servings": 6,
+            "image_path": "recipes/generated/moroccan-harira.svg",
+            "required": [
+                70,
+                69,
+                3,
+                1,
+                2,
+                83,
+                85,
+                90,
+                13,
+                15,
+                11,
+                54,
+                72,
+                60
+            ],
+            "ingredients": [
+                {
+                    "id": 70,
+                    "name": "Lentils",
+                    "name_bn": "মসুর ডাল",
+                    "optional": false
+                },
+                {
+                    "id": 69,
+                    "name": "Chickpeas",
+                    "name_bn": "ছোলা",
+                    "optional": false
+                },
+                {
+                    "id": 3,
+                    "name": "Tomato",
+                    "name_bn": "টমেটো",
+                    "optional": false
+                },
+                {
+                    "id": 1,
+                    "name": "Onion",
+                    "name_bn": "পেঁয়াজ",
+                    "optional": false
+                },
+                {
+                    "id": 2,
+                    "name": "Garlic",
+                    "name_bn": "রসুন",
+                    "optional": false
+                },
+                {
+                    "id": 83,
+                    "name": "Cumin",
+                    "name_bn": "জিরা",
+                    "optional": false
+                },
+                {
+                    "id": 85,
+                    "name": "Turmeric",
+                    "name_bn": "হলুদ",
+                    "optional": false
+                },
+                {
+                    "id": 90,
+                    "name": "Cinnamon",
+                    "name_bn": "দারুচিনি",
+                    "optional": false
+                },
+                {
+                    "id": 13,
+                    "name": "Coriander",
+                    "name_bn": "ধনেপাতা",
+                    "optional": false
+                },
+                {
+                    "id": 15,
+                    "name": "Parsley",
+                    "name_bn": "পার্সলে",
+                    "optional": false
+                },
+                {
+                    "id": 11,
+                    "name": "Lemon",
+                    "name_bn": "লেবু",
+                    "optional": false
+                },
+                {
+                    "id": 54,
+                    "name": "Flour",
+                    "name_bn": "ময়দা",
+                    "optional": false
+                },
+                {
+                    "id": 72,
+                    "name": "Stock",
+                    "name_bn": "ঝোল",
+                    "optional": false
+                },
+                {
+                    "id": 60,
+                    "name": "Olive Oil",
+                    "name_bn": "অলিভ অয়েল",
+                    "optional": false
+                }
+            ],
+            "steps": [
+                "Soften the onions and garlic in olive oil for 8 minutes.",
+                "Add the cumin, turmeric and cinnamon and cook for 1 minute.",
+                "Tip in the tomatoes, lentils, chickpeas and stock and simmer for 35 minutes.",
+                "Whisk the flour into a cup of water and stir it in to thicken the soup.",
+                "Simmer for 5 more minutes, then finish with the herbs and a squeeze of lemon."
+            ],
+            "written": [
+                "200 g lentils",
+                "400 g chickpeas",
+                "400 g chopped tomatoes",
+                "2 onions",
+                "3 cloves garlic",
+                "2 tsp cumin",
+                "1 tsp turmeric",
+                "1 tsp cinnamon",
+                "3 tbsp coriander",
+                "2 tbsp parsley",
+                "1 lemon",
+                "50 g flour",
+                "1500 ml stock",
+                "3 tbsp olive oil"
+            ]
+        },
+        {
+            "id": 30,
+            "title": "Shepherd's Pie",
+            "description": "Braised mince under a mashed potato roof, baked until the peaks catch and crisp.",
+            "cuisine_country": "United Kingdom",
+            "cuisine_region": "Europe",
+            "difficulty": "intermediate",
+            "total_minutes": 70,
+            "servings": 6,
+            "image_path": "recipes/generated/shepherds-pie.svg",
+            "required": [
+                33,
+                4,
+                1,
+                5,
+                29,
+                2,
+                67,
+                72,
+                92,
+                45,
+                44,
+                61
+            ],
+            "ingredients": [
+                {
+                    "id": 33,
+                    "name": "Beef Mince",
+                    "name_bn": "গরুর কিমা",
+                    "optional": false
+                },
+                {
+                    "id": 4,
+                    "name": "Potato",
+                    "name_bn": "আলু",
+                    "optional": false
+                },
+                {
+                    "id": 1,
+                    "name": "Onion",
+                    "name_bn": "পেঁয়াজ",
+                    "optional": false
+                },
+                {
+                    "id": 5,
+                    "name": "Carrot",
+                    "name_bn": "গাজর",
+                    "optional": false
+                },
+                {
+                    "id": 29,
+                    "name": "Peas",
+                    "name_bn": "মটরশুঁটি",
+                    "optional": false
+                },
+                {
+                    "id": 2,
+                    "name": "Garlic",
+                    "name_bn": "রসুন",
+                    "optional": false
+                },
+                {
+                    "id": 67,
+                    "name": "Tomato Paste",
+                    "name_bn": "টমেটো পেস্ট",
+                    "optional": false
+                },
+                {
+                    "id": 72,
+                    "name": "Stock",
+                    "name_bn": "ঝোল",
+                    "optional": false
+                },
+                {
+                    "id": 92,
+                    "name": "Thyme",
+                    "name_bn": "থাইম",
+                    "optional": false
+                },
+                {
+                    "id": 45,
+                    "name": "Butter",
+                    "name_bn": "মাখন",
+                    "optional": false
+                },
+                {
+                    "id": 44,
+                    "name": "Milk",
+                    "name_bn": "দুধ",
+                    "optional": false
+                },
+                {
+                    "id": 61,
+                    "name": "Vegetable Oil",
+                    "name_bn": "সয়াবিন তেল",
+                    "optional": false
+                }
+            ],
+            "steps": [
+                "Boil the potatoes for 18 minutes until a knife slides through easily.",
+                "Brown the mince hard in oil for 8 minutes, then set it aside.",
+                "Fry the onions, carrots and garlic for 8 minutes until softening.",
+                "Return the mince with the tomato paste, thyme and stock and simmer for 20 minutes.",
+                "Mash the potatoes with the butter and milk until smooth.",
+                "Stir the peas through the mince, top with mash, and bake for 25 minutes at 200C."
+            ],
+            "written": [
+                "700 g beef mince",
+                "900 g potatoes",
+                "2 onions",
+                "3 carrots",
+                "150 g peas",
+                "3 cloves garlic",
+                "2 tbsp tomato paste",
+                "500 ml stock",
+                "1 tsp thyme",
+                "80 g butter",
+                "100 ml milk",
+                "2 tbsp vegetable oil"
+            ]
+        },
+        {
+            "id": 31,
+            "title": "French Onion Soup",
+            "description": "An hour of patient stirring turns six onions into something that tastes like beef. Do not rush it.",
+            "cuisine_country": "France",
+            "cuisine_region": "Europe",
+            "difficulty": "advanced",
+            "total_minutes": 90,
+            "servings": 4,
+            "image_path": "recipes/generated/french-onion-soup.svg",
+            "required": [
+                1,
+                45,
+                60,
+                2,
+                92,
+                93,
+                72,
+                55,
+                47
+            ],
+            "ingredients": [
+                {
+                    "id": 1,
+                    "name": "Onion",
+                    "name_bn": "পেঁয়াজ",
+                    "optional": false
+                },
+                {
+                    "id": 45,
+                    "name": "Butter",
+                    "name_bn": "মাখন",
+                    "optional": false
+                },
+                {
+                    "id": 60,
+                    "name": "Olive Oil",
+                    "name_bn": "অলিভ অয়েল",
+                    "optional": false
+                },
+                {
+                    "id": 2,
+                    "name": "Garlic",
+                    "name_bn": "রসুন",
+                    "optional": false
+                },
+                {
+                    "id": 92,
+                    "name": "Thyme",
+                    "name_bn": "থাইম",
+                    "optional": false
+                },
+                {
+                    "id": 93,
+                    "name": "Bay Leaf",
+                    "name_bn": "তেজপাতা",
+                    "optional": false
+                },
+                {
+                    "id": 72,
+                    "name": "Stock",
+                    "name_bn": "ঝোল",
+                    "optional": false
+                },
+                {
+                    "id": 55,
+                    "name": "Bread",
+                    "name_bn": "পাউরুটি",
+                    "optional": false
+                },
+                {
+                    "id": 47,
+                    "name": "Cheddar Cheese",
+                    "name_bn": "চেডার পনির",
+                    "optional": false
+                }
+            ],
+            "steps": [
+                "Melt the butter with the oil and add the thinly sliced onions with a big pinch of salt.",
+                "Cook over low heat for 45 minutes, stirring every few minutes, until deep mahogany.",
+                "Add the garlic, thyme and bay leaves and cook for 2 minutes.",
+                "Pour in the stock and simmer gently for 20 minutes.",
+                "Toast the bread for 4 minutes, pile on the cheese and grill until bubbling.",
+                "Float a cheese toast on each bowl and serve immediately."
+            ],
+            "written": [
+                "6 onions",
+                "60 g butter",
+                "2 tbsp olive oil",
+                "3 cloves garlic",
+                "1 tsp thyme",
+                "2 bay leaves",
+                "1200 ml stock",
+                "4 slices bread",
+                "150 g cheddar cheese"
+            ]
+        },
+        {
+            "id": 32,
+            "title": "Spanish Tortilla",
+            "description": "Potatoes poached soft in olive oil, then set in egg. Good hot, better at room temperature.",
+            "cuisine_country": "Spain",
+            "cuisine_region": "Europe",
+            "difficulty": "intermediate",
+            "total_minutes": 40,
+            "servings": 4,
+            "image_path": "recipes/generated/spanish-tortilla.svg",
+            "required": [
+                4,
+                1,
+                43,
+                60
+            ],
+            "ingredients": [
+                {
+                    "id": 4,
+                    "name": "Potato",
+                    "name_bn": "আলু",
+                    "optional": false
+                },
+                {
+                    "id": 1,
+                    "name": "Onion",
+                    "name_bn": "পেঁয়াজ",
+                    "optional": false
+                },
+                {
+                    "id": 43,
+                    "name": "Egg",
+                    "name_bn": "ডিম",
+                    "optional": false
+                },
+                {
+                    "id": 60,
+                    "name": "Olive Oil",
+                    "name_bn": "অলিভ অয়েল",
+                    "optional": false
+                }
+            ],
+            "steps": [
+                "Slice the potatoes thin and poach them gently in the olive oil for 18 minutes until tender but pale.",
+                "Add the sliced onions for the last 6 minutes.",
+                "Drain well, reserving the oil, and fold the potatoes into the beaten eggs.",
+                "Rest the mixture for 10 minutes so the potato absorbs the egg.",
+                "Cook in a hot oiled pan for 4 minutes, then flip onto a plate and slide back to cook the other side for 3 minutes."
+            ],
+            "written": [
+                "600 g potatoes",
+                "2 onions",
+                "6 eggs",
+                "200 ml olive oil",
+                "1 tsp salt"
+            ]
+        },
+        {
+            "id": 33,
+            "title": "Polish Pierogi",
+            "description": "Potato and cheese dumplings, boiled then fried in butter with onions until the edges blister.",
+            "cuisine_country": "Poland",
+            "cuisine_region": "Europe",
+            "difficulty": "advanced",
+            "total_minutes": 70,
+            "servings": 4,
+            "image_path": "recipes/generated/polish-pierogi.svg",
+            "required": [
+                54,
+                43,
+                4,
+                47,
+                1,
+                45
+            ],
+            "ingredients": [
+                {
+                    "id": 54,
+                    "name": "Flour",
+                    "name_bn": "ময়দা",
+                    "optional": false
+                },
+                {
+                    "id": 43,
+                    "name": "Egg",
+                    "name_bn": "ডিম",
+                    "optional": false
+                },
+                {
+                    "id": 4,
+                    "name": "Potato",
+                    "name_bn": "আলু",
+                    "optional": false
+                },
+                {
+                    "id": 47,
+                    "name": "Cheddar Cheese",
+                    "name_bn": "চেডার পনির",
+                    "optional": false
+                },
+                {
+                    "id": 1,
+                    "name": "Onion",
+                    "name_bn": "পেঁয়াজ",
+                    "optional": false
+                },
+                {
+                    "id": 45,
+                    "name": "Butter",
+                    "name_bn": "মাখন",
+                    "optional": false
+                }
+            ],
+            "steps": [
+                "Work the flour, egg, water and salt into a soft dough and rest it for 30 minutes.",
+                "Boil the potatoes for 18 minutes, then mash them with the grated cheese.",
+                "Roll the dough thin, cut discs, fill and pinch them firmly shut.",
+                "Boil the pierogi in batches for 4 minutes until they float.",
+                "Fry the sliced onions in butter for 8 minutes, then add the pierogi and fry for 4 minutes until golden."
+            ],
+            "written": [
+                "400 g flour",
+                "1 egg",
+                "200 ml water",
+                "600 g potatoes",
+                "200 g cheddar cheese",
+                "2 onions",
+                "80 g butter",
+                "1 tsp salt"
+            ]
+        },
+        {
+            "id": 34,
+            "title": "Buttermilk Pancake Stack",
+            "description": "Thick, tender pancakes. The trick is to stop mixing while the batter still looks wrong.",
+            "cuisine_country": "United States",
+            "cuisine_region": "North America",
+            "difficulty": "beginner",
+            "total_minutes": 25,
+            "servings": 4,
+            "image_path": "recipes/generated/buttermilk-pancake-stack.svg",
+            "required": [
+                54,
+                81,
+                56,
+                43,
+                44,
+                45,
+                97
+            ],
+            "ingredients": [
+                {
+                    "id": 54,
+                    "name": "Flour",
+                    "name_bn": "ময়দা",
+                    "optional": false
+                },
+                {
+                    "id": 81,
+                    "name": "Baking Powder",
+                    "name_bn": "বেকিং পাউডার",
+                    "optional": false
+                },
+                {
+                    "id": 56,
+                    "name": "Sugar",
+                    "name_bn": "চিনি",
+                    "optional": false
+                },
+                {
+                    "id": 43,
+                    "name": "Egg",
+                    "name_bn": "ডিম",
+                    "optional": false
+                },
+                {
+                    "id": 44,
+                    "name": "Milk",
+                    "name_bn": "দুধ",
+                    "optional": false
+                },
+                {
+                    "id": 45,
+                    "name": "Butter",
+                    "name_bn": "মাখন",
+                    "optional": false
+                },
+                {
+                    "id": 97,
+                    "name": "Vanilla",
+                    "name_bn": "ভ্যানিলা",
+                    "optional": false
+                }
+            ],
+            "steps": [
+                "Whisk the flour, baking powder, sugar and salt together.",
+                "Beat the eggs with the milk, melted butter and vanilla.",
+                "Fold wet into dry until just combined — lumps are fine and desirable.",
+                "Rest the batter for 10 minutes.",
+                "Cook each pancake for 2 minutes until bubbles set, then 1 minute on the second side."
+            ],
+            "written": [
+                "250 g flour",
+                "2 tsp baking powder",
+                "2 tbsp sugar",
+                "2 eggs",
+                "350 ml milk",
+                "50 g butter",
+                "1 tsp vanilla",
+                "1 pinch salt"
+            ]
+        },
+        {
+            "id": 35,
+            "title": "Smash Burger with Crispy Onions",
+            "description": "Thin patties pressed hard onto a screaming pan so the whole surface turns to crust.",
+            "cuisine_country": "United States",
+            "cuisine_region": "North America",
+            "difficulty": "beginner",
+            "total_minutes": 20,
+            "servings": 2,
+            "image_path": "recipes/generated/smash-burger-with-crispy-onions.svg",
+            "required": [
+                33,
+                1,
+                47,
+                55,
+                45,
+                59
+            ],
+            "ingredients": [
+                {
+                    "id": 33,
+                    "name": "Beef Mince",
+                    "name_bn": "গরুর কিমা",
+                    "optional": false
+                },
+                {
+                    "id": 1,
+                    "name": "Onion",
+                    "name_bn": "পেঁয়াজ",
+                    "optional": false
+                },
+                {
+                    "id": 47,
+                    "name": "Cheddar Cheese",
+                    "name_bn": "চেডার পনির",
+                    "optional": false
+                },
+                {
+                    "id": 55,
+                    "name": "Bread",
+                    "name_bn": "পাউরুটি",
+                    "optional": false
+                },
+                {
+                    "id": 45,
+                    "name": "Butter",
+                    "name_bn": "মাখন",
+                    "optional": false
+                },
+                {
+                    "id": 59,
+                    "name": "Black Pepper",
+                    "name_bn": "গোলমরিচ",
+                    "optional": false
+                }
+            ],
+            "steps": [
+                "Divide the mince into four loose balls and refrigerate for 10 minutes.",
+                "Get a heavy pan as hot as it will go.",
+                "Press each ball flat for 90 seconds until a dark crust forms, then flip.",
+                "Lay cheese on immediately and cook for 1 more minute.",
+                "Fry the sliced onion in butter for 4 minutes and pile it on with the buns toasted."
+            ],
+            "written": [
+                "400 g beef mince",
+                "1 onion",
+                "4 slices cheddar cheese",
+                "2 bread rolls",
+                "2 tbsp butter",
+                "1 tsp black pepper",
+                "1 tsp salt"
+            ]
+        },
+        {
+            "id": 36,
+            "title": "Poke Bowl",
+            "description": "Cold marinated fish over warm rice, with avocado and cucumber for contrast.",
+            "cuisine_country": "United States",
+            "cuisine_region": "North America",
+            "difficulty": "beginner",
+            "total_minutes": 32,
+            "servings": 2,
+            "image_path": "recipes/generated/poke-bowl.svg",
+            "required": [
+                38,
+                52,
+                64,
+                65,
+                9,
+                18,
+                17,
+                16,
+                12
+            ],
+            "ingredients": [
+                {
+                    "id": 38,
+                    "name": "Salmon",
+                    "name_bn": "স্যামন মাছ",
+                    "optional": false
+                },
+                {
+                    "id": 52,
+                    "name": "Rice",
+                    "name_bn": "চাল",
+                    "optional": false
+                },
+                {
+                    "id": 64,
+                    "name": "Soy Sauce",
+                    "name_bn": "সয়া সস",
+                    "optional": false
+                },
+                {
+                    "id": 65,
+                    "name": "Vinegar",
+                    "name_bn": "ভিনেগার",
+                    "optional": false
+                },
+                {
+                    "id": 9,
+                    "name": "Ginger",
+                    "name_bn": "আদা",
+                    "optional": false
+                },
+                {
+                    "id": 18,
+                    "name": "Avocado",
+                    "name_bn": "অ্যাভোকাডো",
+                    "optional": false
+                },
+                {
+                    "id": 17,
+                    "name": "Cucumber",
+                    "name_bn": "শসা",
+                    "optional": false
+                },
+                {
+                    "id": 16,
+                    "name": "Spring Onion",
+                    "name_bn": "পেঁয়াজ পাতা",
+                    "optional": false
+                },
+                {
+                    "id": 12,
+                    "name": "Lime",
+                    "name_bn": "কাগজি লেবু",
+                    "optional": false
+                }
+            ],
+            "steps": [
+                "Cook the rice for 12 minutes and let it cool slightly.",
+                "Dice the salmon and toss it with the soy sauce, vinegar and grated ginger.",
+                "Chill the fish for 15 minutes while you slice the vegetables.",
+                "Build the bowls with rice, fish, avocado and cucumber.",
+                "Finish with spring onion and a squeeze of lime."
+            ],
+            "written": [
+                "300 g salmon",
+                "250 g rice",
+                "3 tbsp soy sauce",
+                "1 tbsp vinegar",
+                "1 tbsp ginger",
+                "1 avocado",
+                "1 cucumber",
+                "2 spring onions",
+                "1 lime"
+            ]
+        },
+        {
+            "id": 37,
+            "title": "Lamington Traybake",
+            "description": "Sponge squares rolled in chocolate and coconut. Sticky work, worth it.",
+            "cuisine_country": "Australia",
+            "cuisine_region": "Oceania",
+            "difficulty": "intermediate",
+            "total_minutes": 60,
+            "servings": 9,
+            "image_path": "recipes/generated/lamington-traybake.svg",
+            "required": [
+                54,
+                56,
+                43,
+                45,
+                81,
+                44,
+                96,
+                97
+            ],
+            "ingredients": [
+                {
+                    "id": 54,
+                    "name": "Flour",
+                    "name_bn": "ময়দা",
+                    "optional": false
+                },
+                {
+                    "id": 56,
+                    "name": "Sugar",
+                    "name_bn": "চিনি",
+                    "optional": false
+                },
+                {
+                    "id": 43,
+                    "name": "Egg",
+                    "name_bn": "ডিম",
+                    "optional": false
+                },
+                {
+                    "id": 45,
+                    "name": "Butter",
+                    "name_bn": "মাখন",
+                    "optional": false
+                },
+                {
+                    "id": 81,
+                    "name": "Baking Powder",
+                    "name_bn": "বেকিং পাউডার",
+                    "optional": false
+                },
+                {
+                    "id": 44,
+                    "name": "Milk",
+                    "name_bn": "দুধ",
+                    "optional": false
+                },
+                {
+                    "id": 96,
+                    "name": "Chocolate",
+                    "name_bn": "চকলেট",
+                    "optional": false
+                },
+                {
+                    "id": 97,
+                    "name": "Vanilla",
+                    "name_bn": "ভ্যানিলা",
+                    "optional": false
+                }
+            ],
+            "steps": [
+                "Cream the butter and sugar for 5 minutes until pale.",
+                "Beat in the eggs one at a time, then fold in the flour, baking powder and milk.",
+                "Bake in a lined tin for 28 minutes at 180C.",
+                "Cool completely for 60 minutes, then cut into squares.",
+                "Melt the chocolate with a splash of milk, dip each square, and roll in coconut."
+            ],
+            "written": [
+                "200 g flour",
+                "200 g sugar",
+                "4 eggs",
+                "120 g butter",
+                "2 tsp baking powder",
+                "100 ml milk",
+                "150 g chocolate",
+                "1 tsp vanilla"
+            ]
+        },
+        {
+            "id": 38,
+            "title": "Kiwi Green Breakfast Hash",
+            "description": "Crisp potatoes, wilted greens and a soft egg — brunch without the queue.",
+            "cuisine_country": "New Zealand",
+            "cuisine_region": "Oceania",
+            "difficulty": "beginner",
+            "total_minutes": 28,
+            "servings": 2,
+            "image_path": "recipes/generated/kiwi-green-breakfast-hash.svg",
+            "required": [
+                4,
+                7,
+                43,
+                18,
+                1,
+                2,
+                60,
+                11,
+                59
+            ],
+            "ingredients": [
+                {
+                    "id": 4,
+                    "name": "Potato",
+                    "name_bn": "আলু",
+                    "optional": false
+                },
+                {
+                    "id": 7,
+                    "name": "Spinach",
+                    "name_bn": "পালং শাক",
+                    "optional": false
+                },
+                {
+                    "id": 43,
+                    "name": "Egg",
+                    "name_bn": "ডিম",
+                    "optional": false
+                },
+                {
+                    "id": 18,
+                    "name": "Avocado",
+                    "name_bn": "অ্যাভোকাডো",
+                    "optional": false
+                },
+                {
+                    "id": 1,
+                    "name": "Onion",
+                    "name_bn": "পেঁয়াজ",
+                    "optional": false
+                },
+                {
+                    "id": 2,
+                    "name": "Garlic",
+                    "name_bn": "রসুন",
+                    "optional": false
+                },
+                {
+                    "id": 60,
+                    "name": "Olive Oil",
+                    "name_bn": "অলিভ অয়েল",
+                    "optional": false
+                },
+                {
+                    "id": 11,
+                    "name": "Lemon",
+                    "name_bn": "লেবু",
+                    "optional": false
+                },
+                {
+                    "id": 59,
+                    "name": "Black Pepper",
+                    "name_bn": "গোলমরিচ",
+                    "optional": false
+                }
+            ],
+            "steps": [
+                "Parboil the diced potatoes for 8 minutes and drain them dry.",
+                "Fry them in olive oil for 10 minutes until the edges are crisp.",
+                "Add the onion and garlic and cook for 4 minutes.",
+                "Wilt the spinach through for 1 minute.",
+                "Fry the eggs for 3 minutes and serve on top with avocado and lemon."
+            ],
+            "written": [
+                "400 g potatoes",
+                "150 g spinach",
+                "2 eggs",
+                "1 avocado",
+                "1 onion",
+                "2 cloves garlic",
+                "2 tbsp olive oil",
+                "1 lemon",
+                "1 tsp black pepper"
+            ]
+        },
+        {
+            "id": 39,
+            "title": "Sri Lankan Coconut Dhal",
+            "description": "Lentils finished with coconut milk and a curry-leaf tempering. Weeknight food that tastes like a weekend.",
+            "cuisine_country": "Sri Lanka",
+            "cuisine_region": "South Asia",
+            "difficulty": "beginner",
+            "total_minutes": 35,
+            "servings": 4,
+            "image_path": "recipes/generated/sri-lankan-coconut-dhal.svg",
+            "required": [
+                70,
+                51,
+                1,
+                2,
+                85,
+                83,
+                10,
+                95,
+                61,
+                12
+            ],
+            "ingredients": [
+                {
+                    "id": 70,
+                    "name": "Lentils",
+                    "name_bn": "মসুর ডাল",
+                    "optional": false
+                },
+                {
+                    "id": 51,
+                    "name": "Coconut Milk",
+                    "name_bn": "নারকেলের দুধ",
+                    "optional": false
+                },
+                {
+                    "id": 1,
+                    "name": "Onion",
+                    "name_bn": "পেঁয়াজ",
+                    "optional": false
+                },
+                {
+                    "id": 2,
+                    "name": "Garlic",
+                    "name_bn": "রসুন",
+                    "optional": false
+                },
+                {
+                    "id": 85,
+                    "name": "Turmeric",
+                    "name_bn": "হলুদ",
+                    "optional": false
+                },
+                {
+                    "id": 83,
+                    "name": "Cumin",
+                    "name_bn": "জিরা",
+                    "optional": false
+                },
+                {
+                    "id": 10,
+                    "name": "Green Chilli",
+                    "name_bn": "কাঁচা মরিচ",
+                    "optional": false
+                },
+                {
+                    "id": 95,
+                    "name": "Curry Powder",
+                    "name_bn": "কারি পাউডার",
+                    "optional": false
+                },
+                {
+                    "id": 61,
+                    "name": "Vegetable Oil",
+                    "name_bn": "সয়াবিন তেল",
+                    "optional": false
+                },
+                {
+                    "id": 12,
+                    "name": "Lime",
+                    "name_bn": "কাগজি লেবু",
+                    "optional": false
+                }
+            ],
+            "steps": [
+                "Simmer the lentils with turmeric and water for 18 minutes until soft.",
+                "Stir in the coconut milk and cook gently for 5 minutes.",
+                "Heat the oil and fry the cumin for 30 seconds until it pops.",
+                "Add the onion, garlic and chillies and fry for 5 minutes until golden.",
+                "Pour the tempering over the dhal and finish with lime."
+            ],
+            "written": [
+                "250 g lentils",
+                "400 ml coconut milk",
+                "1 onion",
+                "3 cloves garlic",
+                "1 tsp turmeric",
+                "1 tsp cumin",
+                "2 green chillies",
+                "1 tsp curry powder",
+                "3 tbsp vegetable oil",
+                "500 ml water",
+                "1 lime"
+            ]
+        },
+        {
+            "id": 40,
+            "title": "Turkish Menemen",
+            "description": "Soft-scrambled eggs folded through peppers and tomato, cooked slower than you think.",
+            "cuisine_country": "Turkey",
+            "cuisine_region": "Middle East",
+            "difficulty": "beginner",
+            "total_minutes": 20,
+            "servings": 2,
+            "image_path": "recipes/generated/turkish-menemen.svg",
+            "required": [
+                43,
+                3,
+                6,
+                1,
+                60,
+                87,
+                15
+            ],
+            "ingredients": [
+                {
+                    "id": 43,
+                    "name": "Egg",
+                    "name_bn": "ডিম",
+                    "optional": false
+                },
+                {
+                    "id": 3,
+                    "name": "Tomato",
+                    "name_bn": "টমেটো",
+                    "optional": false
+                },
+                {
+                    "id": 6,
+                    "name": "Bell Pepper",
+                    "name_bn": "ক্যাপসিকাম",
+                    "optional": false
+                },
+                {
+                    "id": 1,
+                    "name": "Onion",
+                    "name_bn": "পেঁয়াজ",
+                    "optional": false
+                },
+                {
+                    "id": 60,
+                    "name": "Olive Oil",
+                    "name_bn": "অলিভ অয়েল",
+                    "optional": false
+                },
+                {
+                    "id": 87,
+                    "name": "Paprika",
+                    "name_bn": "পাপ্রিকা",
+                    "optional": false
+                },
+                {
+                    "id": 15,
+                    "name": "Parsley",
+                    "name_bn": "পার্সলে",
+                    "optional": false
+                }
+            ],
+            "steps": [
+                "Soften the sliced peppers and onion in olive oil for 8 minutes.",
+                "Add the grated tomatoes and paprika and cook for 5 minutes until jammy.",
+                "Lower the heat and pour in the beaten eggs.",
+                "Fold slowly for 3 minutes until barely set — they keep cooking off the heat.",
+                "Scatter with parsley and serve straight from the pan."
+            ],
+            "written": [
+                "4 eggs",
+                "3 tomatoes",
+                "2 bell peppers",
+                "1 onion",
+                "2 tbsp olive oil",
+                "1 tsp paprika",
+                "2 tbsp parsley",
+                "1 tsp salt"
+            ]
+        }
+    ],
+    "demo_fridge": [
+        {
+            "name": "Spinach",
+            "days_left": -1
+        },
+        {
+            "name": "Milk",
+            "days_left": 0
+        },
+        {
+            "name": "Chicken Breast",
+            "days_left": 1
+        },
+        {
+            "name": "Yoghurt",
+            "days_left": 2
+        },
+        {
+            "name": "Tomato",
+            "days_left": 3
+        },
+        {
+            "name": "Bell Pepper",
+            "days_left": 5
+        },
+        {
+            "name": "Green Chilli",
+            "days_left": 6
+        },
+        {
+            "name": "Coriander",
+            "days_left": 6
+        },
+        {
+            "name": "Egg",
+            "days_left": 9
+        },
+        {
+            "name": "Lemon",
+            "days_left": 12
+        },
+        {
+            "name": "Ginger",
+            "days_left": 14
+        },
+        {
+            "name": "Garlic",
+            "days_left": 21
+        },
+        {
+            "name": "Onion",
+            "days_left": 24
+        },
+        {
+            "name": "Potato",
+            "days_left": 26
+        },
+        {
+            "name": "Rice",
+            "days_left": null
+        },
+        {
+            "name": "Lentils",
+            "days_left": null
+        },
+        {
+            "name": "Chopped Tomatoes",
+            "days_left": null
+        },
+        {
+            "name": "Vegetable Oil",
+            "days_left": null
+        },
+        {
+            "name": "Salt",
+            "days_left": null
+        },
+        {
+            "name": "Turmeric",
+            "days_left": null
+        },
+        {
+            "name": "Cumin",
+            "days_left": null
+        },
+        {
+            "name": "Chilli Powder",
+            "days_left": null
+        }
+    ],
+    "composer": {
+        "slots": {
+            "protein": [
+                "chicken-thigh",
+                "chicken-breast",
+                "beef-mince",
+                "lamb",
+                "prawn",
+                "hilsa",
+                "rohu",
+                "white-fish",
+                "salmon",
+                "tuna",
+                "egg",
+                "tofu",
+                "chickpea",
+                "black-bean"
+            ],
+            "soft-veg": [
+                "aubergine",
+                "potato",
+                "sweet-potato",
+                "pumpkin",
+                "bottle-gourd",
+                "tomato",
+                "cauliflower",
+                "courgette",
+                "bitter-gourd",
+                "pointed-gourd"
+            ],
+            "quick-veg": [
+                "spinach",
+                "cabbage",
+                "okra",
+                "green-bean",
+                "pea",
+                "carrot",
+                "bell-pepper",
+                "cauliflower",
+                "courgette",
+                "mushroom",
+                "broccoli"
+            ],
+            "allium": [
+                "onion",
+                "spring-onion",
+                "garlic"
+            ],
+            "garlic": [
+                "garlic",
+                "ginger"
+            ],
+            "heat": [
+                "green-chilli",
+                "chilli-powder",
+                "paprika"
+            ],
+            "warm-spice": [
+                "turmeric",
+                "cumin",
+                "coriander-powder",
+                "garam-masala",
+                "curry-powder",
+                "panch-phoron"
+            ],
+            "fat": [
+                "mustard-oil",
+                "vegetable-oil",
+                "olive-oil",
+                "butter"
+            ],
+            "herb": [
+                "coriander",
+                "parsley",
+                "basil"
+            ],
+            "acid": [
+                "lemon",
+                "lime",
+                "tomato",
+                "vinegar"
+            ],
+            "potato": [
+                "potato",
+                "sweet-potato"
+            ],
+            "tomato": [
+                "tomato",
+                "chopped-tomato",
+                "tomato-paste"
+            ],
+            "egg": [
+                "egg"
+            ],
+            "rice": [
+                "rice"
+            ],
+            "lentil": [
+                "lentil",
+                "chickpea"
+            ],
+            "dairy": [
+                "yoghurt",
+                "milk",
+                "cream",
+                "coconut-milk"
+            ],
+            "salt": [
+                "salt"
+            ]
+        },
+        "amounts": {
+            "protein": "400 g",
+            "soft-veg": "500 g",
+            "quick-veg": "300 g",
+            "potato": "400 g",
+            "tomato": "2",
+            "allium": "1 large",
+            "garlic": "3 cloves",
+            "heat": "2",
+            "warm-spice": "1 tsp",
+            "fat": "2 tbsp",
+            "herb": "2 tbsp",
+            "acid": "1",
+            "egg": "4",
+            "rice": "200 g",
+            "lentil": "150 g",
+            "dairy": "100 ml",
+            "salt": "1 tsp"
+        },
+        "templates": [
+            {
+                "key": "bhorta",
+                "title": "{soft-veg} Bhorta",
+                "country": "BD",
+                "difficulty": "beginner",
+                "prep": 5,
+                "cook": 20,
+                "servings": 3,
+                "needs": [
+                    "soft-veg",
+                    "allium"
+                ],
+                "wants": [
+                    "heat",
+                    "fat",
+                    "herb",
+                    "salt"
+                ],
+                "description": "A bhorta made from what was on the shelf: {soft-veg} boiled soft and mashed with raw {allium}. The dish a Bangladeshi kitchen produces from an almost empty fridge.",
+                "method": [
+                    [
+                        "Boil the {soft-veg} whole until a knife slides through with no resistance, then drain and let it steam dry.",
+                        [
+                            "soft-veg"
+                        ]
+                    ],
+                    [
+                        "Mash it while still warm. Keep some texture — a bhorta is not a puree.",
+                        []
+                    ],
+                    [
+                        "Work the {allium} through with your fingers, which bruises it and takes the raw edge off.",
+                        [
+                            "allium"
+                        ]
+                    ],
+                    [
+                        "Add the {heat} and a good pinch of salt, and keep working until the colour is even.",
+                        [
+                            "heat"
+                        ]
+                    ],
+                    [
+                        "Pour over the raw {fat} and mix until it smells sharp.",
+                        [
+                            "fat"
+                        ]
+                    ],
+                    [
+                        "Fold through the {herb} at the very end so it stays green.",
+                        [
+                            "herb"
+                        ]
+                    ],
+                    [
+                        "Serve at room temperature with hot rice.",
+                        []
+                    ]
+                ]
+            },
+            {
+                "key": "bhuna",
+                "title": "{protein} Bhuna",
+                "country": "BD",
+                "difficulty": "intermediate",
+                "prep": 10,
+                "cook": 35,
+                "servings": 4,
+                "needs": [
+                    "protein",
+                    "allium",
+                    "warm-spice",
+                    "fat"
+                ],
+                "wants": [
+                    "tomato",
+                    "garlic",
+                    "heat",
+                    "herb",
+                    "salt"
+                ],
+                "description": "A dry bhuna built around the {protein} that needed using, cooked down until the oil separates from the masala.",
+                "method": [
+                    [
+                        "Heat the {fat} in a heavy pan until it shimmers.",
+                        [
+                            "fat"
+                        ]
+                    ],
+                    [
+                        "Cook the {allium} slowly for 12 minutes, until it collapses and turns properly brown. This is the whole dish — do not rush it.",
+                        [
+                            "allium"
+                        ]
+                    ],
+                    [
+                        "Stir in the {garlic} and cook for another minute, until it stops smelling raw.",
+                        [
+                            "garlic"
+                        ]
+                    ],
+                    [
+                        "Add the {warm-spice} with a splash of water so the spices bloom rather than burn.",
+                        [
+                            "warm-spice"
+                        ]
+                    ],
+                    [
+                        "Stir in the {tomato} and cook until the oil separates out at the edges.",
+                        [
+                            "tomato"
+                        ]
+                    ],
+                    [
+                        "Add the {protein} and turn it in the masala until every piece is coated.",
+                        [
+                            "protein"
+                        ]
+                    ],
+                    [
+                        "Add the {heat}, cover, and cook on a low heat for 20 minutes, stirring now and then.",
+                        [
+                            "heat"
+                        ]
+                    ],
+                    [
+                        "Uncover and cook off any remaining liquid — a bhuna should cling, not pool.",
+                        []
+                    ],
+                    [
+                        "Scatter over the {herb} and take it off the heat.",
+                        [
+                            "herb"
+                        ]
+                    ]
+                ]
+            },
+            {
+                "key": "jhol",
+                "title": "{protein} Jhol",
+                "country": "BD",
+                "difficulty": "beginner",
+                "prep": 10,
+                "cook": 30,
+                "servings": 4,
+                "needs": [
+                    "protein",
+                    "potato",
+                    "allium",
+                    "warm-spice"
+                ],
+                "wants": [
+                    "fat",
+                    "heat",
+                    "herb",
+                    "salt"
+                ],
+                "description": "A thin, light jhol — {protein} and {potato} in a turmeric gravy you can drink. Weeknight food.",
+                "method": [
+                    [
+                        "Warm the {fat} and soften the {allium} for 6 minutes without letting it colour much.",
+                        [
+                            "fat",
+                            "allium"
+                        ]
+                    ],
+                    [
+                        "Add the {warm-spice} and stir for thirty seconds.",
+                        [
+                            "warm-spice"
+                        ]
+                    ],
+                    [
+                        "Add the {potato}, cut into large chunks, and turn it in the spices.",
+                        [
+                            "potato"
+                        ]
+                    ],
+                    [
+                        "Add the {protein} and enough water to just cover everything.",
+                        [
+                            "protein"
+                        ]
+                    ],
+                    [
+                        "Add the {heat} whole, so they season the broth without shredding it.",
+                        [
+                            "heat"
+                        ]
+                    ],
+                    [
+                        "Simmer uncovered for 20 minutes, until the potato is soft and the broth has thinned into a gravy.",
+                        []
+                    ],
+                    [
+                        "Check the salt, add the {herb}, and serve in bowls with rice.",
+                        [
+                            "herb"
+                        ]
+                    ]
+                ]
+            },
+            {
+                "key": "bhaji",
+                "title": "{quick-veg} Bhaji",
+                "country": "BD",
+                "difficulty": "beginner",
+                "prep": 5,
+                "cook": 12,
+                "servings": 3,
+                "needs": [
+                    "quick-veg",
+                    "allium",
+                    "fat"
+                ],
+                "wants": [
+                    "heat",
+                    "warm-spice",
+                    "garlic",
+                    "salt"
+                ],
+                "description": "Twelve minutes: {quick-veg} fried hard and fast with {allium}. The dish for the vegetable that has one day left.",
+                "method": [
+                    [
+                        "Get the {fat} properly hot — a bhaji is fried, not stewed.",
+                        [
+                            "fat"
+                        ]
+                    ],
+                    [
+                        "Add the {allium} and cook for 4 minutes until the edges catch.",
+                        [
+                            "allium"
+                        ]
+                    ],
+                    [
+                        "Add the {garlic} and stir for a few seconds.",
+                        [
+                            "garlic"
+                        ]
+                    ],
+                    [
+                        "Add the {warm-spice} and let it toast in the oil.",
+                        [
+                            "warm-spice"
+                        ]
+                    ],
+                    [
+                        "Add the {quick-veg}, turn the heat to high, and stir-fry for 6 minutes. Keep it moving.",
+                        [
+                            "quick-veg"
+                        ]
+                    ],
+                    [
+                        "Add the {heat} and salt, cook one minute more, and serve straight away.",
+                        [
+                            "heat"
+                        ]
+                    ]
+                ]
+            },
+            {
+                "key": "dim",
+                "title": "Dim Bhuna with {allium}",
+                "country": "BD",
+                "difficulty": "beginner",
+                "prep": 5,
+                "cook": 25,
+                "servings": 3,
+                "needs": [
+                    "egg",
+                    "allium",
+                    "fat"
+                ],
+                "wants": [
+                    "tomato",
+                    "warm-spice",
+                    "heat",
+                    "herb",
+                    "salt"
+                ],
+                "description": "Eggs, blistered in hot oil and finished in an onion masala. The cheapest dinner in this app.",
+                "method": [
+                    [
+                        "Boil the {egg} for 9 minutes, cool them under the tap and peel.",
+                        [
+                            "egg"
+                        ]
+                    ],
+                    [
+                        "Prick each egg a few times, rub with salt, and fry in the hot {fat} until blistered. Set aside.",
+                        [
+                            "fat"
+                        ]
+                    ],
+                    [
+                        "In the same oil, cook the {allium} for 12 minutes until it collapses and browns.",
+                        [
+                            "allium"
+                        ]
+                    ],
+                    [
+                        "Add the {warm-spice} with a splash of water.",
+                        [
+                            "warm-spice"
+                        ]
+                    ],
+                    [
+                        "Stir in the {tomato} and cook for 6 minutes, until the oil separates.",
+                        [
+                            "tomato"
+                        ]
+                    ],
+                    [
+                        "Return the eggs, coat them, add the {heat} and a little water, and simmer for 5 minutes.",
+                        [
+                            "heat"
+                        ]
+                    ],
+                    [
+                        "Finish with the {herb}.",
+                        [
+                            "herb"
+                        ]
+                    ]
+                ]
+            },
+            {
+                "key": "khichuri",
+                "title": "Khichuri with {quick-veg}",
+                "country": "BD",
+                "difficulty": "beginner",
+                "prep": 10,
+                "cook": 30,
+                "servings": 4,
+                "needs": [
+                    "rice",
+                    "lentil",
+                    "warm-spice"
+                ],
+                "wants": [
+                    "quick-veg",
+                    "allium",
+                    "fat",
+                    "heat",
+                    "potato",
+                    "salt"
+                ],
+                "description": "Rice and lentils cooked down together until they stop being two things. Everything else in the fridge goes in with them.",
+                "method": [
+                    [
+                        "Rinse the {rice} and {lentil} together until the water runs clear.",
+                        [
+                            "rice",
+                            "lentil"
+                        ]
+                    ],
+                    [
+                        "Warm the {fat} and soften the {allium} for 5 minutes.",
+                        [
+                            "fat",
+                            "allium"
+                        ]
+                    ],
+                    [
+                        "Add the {warm-spice} and stir until it smells toasted.",
+                        [
+                            "warm-spice"
+                        ]
+                    ],
+                    [
+                        "Add the {potato} in chunks and turn it through.",
+                        [
+                            "potato"
+                        ]
+                    ],
+                    [
+                        "Add the drained rice and lentils, then four times their volume in water.",
+                        []
+                    ],
+                    [
+                        "Bring to the boil, then simmer covered for 25 minutes, stirring occasionally so it does not catch.",
+                        []
+                    ],
+                    [
+                        "Stir in the {quick-veg} for the last 8 minutes.",
+                        [
+                            "quick-veg"
+                        ]
+                    ],
+                    [
+                        "Add the {heat} and salt to taste. It should be soft and loose, not separate grains.",
+                        [
+                            "heat"
+                        ]
+                    ]
+                ]
+            }
+        ]
+    }
+}

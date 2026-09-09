@@ -6,6 +6,17 @@
  * shelf, not a person, and there is nothing behind it worth protecting.
  */
 
+/**
+ * The deployed preview.
+ *
+ * Set at build time, and only by the Vercel build. When it is on, every request
+ * below is answered in the browser by src/preview/backend.js instead of a
+ * server — because Laravel, SQLite and 370 MB of YOLO weights do not go on a
+ * static host, and the app is worth more as something a judge can click than as
+ * a screenshot. Nothing else in the client knows the difference.
+ */
+export const IS_PREVIEW = import.meta.env.VITE_PREVIEW === "true";
+
 const SESSION_KEY = "fridgemama_session";
 const HOST_KEY = "fridgemama_kitchen";
 
@@ -110,6 +121,11 @@ function sessionId() {
 }
 
 async function request(path, { method = "GET", body, isForm = false } = {}) {
+  if (IS_PREVIEW) {
+    const { previewRequest } = await import("./preview/backend.js");
+    return previewRequest(path, { method, body: isForm ? null : body });
+  }
+
   const headers = {
     Accept: "application/json",
     "X-Fridge-Session": sessionId(),
@@ -173,7 +189,13 @@ export const api = {
     request(`/ingredients${search ? `?search=${encodeURIComponent(search)}&limit=8` : "?limit=8"}`),
 };
 
-export const recipeImage = (path) => (path ? `${base()}/recipe-images/${path}` : null);
+export const recipeImage = (path) => {
+  if (!path) return null;
+  // The preview bundles the generated artwork as static files; the server
+  // streams it out of storage. Same pictures, different route.
+  if (IS_PREVIEW) return `/preview-art/${path}`;
+  return `${base()}/recipe-images/${path}`;
+};
 
 /**
  * Is there a kitchen at this address?

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600" role="img">
+<defs>
+  <radialGradient id="wash" cx="30%" cy="20%" r="85%">
+    <stop offset="0%" stop-color="#ffffff" stop-opacity="0.85"/>
+    <stop offset="60%" stop-color="#eef2ec" stop-opacity="0"/>
+    <stop offset="100%" stop-color="#7c9a63" stop-opacity="0.16"/>
+  </radialGradient>
+  <filter id="grainFilter">
+    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/>
+  </filter>
+  <pattern id="grain" width="180" height="180" patternUnits="userSpaceOnUse">
+    <rect width="180" height="180" filter="url(#grainFilter)"/>
+  </pattern>
+</defs>
+<rect width="800" height="600" fill="#eef2ec"/>
+<rect width="800" height="600" fill="url(#wash)"/>
+<ellipse cx="400" cy="314" rx="212" ry="206" fill="rgba(16,24,32,0.10)"/>
+<circle cx="400" cy="300" r="208" fill="#f7f9f6"/>
+<circle cx="400" cy="300" r="208" fill="none" stroke="rgba(16,24,32,0.10)" stroke-width="2"/>
+<circle cx="400" cy="300" r="176" fill="none" stroke="rgba(16,24,32,0.06)" stroke-width="1.5"/>
+<path d="M525.9 306.0C526.7 331.7 524.2 367.9 508.8 385.1C493.4 402.2 458.7 399.8 433.4 408.7C408.1 417.6 380.8 442.1 357.1 438.2C333.3 434.2 303.0 407.2 291.0 385.2C279.0 363.1 283.3 331.1 285.1 306.0C286.9 280.9 290.0 257.2 301.8 234.7C313.7 212.1 333.0 179.2 356.0 170.6C379.0 162.1 415.2 173.5 439.8 183.5C464.4 193.5 489.4 210.2 503.7 230.6C518.1 251.1 525.0 280.3 525.9 306.0Z" fill="#5f7d49"/>
+<path d="M545.5 296.0C542.7 321.3 515.0 349.2 496.1 365.8C477.3 382.5 455.1 386.9 432.4 395.8C409.7 404.6 380.9 424.4 360.0 419.0C339.2 413.6 325.2 383.7 307.5 363.2C289.8 342.7 254.3 318.7 254.0 296.0C253.6 273.3 288.3 249.9 305.3 227.2C322.2 204.5 332.6 170.9 355.8 159.8C378.9 148.8 417.7 151.7 444.0 160.7C470.2 169.7 496.1 191.3 513.0 213.9C529.9 236.4 548.4 270.7 545.5 296.0Z" fill="#7c9a63"/>
+<path d="M460.0 284.0C461.0 300.3 457.3 322.0 447.3 335.4C437.4 348.9 416.4 363.1 400.3 364.9C384.1 366.6 366.3 354.4 350.3 345.9C334.2 337.4 309.4 328.5 303.8 313.9C298.2 299.4 309.7 275.7 316.5 258.7C323.3 241.7 330.8 219.4 344.4 211.9C358.0 204.5 382.2 209.7 398.3 214.0C414.4 218.3 430.7 226.2 441.0 237.8C451.3 249.5 458.9 267.7 460.0 284.0Z" fill="rgba(255,255,255,0.14)"/>
+<ellipse cx="304.7" cy="314.6" rx="6.1" ry="3.4" fill="#c9d67f" transform="rotate(161.3 304.7 314.6)" opacity="0.92"/><path d="M389.4 266.6 Q396.2 260.8 403.0 266.6 Q396.2 272.3 389.4 266.6 Z" fill="#c9d67f" transform="rotate(120.7 396.2 266.6)" opacity="0.92"/><path d="M471.8 325.7 Q477.1 321.2 482.4 325.7 Q477.1 330.3 471.8 325.7 Z" fill="#3f5c34" transform="rotate(339.3 477.1 325.7)" opacity="0.92"/><ellipse cx="416.1" cy="317.0" rx="13.0" ry="7.1" fill="#c9d67f" transform="rotate(120.5 416.1 317.0)" opacity="0.92"/><ellipse cx="430.7" cy="283.3" rx="9.5" ry="5.2" fill="#3f5c34" transform="rotate(242.7 430.7 283.3)" opacity="0.92"/><ellipse cx="497.1" cy="286.4" rx="10.6" ry="5.9" fill="#3f5c34" transform="rotate(325.3 497.1 286.4)" opacity="0.92"/><ellipse cx="389.2" cy="187.2" rx="13.5" ry="7.4" fill="#3f5c34" transform="rotate(103.5 389.2 187.2)" opacity="0.92"/><path d="M384.6 190.3 Q390.3 185.4 396.0 190.3 Q390.3 195.1 384.6 190.3 Z" fill="#c9d67f" transform="rotate(156.7 390.3 190.3)" opacity="0.92"/><path d="M354.2 407.7 Q364.5 398.9 374.9 407.7 Q364.5 416.5 354.2 407.7 Z" fill="#c9d67f" transform="rotate(319.4 364.5 407.7)" opacity="0.92"/><path d="M466.1 360.7 Q478.6 350.1 491.0 360.7 Q478.6 371.3 466.1 360.7 Z" fill="#c9d67f" transform="rotate(183.8 478.6 360.7)" opacity="0.92"/><ellipse cx="431.8" cy="343.6" rx="12.1" ry="6.6" fill="#3f5c34" transform="rotate(60.5 431.8 343.6)" opacity="0.92"/>
+<ellipse cx="508.1" cy="447.4" rx="4.8" ry="2.6" fill="#c9d67f" transform="rotate(289.8 508.1 447.4)" opacity="0.92"/><path d="M462.1 354.1 Q467.4 349.6 472.6 354.1 Q467.4 358.6 462.1 354.1 Z" fill="#c9d67f" transform="rotate(102.0 467.4 354.1)" opacity="0.92"/><ellipse cx="350.9" cy="236.5" rx="3.8" ry="2.1" fill="#c9d67f" transform="rotate(96.0 350.9 236.5)" opacity="0.92"/><path d="M275.8 306.0 Q282.6 300.2 289.4 306.0 Q282.6 311.8 275.8 306.0 Z" fill="#c9d67f" transform="rotate(114.6 282.6 306.0)" opacity="0.92"/>
+<rect width="800" height="600" fill="url(#grain)" opacity="0.05"/>
+</svg>

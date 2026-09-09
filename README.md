@@ -247,6 +247,40 @@ venue cannot make, and `offline-check.ps1` fails the build if one appears.
 ---
 
 
+## The online preview
+
+The app is deployed to Vercel as a **preview build**, so a link is something
+somebody can click rather than only read.
+
+```powershell
+vercel login      # once
+vercel --prod     # from the repo root
+```
+
+`vercel.json` builds only `client/` with `VITE_PREVIEW=true`. Nothing else in
+the repo is uploaded — see `.vercelignore`.
+
+**What the preview is.** Laravel, SQLite and 370 MB of YOLO weights do not go
+on a static host, and the project's argument is that they do not need to: it
+runs on the laptop, offline. So `src/preview/backend.js` answers every request
+in the browser instead. The data is *dumped, not authored* — `fixture.json`
+comes out of the real database (132 ingredients with their Bangla names and
+shelf lives, 40 recipes with their real method steps, the demo fridge, and the
+composer's own templates exported from the PHP constants so the two cannot
+drift). The behaviour is *ported, not approximated*: the freshness tiers, the
+urgency curve, the health dial, the ranking formula with its qualification
+gate, and the recipe composer are the same rules written again in JavaScript.
+It ranks the demo fridge identically to the server.
+
+**What it cannot do is run the model.** `POST /fridge/scan` replays a recording
+of the detector's real output on the bundled photo — six ingredients, boxes and
+confidences included, 428 ms as measured. A banner says so on every screen.
+
+The preview is a way to share the project. It is not the demo: the demo is the
+laptop, with the WiFi off.
+
+---
+
 ## Offline
 
 The venue provides no internet, so model weights live in `vision/weights`
@@ -267,7 +301,7 @@ network.
 ## Tests
 
 ```bash
-php artisan test           # 46 tests
+php artisan test           # 51 tests
 cd client && npm run lint
 ```
 

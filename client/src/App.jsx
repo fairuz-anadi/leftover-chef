@@ -11,7 +11,7 @@ import {
   Sprout,
   X,
 } from "lucide-react";
-import { api, isNativeApp, recipeImage } from "./api";
+import { api, isNativeApp, IS_PREVIEW, recipeImage } from "./api";
 import { FreshnessBadge } from "./components/Freshness";
 import HealthDial from "./components/HealthDial";
 import InstallButton from "./components/InstallButton";
@@ -403,6 +403,16 @@ export default function App({ onHome = null, onChangeKitchen = null }) {
         </header>
 
         <div className="app-content">
+          {/* ── What this deployment is ───────────────────── */}
+          {IS_PREVIEW && (
+            <div className="preview-banner" role="note">
+              <b>Online preview.</b> Everything here runs in your browser against the real
+              seeded data. The detector&rsquo;s answer for the sample photo is a recording of
+              a real run — the live model runs on the laptop, offline, which is the whole
+              point of the project.
+            </div>
+          )}
+
           {/* ── Notification simulation ───────────────────── */}
           {alert && (
             <div className="lc-rise alert-banner" role="status">
