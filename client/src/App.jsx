@@ -7,6 +7,7 @@ import {
   Refrigerator,
   RotateCcw,
   ScanLine,
+  Sparkles,
   Sprout,
   X,
 } from "lucide-react";
@@ -636,16 +637,27 @@ function SuggestionCard({ suggestion, onOpen }) {
         <span className="absolute right-2 top-2 rounded-full bg-black/70 px-2 py-0.5 font-mono text-[10px] font-bold text-white">
           {suggestion.match_percent}%
         </span>
-        {suggestion.local_bonus > 0 && (
-          <span className="absolute left-2 top-2 rounded-full bg-[var(--accent)] px-2 py-0.5 font-mono text-[10px] font-bold text-[var(--on-accent)]">
-            local
-          </span>
-        )}
+        <span className="absolute left-2 top-2 flex gap-1">
+          {recipe.generated && (
+            <span
+              title="Written by FridgeMama for what is on your shelf"
+              className="flex items-center gap-1 rounded-full bg-[var(--text)] px-2 py-0.5 font-mono text-[10px] font-bold text-white"
+            >
+              <Sparkles size={9} /> for you
+            </span>
+          )}
+          {suggestion.local_bonus > 0 && (
+            <span className="rounded-full bg-[var(--accent)] px-2 py-0.5 font-mono text-[10px] font-bold text-[var(--on-accent)]">
+              local
+            </span>
+          )}
+        </span>
       </div>
 
       <div className="p-3.5">
         <p className="m-0 truncate text-sm font-bold text-[var(--text)]">{recipe.title}</p>
         <p className="m-0 mt-0.5 truncate text-[11px] text-[var(--faint)]">
+          {recipe.generated ? "Written for your shelf · " : ""}
           {recipe.cuisine_country}
           {recipe.total_minutes ? ` · ${recipe.total_minutes} min` : ""}
           {suggestion.missing.length > 0 ? ` · need ${suggestion.missing.length}` : " · ready now"}

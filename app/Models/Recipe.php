@@ -15,6 +15,7 @@ class Recipe extends Model
         'ingredients',
         'instructions',
         'image_path',
+        'generated_at',
         'average_rating',
         'cuisine_country',
         'cuisine_code',
@@ -30,6 +31,7 @@ class Recipe extends Model
     ];
 
     protected $casts = [
+        'generated_at' => 'datetime',
         'ingredients' => 'array',
         'instructions' => 'array',
         'step_timers' => 'array',

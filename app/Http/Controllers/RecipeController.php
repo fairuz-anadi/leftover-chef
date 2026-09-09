@@ -46,6 +46,9 @@ class RecipeController extends Controller
                 'servings' => $recipe->servings,
                 'total_minutes' => (int) $recipe->prep_minutes + (int) $recipe->cook_minutes,
                 'image_path' => $recipe->image_path,
+                // Said on the reveal as well as the card: a dish the app
+                // wrote should never be mistaken for one a person did.
+                'generated' => $recipe->generated_at !== null,
                 'steps' => $this->guide->steps($recipe),
                 'ingredients' => $recipe->ingredientRecords->map(fn ($ingredient) => [
                     'id' => $ingredient->id,

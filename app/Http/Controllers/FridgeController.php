@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Services\DemoFridge;
+use App\Http\Services\RecipeComposer;
 use App\Http\Services\FreshnessService;
 use App\Http\Services\RecipeSuggestionService;
 use App\Http\Services\WasteLedger;
@@ -25,6 +26,7 @@ class FridgeController extends Controller
     public function __construct(
         private FreshnessService $freshness,
         private RecipeSuggestionService $suggestions,
+        private RecipeComposer $composer,
         private WasteLedger $ledger,
         private DemoFridge $demo,
     ) {
@@ -212,6 +214,12 @@ class FridgeController extends Controller
             ->values()
             ->all();
 
+        // Write a dish or two for this shelf before ranking anything, so the
+        // composed recipes go through exactly the same engine as the seeded
+        // ones and have to earn their place on the same arithmetic. They are
+        // ordinary rows by the time the scorer sees them.
+        $composed = $this->composer->compose($session)->pluck('id')->all();
+
         return [
             'session' => [
                 'day_offset' => $session->day_offset,
@@ -222,7 +230,7 @@ class FridgeController extends Controller
             'health' => $this->freshness->health($session),
             'waste' => $this->ledger->summary($session),
             'leaderboard' => $this->ledger->leaderboard($session),
-            'suggestions' => $this->suggestions->suggest($session)->all(),
+            'suggestions' => $this->suggestions->suggest($session, ['generated_ids' => $composed])->all(),
             'missing_links' => $this->suggestions->missingLinks($session),
         ];
     }

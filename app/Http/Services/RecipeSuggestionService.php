@@ -27,6 +27,14 @@ class RecipeSuggestionService
     private const WEIGHT_MATCH = 0.6;
     private const WEIGHT_URGENCY = 0.4;
 
+    /**
+     * How much of a recipe you must already hold before it is worth naming.
+     *
+     * Below this you are not being given a suggestion, you are being given a
+     * shopping list with a photograph attached.
+     */
+    private const MIN_MATCH_PERCENT = 40;
+
     /** Home-cuisine nudge, in priority points. */
     private const LOCAL_BONUS = ['Bangladesh' => 8];
     private const REGION_BONUS = ['South Asia' => 4];
@@ -45,6 +53,13 @@ class RecipeSuggestionService
         $limit = (int) ($options['limit'] ?? 12);
         $localBias = $options['local_bias'] ?? true;
 
+        // Composed recipes are ordinary rows, which means every fridge can see
+        // every fridge's. That is wrong: a dish whose whole claim is "written
+        // for this shelf" must not turn up on somebody else's, and after a busy
+        // afternoon the library would be mostly other people's leftovers. Only
+        // the ones composed for *this* fridge, this request, are eligible.
+        $mine = collect($options['generated_ids'] ?? [])->map(fn ($id) => (int) $id)->all();
+
         $statuses = $this->freshness->statuses($session);
         $owned = $session->pantryItems()->pluck('ingredient_id')->map(fn ($id) => (int) $id);
 
@@ -54,8 +69,10 @@ class RecipeSuggestionService
 
         return Recipe::with(['ingredientRecords:id,name,name_bn,slug,aisle'])
             ->get()
+            ->reject(fn (Recipe $recipe) => $recipe->generated_at !== null
+                && !in_array((int) $recipe->id, $mine, true))
             ->map(fn (Recipe $recipe) => $this->score($recipe, $owned, $statuses, $localBias))
-            ->reject(fn (array $row) => $row['required_count'] === 0 || count($row['missing']) > $maxMissing)
+            ->filter(fn (array $row) => $this->qualifies($row, $maxMissing))
             ->sortByDesc('priority_score')
             ->take($limit)
             ->values();
@@ -118,6 +135,41 @@ class RecipeSuggestionService
     }
 
     /**
+     * Is this a suggestion, or merely a recipe that happens to exist?
+     *
+     * The rule that was missing is the second one. Filtering only on "how many
+     * ingredients are you short" lets a three-ingredient recipe through when
+     * you own none of the three: nothing is missing beyond the cap, so it
+     * qualifies, scores zero for match and zero for urgency — and then the
+     * local-cuisine bonus, which is meant to break ties, puts it on the screen
+     * on its own. Photograph six things and Mishti Doi appears, wanting milk,
+     * sugar and yoghurt you do not have. From the outside that is
+     * indistinguishable from the list being random.
+     *
+     * So: it must use something you actually own, and enough of it to be worth
+     * the word "suggestion". The bonus can then only reorder recipes that have
+     * already earned their place, which is all a tie-break was ever for.
+     *
+     * @param  array<string, mixed>  $row
+     */
+    private function qualifies(array $row, int $maxMissing): bool
+    {
+        if ($row['required_count'] === 0) {
+            return false;
+        }
+
+        if ($row['have_count'] === 0) {
+            return false;
+        }
+
+        if ($row['match_percent'] < self::MIN_MATCH_PERCENT) {
+            return false;
+        }
+
+        return count($row['missing']) <= $maxMissing;
+    }
+
+    /**
      * @param  Collection<int, int>  $owned
      * @param  Collection<int, array<string, mixed>>  $statuses
      * @return array<string, mixed>
@@ -155,6 +207,10 @@ class RecipeSuggestionService
                 'total_minutes' => (int) $recipe->prep_minutes + (int) $recipe->cook_minutes,
                 'servings' => $recipe->servings,
                 'image_path' => $recipe->image_path,
+                // Composed for a fridge rather than written by a person. The
+                // card says so; passing one off as the other would be the
+                // easiest lie in the app to tell.
+                'generated' => $recipe->generated_at !== null,
             ],
             'match_percent' => $matchPercent,
             'have_count' => $have->count(),

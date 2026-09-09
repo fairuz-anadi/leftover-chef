@@ -102,6 +102,11 @@ export default function RecipeReveal({ recipeId, fridgePhoto, onClose, onCooked,
                   {recipe.cuisine_country} · {recipe.difficulty}
                   {recipe.total_minutes ? ` · ${recipe.total_minutes} min` : ""}
                 </p>
+                {recipe.generated && (
+                  <p className="m-0 mt-2 inline-flex items-center gap-1.5 rounded-full bg-[var(--raised)] px-3 py-1 text-[11px] font-semibold text-[var(--dim)]">
+                    ✦ Written by FridgeMama from what is on your shelf
+                  </p>
+                )}
               </div>
               <button
                 type="button"

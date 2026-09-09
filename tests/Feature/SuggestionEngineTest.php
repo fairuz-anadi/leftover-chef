@@ -53,6 +53,12 @@ class SuggestionEngineTest extends TestCase
         return app(RecipeSuggestionService::class);
     }
 
+    /** A request carrying a fridge, which is this app's whole identity model. */
+    private function fridge(string $session = self::SESSION)
+    {
+        return $this->withHeader('X-Fridge-Session', $session);
+    }
+
     // -- detector labels become real ingredients --------------------------
 
     public function test_detector_labels_resolve_through_the_alias_table(): void
@@ -147,12 +153,22 @@ class SuggestionEngineTest extends TestCase
 
     public function test_a_kitchen_sink_recipe_cannot_win_on_volume_alone(): void
     {
-        $fridge = $this->stock(['Spinach' => 1, 'Milk' => 1, 'Tomato' => 1, 'Onion' => 1]);
-        $service = $this->suggestions();
+        // Enough to actually cook with, because a suggestion now has to be
+        // mostly satisfiable — a fridge of four things and a relaxed missing
+        // cap no longer returns anything, which is the point of the filter.
+        $fridge = $this->stock([
+            'Spinach' => 1, 'Milk' => 1, 'Tomato' => 1, 'Onion' => 1,
+            'Egg' => 1, 'Garlic' => 1, 'Olive Oil' => 1, 'Bell Pepper' => 1,
+            'Cumin' => 1, 'Paprika' => 1,
+        ]);
 
-        $scores = $service->suggest($fridge, ['max_missing' => 20])->pluck('urgency_score');
+        $scores = $this->suggestions()->suggest($fridge, ['max_missing' => 20])->pluck('urgency_score');
 
-        // Everything is equally urgent, so no score may exceed the ceiling.
+        $this->assertNotEmpty($scores, 'ten urgent ingredients should suggest something');
+
+        // Everything is equally urgent, so no score may exceed the ceiling —
+        // a recipe listing ten of them cannot outrank one listing three by
+        // simply naming more.
         $this->assertLessThanOrEqual(100, $scores->max());
         $this->assertGreaterThan(0, $scores->max());
     }
@@ -233,4 +249,125 @@ class SuggestionEngineTest extends TestCase
 
         $this->assertTrue($suggested->intersect($held)->isEmpty());
     }
+
+    /**
+     * The bug this was written for: photograph a handful of things and dishes
+     * you own none of were still offered. A three-ingredient recipe missing all
+     * three is only "3 missing", which cleared the cap, scored zero for match
+     * and zero for urgency — and then the local-cuisine bonus, a tie-break, put
+     * it on screen unaccompanied.
+     */
+    public function test_it_never_suggests_a_recipe_you_own_nothing_for(): void
+    {
+        $this->stockOnly(['Tomato', 'Onion', 'Egg', 'Green Chilli', 'Coriander', 'Potato']);
+
+        $suggestions = $this->fridge()->getJson('/api/fridge')->assertOk()->json('suggestions');
+
+        $this->assertNotEmpty($suggestions, 'six usable ingredients should suggest something');
+
+        foreach ($suggestions as $suggestion) {
+            $this->assertGreaterThan(
+                0,
+                $suggestion['have_count'],
+                "{$suggestion['recipe']['title']} was suggested using nothing on the shelf",
+            );
+        }
+    }
+
+    public function test_a_suggestion_must_be_mostly_satisfiable(): void
+    {
+        $this->stockOnly(['Tomato', 'Onion', 'Egg', 'Green Chilli', 'Coriander', 'Potato']);
+
+        foreach ($this->fridge()->getJson('/api/fridge')->json('suggestions') as $suggestion) {
+            $this->assertGreaterThanOrEqual(
+                40,
+                $suggestion['match_percent'],
+                "{$suggestion['recipe']['title']} is mostly a shopping list",
+            );
+        }
+    }
+
+    public function test_the_local_bonus_cannot_put_a_recipe_on_screen_by_itself(): void
+    {
+        // Mishti Doi is Bangladeshi — it collects the bonus — and needs milk,
+        // sugar and yoghurt, none of which are here.
+        $this->stockOnly(['Tomato', 'Onion', 'Potato']);
+
+        $titles = collect($this->fridge()->getJson('/api/fridge')->json('suggestions'))
+            ->pluck('recipe.title');
+
+        $this->assertNotContains('Mishti Doi', $titles->all());
+    }
+
+    public function test_it_writes_a_recipe_for_a_shelf_the_library_does_not_cover(): void
+    {
+        $this->stockOnly(['Potato', 'Onion', 'Green Chilli', 'Coriander']);
+
+        $suggestions = $this->fridge()->getJson('/api/fridge')->assertOk()->json('suggestions');
+        $composed = collect($suggestions)->filter(fn ($s) => $s['recipe']['generated'] ?? false);
+
+        $this->assertNotEmpty($composed, 'nothing was composed for a shelf with four usable things on it');
+
+        $first = $composed->first();
+
+        // A composed dish is built from the shelf, so it must not send you
+        // shopping for anything.
+        $this->assertGreaterThan(0, $first['have_count']);
+        $this->assertSame(100, $first['match_percent'], 'a composed dish should need nothing you lack');
+
+        // And it must be a real recipe: openable, with method steps.
+        $detail = $this->fridge()
+            ->getJson("/api/recipes/{$first['recipe']['id']}")
+            ->assertOk()
+            ->json('data');
+
+        $this->assertTrue($detail['generated']);
+        $this->assertNotEmpty($detail['steps']);
+        $this->assertNotEmpty($detail['ingredients']);
+    }
+
+    public function test_a_dish_composed_for_one_fridge_is_not_offered_to_another(): void
+    {
+        $this->stockOnly(['Potato', 'Onion', 'Green Chilli', 'Coriander']);
+        $mine = collect($this->fridge()->getJson('/api/fridge')->json('suggestions'))
+            ->filter(fn ($s) => $s['recipe']['generated'] ?? false)
+            ->pluck('recipe.title');
+
+        $this->assertNotEmpty($mine);
+
+        // A different browser, with a different shelf.
+        $this->stockOnly(['Milk', 'Yoghurt', 'Sugar'], 'someone-elses-fridge');
+        $theirs = collect(
+            $this->fridge('someone-elses-fridge')->getJson('/api/fridge')->json('suggestions')
+        )->pluck('recipe.title');
+
+        foreach ($mine as $title) {
+            $this->assertNotContains(
+                $title,
+                $theirs->all(),
+                "{$title} was written for another fridge and turned up in this one",
+            );
+        }
+    }
+
+    /**
+     * Empty the demo contents and put back only what is named, dated from the
+     * shelf-life table exactly as a confirmed scan would.
+     *
+     * @param  array<int, string>  $names
+     */
+    private function stockOnly(array $names, string $session = self::SESSION): void
+    {
+        $fridge = FridgeSession::forId($session);
+        $fridge->pantryItems()->delete();
+        $fridge->forceFill(['stocked_at' => now()])->save();
+
+        // Confirming a scan reports 201: these rows are newly created.
+        $this->fridge($session)
+            ->postJson('/api/fridge/scan/confirm', [
+                'items' => collect($names)->map(fn (string $name) => ['name' => $name])->all(),
+            ])
+            ->assertSuccessful();
+    }
+
 }

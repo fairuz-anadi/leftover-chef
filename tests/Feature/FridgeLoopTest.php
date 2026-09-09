@@ -196,7 +196,13 @@ class FridgeLoopTest extends TestCase
         $recipe = \App\Models\Recipe::where('title', 'Spaghetti Aglio e Olio')->firstOrFail();
         $required = $recipe->ingredientRecords->reject(fn ($i) => (bool) $i->pivot->is_optional);
 
-        $this->stock(array_fill_keys($required->pluck('name')->all(), 2));
+        // Salt is deliberately not a required ingredient any more — no recipe
+        // should send you shopping for it — so it has to be put on the shelf
+        // explicitly for the cupboard assertion below to mean anything.
+        $stock = array_fill_keys($required->pluck('name')->all(), 2);
+        $stock['Salt'] = null;
+
+        $this->stock($stock);
 
         $response = $this->fridge()->postJson("/api/recipes/{$recipe->id}/cooked")->assertOk();
 

@@ -469,6 +469,65 @@ enforced by there being one of each rather than by anyone remembering.
 
 ---
 
+## 10c. How a recipe gets on the screen
+
+Two sources, one ranking.
+
+**The library.** Forty seeded dishes, ten Bangladeshi. Each is scored against
+your shelf:
+
+    priority = 0.6 x match%  +  0.4 x urgency  +  local bonus
+
+`match%` is how much of the recipe you already hold. `urgency` is how much
+at-risk food it would use up, aggregated so the most urgent item counts in
+full and each further one adds half the last — three things about to die beat
+one, but not by three times, so a recipe cannot win by listing everything.
+The bonus is +8 for Bangladesh, +4 for the wider region. Every term is in the
+API response, so the arithmetic on the card can be checked by hand.
+
+**The composer.** `RecipeComposer` writes a dish for the shelf in front of it,
+from cooking grammar rather than a language model — there is no internet at
+the venue. A bhorta is *a soft vegetable, mashed, with raw allium and heat
+through it*; a jhol is *a protein and a potato in a thin turmeric gravy*.
+Six such templates, each with required slots and optional ones. A template is
+skipped unless every required slot can be filled from the fridge, and optional
+slots are dropped silently along with the method lines that mention them — so a
+composed recipe never lists anything you would have to go and buy. Where two
+ingredients could fill a slot, **the one closest to the bin wins**, which
+points the generator at the same problem as the rest of the app.
+
+A composed dish is a real row in `recipes`, marked with `generated_at`. That
+matters: it is scored by the same engine, opened by the same reveal, and
+cooking it takes the same ingredients off the shelf. Nothing downstream knows
+the difference, so the card says so out loud instead.
+
+Composed recipes are scoped to the fridge they were written for. They are
+ordinary rows, so without that every fridge would see every other fridge's, and
+a dish whose entire claim is "written for this shelf" would turn up on somebody
+else's.
+
+### The bug this fixed
+
+Photograph six things and Mishti Doi was suggested — needing milk, sugar and
+yoghurt, none of which were there. The filter only asked *how many ingredients
+are you short*, capped at four. A three-ingredient recipe you own none of is
+"three missing", which clears the cap. It then scored zero for match and zero
+for urgency, and the local-cuisine bonus — a tie-break — put it on the screen
+on its own. Three of five suggestions were under 50% match. From the outside
+that is indistinguishable from the list being random, which is exactly what it
+was reported as.
+
+A suggestion must now use something you actually own, and at least 40% of it.
+The bonus can only reorder recipes that have already earned their place, which
+is all a tie-break was ever for. Five tests cover it.
+
+Salt moved to `RecipeIngredientSync::ALWAYS_AVAILABLE` alongside water in the
+same pass. No recipe has ever been blocked on salt, and counting it made a
+composed dish read as 80% complete when the only thing missing was the salt
+cellar.
+
+---
+
 ## 11. State of things
 
 **Done and verified**
@@ -476,7 +535,7 @@ enforced by there being one of each rather than by anyone remembering.
 - The whole loop, end to end in a browser: photo → 6 ingredients in ~280 ms →
   confirmed → dated → fast-forward → notification → reveal → cooked → counter
   moved.
-- 46 PHPUnit tests pass. `npm run build` and eslint clean.
+- 51 PHPUnit tests pass. `npm run build` and eslint clean.
 - `offline-check.ps1` passes 12/12 against the running stack.
 - The service worker registers and activates in real Chrome, with the shell
   cached and the manifest served as `application/manifest+json`. It does *not*

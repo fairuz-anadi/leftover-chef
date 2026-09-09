@@ -21,7 +21,13 @@ class RecipeIngredientSync
      * list but are kept off the pivot, so they never count as "missing" or
      * land on a shopping list.
      */
-    private const ALWAYS_AVAILABLE = ['water', 'ice', 'cold-water', 'warm-water', 'boiling-water'];
+    private const ALWAYS_AVAILABLE = [
+        'water', 'ice', 'cold-water', 'warm-water', 'boiling-water',
+        // Salt belongs here for the same reason water does. No recipe has ever
+        // been blocked on salt, and counting it made a composed dish read as
+        // 80% complete when the only thing "missing" was the salt cellar.
+        'salt',
+    ];
 
     public function __construct(private IngredientParser $parser)
     {
